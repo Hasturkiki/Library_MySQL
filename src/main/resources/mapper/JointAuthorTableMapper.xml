@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library_mysql.mapper.JointAuthorTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.JointAuthorTable">
+            <id property="jointAuthorTableId" column="joint_author_table_id" jdbcType="INTEGER"/>
+            <result property="tableId" column="table_id" jdbcType="INTEGER"/>
+            <result property="authorId" column="author_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        joint_author_table_id,table_id,author_id
+    </sql>
+</mapper>

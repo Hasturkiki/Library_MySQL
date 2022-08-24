@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library_mysql.mapper.PublishingCompanyMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.PublishingCompany">
+            <id property="publishingCompanyId" column="publishing_company_id" jdbcType="INTEGER"/>
+            <result property="publishingCompanyName" column="publishing_company_name" jdbcType="VARCHAR"/>
+            <result property="publishingCompanyTelephoneNumber" column="publishing_company_telephone_number" jdbcType="VARCHAR"/>
+            <result property="publishingCompanyAddress" column="publishing_company_address" jdbcType="VARCHAR"/>
+    </resultMap>
+
+<!--    <sql id="Base_Column_List">-->
+<!--        publishing_company_id,publishing_company_name,publishing_company_telephone_number,-->
+<!--        publishing_company_address-->
+<!--    </sql>-->
+
+    <select id="selectPublishingCompanyById" parameterType="int" resultType="com.example.library_mysql.domain.PublishingCompany">
+        select * from publishing_company where publishing_company_id = #{publishingCompanyId}
+    </select>
+</mapper>

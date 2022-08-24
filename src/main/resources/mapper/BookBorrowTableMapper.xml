@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library_mysql.mapper.BookBorrowTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.BookBorrowTable">
+            <id property="booksBorrowTableId" column="books_borrow_table_id" jdbcType="INTEGER"/>
+            <result property="readerId" column="reader_id" jdbcType="INTEGER"/>
+            <result property="bookId" column="book_id" jdbcType="INTEGER"/>
+            <result property="isBorrowing" column="is_borrowing" jdbcType="INTEGER"/>
+            <result property="borrowTime" column="borrow_time" jdbcType="TIMESTAMP"/>
+            <result property="backTime" column="back_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        books_borrow_table_id,reader_id,book_id,
+        is_borrowing,borrow_time,back_time
+    </sql>
+</mapper>

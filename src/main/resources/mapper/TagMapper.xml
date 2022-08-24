@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library_mysql.mapper.TagMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.Tag">
+            <id property="tagId" column="tag_id" jdbcType="INTEGER"/>
+            <result property="tagName" column="tag_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+<!--    <sql id="Base_Column_List">-->
+<!--        tag_id,tag_name-->
+<!--    </sql>-->
+
+    <select id="selectTagById" parameterType="int" resultType="com.example.library_mysql.domain.Tag">
+        select * from tag where tag_id = #{tagId}
+    </select>
+</mapper>

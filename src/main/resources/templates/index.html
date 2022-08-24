@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SpringBootDemo</title>
+    <style>
+        #search_string {
+            display: inline-block;
+            position: relative;
+            margin-left: 28%;
+            width: 40%;
+            align-self: center;
+        }
+
+        #search {
+            margin: 23px auto;
+            width: 100px;
+            height: 23px;
+            border-radius: 0.7em;
+            background-color: rgba(23, 42, 52, 0.07);
+        }
+        #search:hover {
+            background-color: rgba(233, 233, 233, 0.7);
+        }
+        #search:active {
+            background-color: rgba(23, 233, 23, 0.233);
+        }
+
+        #search_result {
+            width: 80%;
+            height: 80%;
+            background-color: transparent;
+            font-family: "Adobe Devanagari",serif;
+            font-size: 17px;
+            margin: 23px auto;
+        }
+
+        .search_result_title {
+            list-style: none;
+            font-size: 250%;
+            font-family: "Adobe Devanagari", serif;
+            padding-left: 10%;
+            background-color: rgba(23, 23, 23, 0.233);
+            height: 52px;
+        }
+
+        .search_result_emptyHind {
+            list-style: none;
+            font-size: 250%;
+            font-family: "Agency FB", serif;
+            margin: 10% 20%;
+        }
+
+        .search_result_content {
+            list-style: none;
+            font-size: 123%;
+            font-family: "Rage Italic", serif;
+            /*padding-left: 10%;*/
+        }
+        .search_result_content p {
+            display: inline-block;
+            width: 52px;
+            text-align: center;
+        }
+    </style>
+    <script src="./js/jquery-3.6.0.min.js"></script>
+    <script src="./js/index.js"></script>
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" crossorigin="anonymous">-->
+</head>
+<body style="background-color: rgba(52, 52, 52, 0.233)">
+    <h1 style="text-align: center; color: rgba(23, 23, 233, 0.3); font-size: 23px; margin-top: 52px">SpringBoot Study</h1>
+    <div style="margin: 42px auto; padding: 7px; width: 80%; height: 800px; background-color: rgba(233, 233, 233, 0.7); border: 3px rgba(64, 160, 160, 0.64) dotted">
+        <label>
+            <input id="search_string" type="text">
+            <button onclick="search()" id="search">search</button>
+        </label>
+        <a href="/author/searchAuthor" style="position: relative; left: 10%; text-decoration: none; display: block; margin-bottom: 20px;">searchAuthor</a>
+        <a href="/book/searchBook" style="position: relative; left: 10%; text-decoration: none; display: block; margin-bottom: 20px;">searchBook</a>
+        <a href="/publishingCompany/searchPublishingCompany" style="position: relative; left: 10%; text-decoration: none; display: block; margin-bottom: 20px;">searchPublishingCompany</a>
+        <a href="/reader/searchReader" style="position: relative; left: 10%; text-decoration: none; display: block; margin-bottom: 20px;">searchReader</a>
+        <a href="/tag/searchTag" style="position: relative; left: 10%; text-decoration: none; display: block; margin-bottom: 20px;">searchTag</a>
+        <label style="display:block; margin-left: 10%; width: 420px">search result:</label>
+        <div id="search_result">
+            <ul></ul>
+<!--            <ul>-->
+<!--                <li class="search_result_title" style="display: none">-->
+<!--                    序号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--                    姓名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--                    性别&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--                    年龄</li>-->
+<!--            </ul>-->
+        </div>
+    </div>
+</body>
+</html>

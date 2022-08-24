@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>showBook</title>
+</head>
+<body>
+    <div style="margin: 42px; padding: 16px;background-color: rgba(23, 23, 23, 0.3)">
+        <table>
+            <th style="padding-left: 52px; width: 42px">ID</th>
+            <th style="padding-left: 52px; width: 160px">书名</th>
+            <th style="padding-left: 52px; width: 42px">作者</th>
+            <th style="padding-left: 52px; width: 160px">IBSN号</th>
+            <th style="padding-left: 52px; width: 52px">出版社</th>
+            <th style="padding-left: 52px; width: 42px">标签</th>
+            <th style="padding-left: 52px; width: 42px">库存</th>
+            <th style="padding-left: 52px; width: 42px">单价</th>
+            <th style="padding-left: 52px; width: 72px">外借数量</th>
+            <th style="padding-left: 52px; width: 100px">出版日期</th>
+            <th style="padding-left: 52px; width: 72px">共同作者</th>
+            <tr th:each="book : ${books}">
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.bookId}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.bookName}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.authorId}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.ibsn}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.publishingCompanyId}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.tagId}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.quantity}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.price}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.isBeingBorrowed}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.publicationDate}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${books.jointAuthorTableId}"></td>
+            </tr>
+        </table>
+        <a href="/book/searchBook" style="position: relative; left: 40%; line-height: 64px; text-decoration: none">return</a>
+        <a href="/" style="position: relative; left: 50%; text-decoration: none">home</a>
+    </div>
+</body>
+</html>

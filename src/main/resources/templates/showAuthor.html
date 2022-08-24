@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>showAuthor</title>
+</head>
+<body>
+    <div style="width: 520px; margin: 52px auto; padding: 7px 52px 7px 7px;background-color: rgba(23, 23, 23, 0.3)">
+        <table>
+            <th style="padding-left: 52px; width: 42px">ID</th>
+            <th style="padding-left: 52px; width: 42px">姓名</th>
+            <th style="padding-left: 52px; width: 42px">性别</th>
+            <th style="padding-left: 52px; width: 42px">年龄</th>
+            <tr th:each="author : ${authors}">
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${authors.authorId}"></td>
+                <td style="padding-left: 52px;width: 260px;text-align: center;" th:text="${authors.authorName}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${authors.authorSex}"></td>
+                <td style="padding-left: 52px;width: 42px;text-align: center;" th:text="${authors.authorAge}"></td>
+            </tr>
+        </table>
+        <a href="/author/searchAuthor" style="position: relative; left: 40%; line-height: 64px; text-decoration: none">return</a>
+        <a href="/" style="position: relative; left: 50%; text-decoration: none">home</a>
+    </div>
+</body>
+</html>
