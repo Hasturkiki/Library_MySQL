@@ -1,6 +1,8 @@
 # Library_MySQL
-Library by MySQL8.
 
 ## 运行环境
-- Java 8
+- Java 18
 - MySQL 8
+
+## 静态资源路径
+- C:/Users/{userName}/Pictures/Coding/
