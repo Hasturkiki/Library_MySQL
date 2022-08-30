@@ -57,12 +57,24 @@
 // }
 
 $(document).keyup(function (e) {
+    let key = String.fromCharCode(e.keyCode || e.which)
+    console.log(key)
     if($('#search_string').is(":focus"))
         switch (e.keyCode) {
             case 13:
                 search();
                 return;
+            case 27:
+                $('#search_string').blur()
+                return;
         }
+    else {
+        switch (e.keyCode) {
+            case 191:
+                $('#search_string').focus()
+                return;
+        }
+    }
 })
 
 function search() {

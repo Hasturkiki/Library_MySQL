@@ -11,7 +11,7 @@ public class LibraryMySqlApplication {
 
         // 通过命令行自动打开首页
         try {
-            Runtime.getRuntime().exec("cmd /c start http://localhost:8080");
+            Runtime.getRuntime().exec("cmd /c start http://localhost:8080/index");
         } catch (Exception e) {
             e.printStackTrace();
         }

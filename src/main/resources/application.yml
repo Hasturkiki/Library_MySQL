@@ -1,0 +1,48 @@
+# 服务器
+server:
+  port: 8080
+
+# 日志
+logging:
+  level:
+    com.example.library_mysql.controller: debug
+#    springfox.documentation.schema.property.CachingModelPropertiesProvider: error
+
+# 数据源
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/library?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    hikari:
+      username: root
+      password: 123456
+  servlet:
+    multipart:
+      location: C:/Users/Hastur kiki/Pictures/Coding/
+      max-file-size: 10MB
+      max-request-size: 10MB
+#    mvc:
+#      pathmatch:
+#        matching-strategy: ant_path_matcher
+
+#mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.library_mysql.domain
+  global-config:
+    db-config:
+      id-type: AUTO
+#      # 逻辑删除字段名
+#      logic-delete-field: isDeleted
+#      # 逻辑删除字面值：未删除为0
+#      logic-not-delete-value: 0
+#      # 逻辑删除字面值：删除为1
+#      logic-delete-value: 1
+    banner: off
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#springfox:
+#  documentation:
+#    swagger-ui:
+#      enabled: on
