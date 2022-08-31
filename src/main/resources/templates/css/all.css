@@ -1,0 +1,88 @@
+.main {
+    margin: 10% auto;
+    width: 80%;
+    text-align: center;
+}
+
+ #search_string {
+     display: inline-block;
+     position: relative;
+     margin: 3% 0 0 27%;
+     width: 42%;
+     height: 32px;
+     border-radius: 0.3em;
+     align-self: center;
+     font-size: 24px;
+     line-height: 32px;
+     font-family: "Rage Italic", serif;
+     color: #aaccee;
+ }
+
+#search {
+    padding-top: 0.36%;
+    margin-bottom: 1%;
+    width: 100px;
+    line-height: 32px;
+    border-radius: 2.3em;
+    background-color: #bbccdd;
+    color: #008848;
+    font-size: 20px;
+}
+
+#search:hover {
+    background-color: rgba(233, 233, 233, 0.7);
+}
+
+#search:active {
+    background-color: rgba(23, 233, 23, 0.233);
+}
+
+#search_result {
+    width: 80%;
+    height: 80%;
+    background-color: transparent;
+    font-family: "Adobe Devanagari", serif;
+    font-size: 17px;
+    margin: 23px auto;
+}
+
+.search_result_emptyHind {
+    list-style: none;
+    font-size: 250%;
+    font-family: "Agency FB", serif;
+}
+
+.search_result_content {
+    list-style: none;
+    font-size: 20px;
+    font-family: "Rage Italic", serif;
+    text-align: center;
+}
+
+.search_result_content > td {
+    padding: 3px 7px 7px;
+}
+
+.search_result_content p {
+    display: inline-block;
+    width: 52px;
+    text-align: center;
+}
+
+.a_link {
+    position: relative;
+    left: 7%;
+    top: 7px;
+    margin: 3%;
+    text-decoration: none;
+    color: #00bbdd;
+}
+
+.search_result_title {
+    display: block;
+    margin: 1% 10% 0;
+    width: 80%;
+    font-size: 32px;
+    font-family: "Adobe Devanagari", ui-sans-serif;
+    color: #666666;
+}

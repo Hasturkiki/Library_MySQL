@@ -31,19 +31,6 @@ public class HomeController {
     @Autowired
     private TagService tagService;
 
-//    @RequestMapping("/search")
-//    @ResponseBody
-//    public Author showAuthor(Integer authorId) throws UnsupportedEncodingException {
-//        Author author = authorService.selectAuthorById(authorId);
-//        if(author!=null) {
-//            String str = new String(author.toString().getBytes(),"GBK");
-//            System.out.println("authorSearch "+authorId+" success.\n"+str);
-//        } else {
-//            System.out.println("authorSearch "+authorId+" error.");
-//        }
-//        return author;
-//    }searchValue
-
     @RequestMapping("/search")
     @ResponseBody
     public List<Object> show(String searchValue) throws UnsupportedEncodingException {

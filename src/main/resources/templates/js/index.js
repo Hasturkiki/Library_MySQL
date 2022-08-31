@@ -1,65 +1,7 @@
-// function search() {
-//     let searchValue = parseInt(document.getElementById("search_string").value);
-//     let resultBox = document.getElementById("search_result").firstElementChild;
-//     let resultTitle = resultBox.firstElementChild;
-//     if(resultTitle.style.display == 'none')
-//         resultTitle.style.display = 'block';
-//     else
-//         resultBox.lastElementChild.remove();
-//     if(document.getElementsByClassName("search_result_emptyHind")[0])
-//         document.getElementsByClassName("search_result_emptyHind")[0].remove();
-//     $.ajax({
-//         url: '/search',
-//         type: 'post',
-//         async: true,
-//         data: 'authorId='+searchValue,
-//         dataType: 'json',
-//         success: (data) => {
-//             let li = document.createElement("li");
-//             li.className = "search_result_content";
-//             let p_authorId = document.createElement("p");
-//             p_authorId.innerText = data.authorId;
-//             p_authorId.style.margin = "0 2%";
-//
-//             let p_authorName = document.createElement("p");
-//             p_authorName.innerText = data.authorName;
-//             p_authorName.style.width = "52%";
-//
-//             let p_authorSex = document.createElement("p");
-//             p_authorSex.innerText = data.authorSex;
-//             p_authorSex.style.margin = "0 2%";
-//
-//             let p_authorAge = document.createElement("p");
-//             p_authorAge.innerText = data.authorAge;
-//             p_authorAge.style.margin = "0 7.5%";
-//
-//             li.appendChild(p_authorId);
-//             li.appendChild(p_authorName);
-//             li.appendChild(p_authorSex);
-//             li.appendChild(p_authorAge);
-//             resultBox.appendChild(li);
-//         },
-//         error: () => {
-//             resultTitle.style.display = "none";
-//             let li = document.createElement("li");
-//             li.className = "search_result_emptyHind";
-//             li.innerText = "该id无对应作者，请重试。";
-//             resultBox.appendChild(li);
-//         }
-//     });
-// }
-
-//  监听键盘输入
-// document.onkeydown = function (e) {
-//     let keyNum = window.event ? e.keyCode : e.which;
-//     if(keyNum == 13)
-//         search();
-// }
-
 $(document).keyup(function (e) {
     let key = String.fromCharCode(e.keyCode || e.which)
     console.log(key)
-    if($('#search_string').is(":focus"))
+    if ($('#search_string').is(":focus"))
         switch (e.keyCode) {
             case 13:
                 search();
@@ -80,178 +22,169 @@ $(document).keyup(function (e) {
 function search() {
     let searchValue = document.getElementById("search_string").value;
     let resultBox = document.getElementById("search_result").firstElementChild;
-    if(resultBox.childNodes.length != 0)
-        resultBox.innerHTML="";
-    if(document.getElementsByClassName("search_result_emptyHind")[0])
+    if (resultBox.childNodes.length !== 0)
+        resultBox.innerHTML = "";
+    if (document.getElementsByClassName("search_result_emptyHind")[0])
         document.getElementsByClassName("search_result_emptyHind")[0].remove();
     $.ajax({
         url: '/search',
         type: 'post',
         async: true,
-        data: 'searchValue='+searchValue,
+        data: 'searchValue=' + searchValue,
         dataType: 'json',
         success: (data) => {
-            if(data[0] != null) {
-                let li = document.createElement("li");
-                li.className = "search_result_content";
+            if (data[0] != null) {
+                let tr = document.createElement("tr");
+                tr.className = "search_result_content";
 
-                let p_authorId = document.createElement("p");
-                p_authorId.innerText = data[0].authorId;
+                // let td_authorId = document.createElement("td");
+                // td_authorId.innerText = data[0].authorId;
 
-                let p_authorName = document.createElement("p");
-                p_authorName.innerText = data[0].authorName;
-                p_authorName.style.width = "52%";
+                let td_authorName = document.createElement("td");
+                td_authorName.innerText = data[0].authorName;
 
-                let p_authorSex = document.createElement("p");
-                p_authorSex.innerText = data[0].authorSex;
+                let td_authorSex = document.createElement("td");
+                td_authorSex.innerText = data[0].authorSex;
 
-                let p_authorAge = document.createElement("p");
-                p_authorAge.innerText = data[0].authorAge;
+                let td_authorAge = document.createElement("td");
+                td_authorAge.innerText = data[0].authorAge;
 
-                li.appendChild(p_authorId);
-                li.appendChild(p_authorName);
-                li.appendChild(p_authorSex);
-                li.appendChild(p_authorAge);
+                // tr.appendChild(td_authorId);
+                tr.appendChild(td_authorName);
+                tr.appendChild(td_authorSex);
+                tr.appendChild(td_authorAge);
 
-                resultBox.appendChild(li);
+                resultBox.appendChild(tr);
             }
-            if(data[1] != null) {
-                let li = document.createElement("li");
-                li.className = "search_result_content";
+            if (data[1] != null) {
+                let tr = document.createElement("tr");
+                tr.className = "search_result_content";
 
-                let p_bookId = document.createElement("p");
-                p_bookId.innerText = data[1].bookId;
+                // let td_bookId = document.createElement("td");
+                // td_bookId.innerText = data[1].bookId;
 
-                let p_bookName = document.createElement("p");
-                p_bookName.innerText = data[1].bookName;
-                p_bookName.style.width = "52%";
+                let td_bookName = document.createElement("td");
+                td_bookName.innerText = data[1].bookName;
 
-                let p_authorId = document.createElement("p");
-                p_authorId.innerText = data[1].authorId;
+                let td_authorId = document.createElement("td");
+                td_authorId.innerText = data[1].authorId;
 
-                let p_ibsn = document.createElement("p");
-                p_ibsn.innerText = data[1].ibsn;
-                p_ibsn.style.width = "25%";
+                let td_ibsn = document.createElement("td");
+                td_ibsn.innerText = data[1].ibsn;
 
-                let p_publishingCompanyId = document.createElement("p");
-                p_publishingCompanyId.innerText = data[1].publishingCompanyId;
+                let td_publishingCompanyId = document.createElement("td");
+                td_publishingCompanyId.innerText = data[1].publishingCompanyId;
 
-                let p_tagId = document.createElement("p");
-                p_tagId.innerText = data[1].tagId;
+                let td_tagId = document.createElement("td");
+                td_tagId.innerText = data[1].tagId;
 
-                let p_quantity = document.createElement("p");
-                p_quantity.innerText = data[1].quantity;
-                p_quantity.style.marginLeft = "10%"
+                let td_quantity = document.createElement("td");
+                td_quantity.innerText = data[1].quantity;
 
-                let p_price = document.createElement("p");
-                p_price.innerText = data[1].price;
+                let td_price = document.createElement("td");
+                td_price.innerText = data[1].price;
 
-                let p_isBeingBorrowed = document.createElement("p");
-                p_isBeingBorrowed.innerText = data[1].isBeingBorrowed;
+                let td_isBeingBorrowed = document.createElement("td");
+                td_isBeingBorrowed.innerText = data[1].isBeingBorrowed;
 
-                let p_publicationDate = document.createElement("p");
-                p_publicationDate.innerText = data[1].publicationDate;
-                p_publicationDate.style.width = "25%";
+                let td_publicationDate = document.createElement("td");
+                td_publicationDate.innerText = data[1].publicationDate;
 
-                let p_jointAuthorTableId = document.createElement("p");
-                p_jointAuthorTableId.innerText = data[1].jointAuthorTableId;
+                let td_jointAuthorTableId = document.createElement("td");
+                td_jointAuthorTableId.innerText = data[1].jointAuthorTableId;
 
-                li.appendChild(p_bookId);
-                li.appendChild(p_bookName);
-                li.appendChild(p_authorId);
-                li.appendChild(p_ibsn);
-                li.appendChild(p_publishingCompanyId);
-                li.appendChild(p_tagId);
-                li.appendChild(p_quantity);
-                li.appendChild(p_price);
-                li.appendChild(p_isBeingBorrowed);
-                li.appendChild(p_publicationDate);
-                li.appendChild(p_jointAuthorTableId);
+                // tr.appendChild(td_bookId);
+                tr.appendChild(td_bookName);
+                tr.appendChild(td_authorId);
+                tr.appendChild(td_ibsn);
+                tr.appendChild(td_publishingCompanyId);
+                tr.appendChild(td_tagId);
+                tr.appendChild(td_quantity);
+                tr.appendChild(td_price);
+                tr.appendChild(td_isBeingBorrowed);
+                tr.appendChild(td_publicationDate);
+                tr.appendChild(td_jointAuthorTableId);
 
-                resultBox.appendChild(li);
+                resultBox.appendChild(tr);
             }
-            if(data[2] != null) {
-                let li = document.createElement("li");
-                li.className = "search_result_content";
+            if (data[2] != null) {
+                let tr = document.createElement("tr");
+                tr.className = "search_result_content";
 
-                let p_publishingCompanyId = document.createElement("p");
-                p_publishingCompanyId.innerText = data[2].publishingCompanyId;
+                // let td_publishingCompanyId = document.createElement("td");
+                // td_publishingCompanyId.innerText = data[2].publishingCompanyId;
 
-                let p_publishingCompanyName = document.createElement("p");
-                p_publishingCompanyName.innerText = data[2].publishingCompanyName;
-                p_publishingCompanyName.style.width = "25%";
+                let td_publishingCompanyName = document.createElement("td");
+                td_publishingCompanyName.innerText = data[2].publishingCompanyName;
 
-                let p_publishingCompanyTelephoneNumber = document.createElement("p");
-                p_publishingCompanyTelephoneNumber.innerText = data[2].publishingCompanyTelephoneNumber;
-                p_publishingCompanyTelephoneNumber.style.width = "16%";
+                let td_publishingCompanyTelephoneNumber = document.createElement("td");
+                td_publishingCompanyTelephoneNumber.innerText = data[2].publishingCompanyTelephoneNumber;
 
-                let p_publishingCompanyAddress = document.createElement("p");
-                p_publishingCompanyAddress.innerText = data[2].publishingCompanyAddress;
-                p_publishingCompanyAddress.style.width = "52%";
+                let td_publishingCompanyAddress = document.createElement("td");
+                td_publishingCompanyAddress.innerText = data[2].publishingCompanyAddress;
 
-                li.appendChild(p_publishingCompanyId);
-                li.appendChild(p_publishingCompanyName);
-                li.appendChild(p_publishingCompanyTelephoneNumber);
-                li.appendChild(p_publishingCompanyAddress);
+                // tr.appendChild(td_publishingCompanyId);
+                tr.appendChild(td_publishingCompanyName);
+                tr.appendChild(td_publishingCompanyTelephoneNumber);
+                tr.appendChild(td_publishingCompanyAddress);
 
-                resultBox.appendChild(li);
+                resultBox.appendChild(tr);
             }
-            if(data[3] != null) {
-                let li = document.createElement("li");
-                li.className = "search_result_content";
+            if (data[3] != null) {
+                let tr = document.createElement("tr");
+                tr.className = "search_result_content";
 
-                let p_readerId = document.createElement("p");
-                p_readerId.innerText = data[3].readerId;
+                // let td_readerId = document.createElement("td");
+                // td_readerId.innerText = data[3].readerId;
 
-                let p_readerName = document.createElement("p");
-                p_readerName.innerText = data[3].readerName;
-                p_readerName.style.width = "25%";
+                let td_readerName = document.createElement("td");
+                td_readerName.innerText = data[3].readerName;
+                td_readerName.style.width = "25%";
 
-                let p_readerSex = document.createElement("p");
-                p_readerSex.innerText = data[3].readerSex;
+                let td_readerSex = document.createElement("td");
+                td_readerSex.innerText = data[3].readerSex;
 
-                let p_readerAge = document.createElement("p");
-                p_readerAge.innerText = data[3].readerAge;
+                let td_readerAge = document.createElement("td");
+                td_readerAge.innerText = data[3].readerAge;
 
-                let p_saving = document.createElement("p");
-                p_saving.innerText = data[3].saving;
+                let td_saving = document.createElement("td");
+                td_saving.innerText = data[3].saving;
 
-                li.appendChild(p_readerId);
-                li.appendChild(p_readerName);
-                li.appendChild(p_readerSex);
-                li.appendChild(p_readerAge);
-                li.appendChild(p_saving);
+                // tr.appendChild(td_readerId);
+                tr.appendChild(td_readerName);
+                tr.appendChild(td_readerSex);
+                tr.appendChild(td_readerAge);
+                tr.appendChild(td_saving);
 
-                resultBox.appendChild(li);
+                resultBox.appendChild(tr);
             }
-            if(data[4] != null) {
-                let li = document.createElement("li");
-                li.className = "search_result_content";
+            if (data[4] != null) {
+                let tr = document.createElement("tr");
+                tr.className = "search_result_content";
 
-                let p_tagId = document.createElement("p");
-                p_tagId.innerText = data[4].tagId;
+                // let td_tagId = document.createElement("td");
+                // td_tagId.innerText = data[4].tagId;
 
-                let p_tagName = document.createElement("p");
-                p_tagName.innerText = data[4].tagName;
-                p_tagName.style.width = "25%";
+                let td_tagName = document.createElement("td");
+                td_tagName.innerText = data[4].tagName;
 
-                li.appendChild(p_tagId);
-                li.appendChild(p_tagName);
+                // tr.appendChild(td_tagId);
+                tr.appendChild(td_tagName);
 
-                resultBox.appendChild(li);
+                resultBox.appendChild(tr);
             }
-            if(data[0] == null && data[1] == null && data[2] == null && data[3] == null && data[4] == null) {
-                let li = document.createElement("li");
-                li.className = "search_result_emptyHind";
-                li.innerText = "无对应内容，请确认后重试。";
-                resultBox.appendChild(li);
+            if (data[0] == null && data[1] == null && data[2] == null && data[3] == null && data[4] == null) {
+                let p = document.createElement("p");
+                p.className = "search_result_emptyHind";
+                p.innerText = "无对应内容，请确认后重试。";
+                resultBox.appendChild(p);
             }
         },
         error: () => {
-            let li = document.createElement("li");
-            li.className = "search_result_emptyHind";
-            li.innerText = "无对应内容，请确认后重试。";
-            resultBox.appendChild(li);
+            let p = document.createElement("p");
+            p.className = "search_result_emptyHind";
+            p.innerText = "无对应内容，请确认后重试。";
+            resultBox.appendChild(p);
         }
     });
 }
