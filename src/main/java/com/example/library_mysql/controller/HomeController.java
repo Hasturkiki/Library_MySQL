@@ -1,60 +1,63 @@
 package com.example.library_mysql.controller;
 
+import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.*;
 import com.example.library_mysql.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.Api;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
+@Api(tags = "主页")
 @Controller
 public class HomeController {
-    @RequestMapping({"/index","/home","/"})
+    @RequestMapping({"/index", "/home", "/"})
     public String home() {
         return "index";
     }
 
-    @Autowired
+    @Resource
     private AuthorService authorService;
-    @Autowired
+    @Resource
     private BookService bookService;
-    @Autowired
+    @Resource
     private PublishingCompanyService publishingCompanyService;
-    @Autowired
+    @Resource
     private ReaderService readerService;
-    @Autowired
+    @Resource
     private TagService tagService;
 
     @RequestMapping("/search")
     @ResponseBody
-    public List<Object> show(String searchValue) throws UnsupportedEncodingException {
-        int id = parseInt(searchValue);
-        List<Object> result = new ArrayList<>();
-        Author author = authorService.selectAuthorById(id);
-        Book book = bookService.selectBookById(id);
-        PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(id);
-        Reader reader = readerService.selectReaderById(id);
-        Tag tag = tagService.selectTagById(id);
+    public R<Object> show(String searchValue) throws UnsupportedEncodingException {
+        if (searchValue != null) {
+            int id = parseInt(searchValue);
+            List<Object> result = new ArrayList<>();
+            Author author = authorService.selectAuthorById(id);
+            Book book = bookService.selectBookById(id);
+            PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(id);
+            Reader reader = readerService.selectReaderById(id);
+            Tag tag = tagService.selectTagById(id);
 
-        result.add(author);
-        result.add(book);
-        result.add(publishingCompany);
-        result.add(reader);
-        result.add(tag);
+            result.add(author);
+            result.add(book);
+            result.add(publishingCompany);
+            result.add(reader);
+            result.add(tag);
 
-        if(searchValue!=null) {
-            String str = new String(result.toString().getBytes(),"GBK");
-            System.out.println("searchValue "+searchValue+" success.\n"+str);
+            String str = new String(result.toString().getBytes(), "GBK");
+            System.out.println("searchValue " + searchValue + " success.\n" + str);
+            return R.success(result);
         } else {
-            System.out.println("searchValue "+searchValue+" error.");
+            System.out.println("search fail.");
+            return R.error("search fail.");
         }
-
-        return result;
     }
 }
