@@ -26,7 +26,8 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
     public Author selectAuthorById(int id) {
         Author author = lambdaQuery().eq(Author::getAuthorId, id).one();
         long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, id).count();
-        author.setBookNumber(bookNumber);
+        if (author != null)
+            author.setBookNumber(bookNumber);
         return author;
     }
 }

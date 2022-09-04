@@ -73,9 +73,21 @@ function search() {
                     tr.appendChild(td_readerAge)
                     tr.appendChild(td_bookNumber)
 
-                    resultBox.appendChild(tr)
+                    let table = document.createElement('table')
+                    table.className = 'search_result_table'
+                    table.innerHTML = '<colgroup>\n' +
+                        '    <col style="background-color: #ccc">\n' +
+                        '  </colgroup>\n' +
+                        '  <tr>\n' +
+                        '    <th>作者名</th>\n' +
+                        '    <th>性别</th>\n' +
+                        '    <th>年龄</th>\n' +
+                        '    <th>作品数</th>\n' +
+                        '  </tr>'
+                    table.appendChild(tr)
+                    resultBox.appendChild(table)
                 }
-                if (data[1] != null) {
+                if (data[1].book != null) {
                     let tr = document.createElement("tr");
                     tr.className = "search_result_content";
 
@@ -132,7 +144,7 @@ function search() {
                     let td_jointAuthorTable = document.createElement("td");
                     switch (data[1].book.jointAuthorTableId) {
                         case 0:
-                            td_jointAuthorTable.innerText = ''
+                            td_jointAuthorTable.innerText = '无'
                             break
                         default:
                             td_jointAuthorTable.innerText = '合著'    //todo 共同作者链接
@@ -150,7 +162,25 @@ function search() {
                     tr.appendChild(td_publicationDate);
                     tr.appendChild(td_jointAuthorTable);
 
-                    resultBox.appendChild(tr);
+                    let table = document.createElement('table')
+                    table.className = 'search_result_table'
+                    table.innerHTML = '<colgroup>\n' +
+                        '    <col style="background-color: #ccc">\n' +
+                        '  </colgroup>\n' +
+                        '  <tr>\n' +
+                        '    <th>书名</th>\n' +
+                        '    <th>作者</th>\n' +
+                        '    <th>IBSN号</th>\n' +
+                        '    <th>出版社</th>\n' +
+                        '    <th>标签</th>\n' +
+                        '    <th>库存</th>\n' +
+                        '    <th>价格</th>\n' +
+                        '    <th>借出情况</th>\n' +
+                        '    <th>出版日期</th>\n' +
+                        '    <th>others</th>\n' +
+                        '  </tr>'
+                    table.appendChild(tr)
+                    resultBox.appendChild(table)
                 }
                 if (data[2] != null) {
                     let tr = document.createElement("tr");
@@ -173,7 +203,18 @@ function search() {
                     tr.appendChild(td_publishingCompanyTelephoneNumber);
                     tr.appendChild(td_publishingCompanyAddress);
 
-                    resultBox.appendChild(tr);
+                    let table = document.createElement('table')
+                    table.className = 'search_result_table'
+                    table.innerHTML = '<colgroup>\n' +
+                        '    <col style="background-color: #ccc">\n' +
+                        '  </colgroup>\n' +
+                        '  <tr>\n' +
+                        '    <th>出版社名称</th>\n' +
+                        '    <th>联系方式</th>\n' +
+                        '    <th>通信地址</th>\n' +
+                        '  </tr>'
+                    table.appendChild(tr)
+                    resultBox.appendChild(table)
                 }
                 if (data[3] != null) {
                     let tr = document.createElement("tr");
@@ -213,7 +254,19 @@ function search() {
                     tr.appendChild(td_readerAge);
                     tr.appendChild(td_saving);
 
-                    resultBox.appendChild(tr);
+                    let table = document.createElement('table')
+                    table.className = 'search_result_table'
+                    table.innerHTML = '<colgroup>\n' +
+                        '    <col style="background-color: #ccc">\n' +
+                        '  </colgroup>\n' +
+                        '  <tr>\n' +
+                        '    <th>用户名</th>\n' +
+                        '    <th>性别</th>\n' +
+                        '    <th>年龄</th>\n' +
+                        '    <th>余额</th>\n' +
+                        '  </tr>'
+                    table.appendChild(tr)
+                    resultBox.appendChild(table)
                 }
                 if (data[4] != null) {
                     let tr = document.createElement("tr");
@@ -228,9 +281,18 @@ function search() {
                     // tr.appendChild(td_tagId);
                     tr.appendChild(td_tagName);
 
-                    resultBox.appendChild(tr);
+                    let table = document.createElement('table')
+                    table.className = 'search_result_table'
+                    table.innerHTML = '<colgroup>\n' +
+                        '    <col style="background-color: #ccc">\n' +
+                        '  </colgroup>\n' +
+                        '  <tr>\n' +
+                        '    <th>标签名称</th>\n' +
+                        '  </tr>'
+                    table.appendChild(tr)
+                    resultBox.appendChild(table)
                 }
-                if (data[0] == null && data[1] == null && data[2] == null && data[3] == null && data[4] == null) {
+                if (data[0] == null && data[1].book == null && data[2] == null && data[3] == null && data[4] == null) {
                     let p = document.createElement("p");
                     p.className = "search_result_emptyHind";
                     p.innerText = "无对应内容，请确认后重试。";
