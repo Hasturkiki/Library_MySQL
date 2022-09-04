@@ -11,10 +11,14 @@
             <result property="isBorrowing" column="is_borrowing" jdbcType="INTEGER"/>
             <result property="borrowTime" column="borrow_time" jdbcType="TIMESTAMP"/>
             <result property="backTime" column="back_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         books_borrow_table_id,reader_id,book_id,
-        is_borrowing,borrow_time,back_time
+        is_borrowing,borrow_time,back_time,
+        create_time,update_time,is_deleted
     </sql>
 </mapper>

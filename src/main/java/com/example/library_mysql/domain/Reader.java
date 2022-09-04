@@ -4,9 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -42,61 +41,21 @@ public class Reader implements Serializable {
      */
     private Integer saving;
 
-    public String getReaderSex() {
-        return switch (readerSex) {
-            case 0 -> "女";
-            case 1 -> "男";
-            case 2 -> "保密";
-            default -> "error";
-        };
-    }
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
 
-    @Serial
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 是否删除标志，0为未删除、1为已删除，默认为0
+     */
+    private Boolean isDeleted;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        }
-        if (that == null) {
-            return false;
-        }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        Reader other = (Reader) that;
-        return (this.getReaderId() == null ? other.getReaderId() == null : this.getReaderId().equals(other.getReaderId()))
-            && (this.getReaderName() == null ? other.getReaderName() == null : this.getReaderName().equals(other.getReaderName()))
-            && (this.getReaderSex() == null ? other.getReaderSex() == null : this.getReaderSex().equals(other.getReaderSex()))
-            && (this.getReaderAge() == null ? other.getReaderAge() == null : this.getReaderAge().equals(other.getReaderAge()))
-            && (this.getSaving() == null ? other.getSaving() == null : this.getSaving().equals(other.getSaving()));
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getReaderId() == null) ? 0 : getReaderId().hashCode());
-        result = prime * result + ((getReaderName() == null) ? 0 : getReaderName().hashCode());
-        result = prime * result + ((getReaderSex() == null) ? 0 : getReaderSex().hashCode());
-        result = prime * result + ((getReaderAge() == null) ? 0 : getReaderAge().hashCode());
-        result = prime * result + ((getSaving() == null) ? 0 : getSaving().hashCode());
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() +
-                " [" +
-                "Hash = " + hashCode() +
-                ", readerId=" + readerId +
-                ", readerName=" + readerName +
-                ", readerSex=" + readerSex +
-                ", readerAge=" + readerAge +
-                ", saving=" + saving +
-                ", serialVersionUID=" + serialVersionUID +
-                "]";
-    }
 }

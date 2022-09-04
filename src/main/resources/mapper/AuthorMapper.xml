@@ -9,15 +9,14 @@
             <result property="authorName" column="author_name" jdbcType="VARCHAR"/>
             <result property="authorSex" column="author_sex" jdbcType="INTEGER"/>
             <result property="authorAge" column="author_age" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
 
-<!--    <sql id="Base_Column_List">-->
-<!--        author_id,author_name,author_sex,-->
-<!--        author_age-->
-<!--    </sql>-->
-
-    <select id="selectAuthorById" parameterType="int" resultType="com.example.library_mysql.domain.Author">
-        select * from author where author_id = #{authorId}
-    </select>
-
+    <sql id="Base_Column_List">
+        author_id,author_name,author_sex,
+        author_age,create_time,update_time,
+        is_deleted
+    </sql>
 </mapper>

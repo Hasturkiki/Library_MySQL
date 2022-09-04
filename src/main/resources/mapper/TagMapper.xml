@@ -7,13 +7,13 @@
     <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.Tag">
             <id property="tagId" column="tag_id" jdbcType="INTEGER"/>
             <result property="tagName" column="tag_name" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
 
-<!--    <sql id="Base_Column_List">-->
-<!--        tag_id,tag_name-->
-<!--    </sql>-->
-
-    <select id="selectTagById" parameterType="int" resultType="com.example.library_mysql.domain.Tag">
-        select * from tag where tag_id = #{tagId}
-    </select>
+    <sql id="Base_Column_List">
+        tag_id,tag_name,create_time,
+        update_time,is_deleted
+    </sql>
 </mapper>

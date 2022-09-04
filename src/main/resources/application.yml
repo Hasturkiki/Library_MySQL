@@ -32,12 +32,12 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: AUTO
-#      # 逻辑删除字段名
-#      logic-delete-field: isDeleted
-#      # 逻辑删除字面值：未删除为0
-#      logic-not-delete-value: 0
-#      # 逻辑删除字面值：删除为1
-#      logic-delete-value: 1
+      # 逻辑删除字段名
+      logic-delete-field: isDeleted
+      # 逻辑删除字面值：未删除为0
+      logic-not-delete-value: 0
+      # 逻辑删除字面值：删除为1
+      logic-delete-value: 1
     banner: off
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

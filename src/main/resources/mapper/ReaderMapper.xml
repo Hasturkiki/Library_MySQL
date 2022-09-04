@@ -10,14 +10,14 @@
             <result property="readerSex" column="reader_sex" jdbcType="INTEGER"/>
             <result property="readerAge" column="reader_age" jdbcType="INTEGER"/>
             <result property="saving" column="saving" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
 
-<!--    <sql id="Base_Column_List">-->
-<!--        reader_id,reader_name,reader_sex,-->
-<!--        reader_age,saving-->
-<!--    </sql>-->
-
-    <select id="selectReaderById" parameterType="int" resultType="com.example.library_mysql.domain.Reader">
-        select * from reader where reader_id = #{readerId}
-    </select>
+    <sql id="Base_Column_List">
+        reader_id,reader_name,reader_sex,
+        reader_age,saving,create_time,
+        update_time,is_deleted
+    </sql>
 </mapper>
