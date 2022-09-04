@@ -2,6 +2,7 @@ package com.example.library_mysql.service;
 
 import com.example.library_mysql.domain.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.library_mysql.vo.BookVo;
 
 /**
 * @author Hastur kiki
@@ -11,4 +12,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface BookService extends IService<Book> {
 
     Book selectBookById(int id);
+
+    BookVo selectBookVoById(int id);
 }

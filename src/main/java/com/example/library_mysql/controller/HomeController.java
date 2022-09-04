@@ -3,6 +3,7 @@ package com.example.library_mysql.controller;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.*;
 import com.example.library_mysql.service.*;
+import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,13 +42,14 @@ public class HomeController {
             int id = parseInt(searchValue);
             List<Object> result = new ArrayList<>();
             Author author = authorService.selectAuthorById(id);
-            Book book = bookService.selectBookById(id);
+//            Book book = bookService.selectBookById(id);
+            BookVo bookVo = bookService.selectBookVoById(id);
             PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(id);
             Reader reader = readerService.selectReaderById(id);
             Tag tag = tagService.selectTagById(id);
 
             result.add(author);
-            result.add(book);
+            result.add(bookVo);
             result.add(publishingCompany);
             result.add(reader);
             result.add(tag);

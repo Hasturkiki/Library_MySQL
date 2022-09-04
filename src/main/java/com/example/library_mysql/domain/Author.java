@@ -51,6 +51,12 @@ public class Author implements Serializable {
      */
     private Boolean isDeleted;
 
+    /**
+     * 作者名下作品数量
+     */
+    @TableField(exist = false)
+    private long bookNumber;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

@@ -2,9 +2,13 @@ package com.example.library_mysql.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.domain.Author;
+import com.example.library_mysql.domain.Book;
 import com.example.library_mysql.service.AuthorService;
 import com.example.library_mysql.mapper.AuthorMapper;
+import com.example.library_mysql.service.BookService;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
 * @author Hastur kiki
@@ -15,9 +19,15 @@ import org.springframework.stereotype.Service;
 public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
     implements AuthorService{
 
+    @Resource
+    private BookService bookService;
+
     @Override
     public Author selectAuthorById(int id) {
-        return lambdaQuery().eq(Author::getAuthorId, id).one();
+        Author author = lambdaQuery().eq(Author::getAuthorId, id).one();
+        long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, id).count();
+        author.setBookNumber(bookNumber);
+        return author;
     }
 }
 

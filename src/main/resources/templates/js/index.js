@@ -40,36 +40,40 @@ function search() {
                     let tr = document.createElement("tr");
                     tr.className = "search_result_content";
 
-                    // let td_authorId = document.createElement("td");
-                    // td_authorId.innerText = data[0].authorId;
+                    // let td_readerId = document.createElement("td");
+                    // td_readerId.innerText = data[0].authorId;
 
-                    let td_authorName = document.createElement("td");
-                    td_authorName.innerText = data[0].authorName;
+                    let td_readerName = document.createElement("td");
+                    td_readerName.innerText = data[0].authorName
 
-                    let td_authorSex = document.createElement("td");
+                    let td_readerSex = document.createElement("td");
                     switch (data[0].authorSex) {
                         case 0:
-                            td_authorSex.innerText = '女';
+                            td_readerSex.innerText = '女'
                             break
                         case 1:
-                            td_authorSex.innerText = '男';
+                            td_readerSex.innerText = '男'
                             break
                         case 2:
-                            td_authorSex.innerText = '保密';
+                            td_readerSex.innerText = '保密'
                             break
                         default:
-                            td_authorSex.innerText = '？'
+                            td_readerSex.innerText = '？'
                     }
 
-                    let td_authorAge = document.createElement("td");
-                    td_authorAge.innerText = data[0].authorAge + '岁';
+                    let td_readerAge = document.createElement("td");
+                    td_readerAge.innerText = data[0].authorAge + '岁'
 
-                    // tr.appendChild(td_authorId);
-                    tr.appendChild(td_authorName);
-                    tr.appendChild(td_authorSex);
-                    tr.appendChild(td_authorAge);
+                    let td_bookNumber = document.createElement("td");
+                    td_bookNumber.innerText = data[0].bookNumber + '作'  //todo 作品链接
 
-                    resultBox.appendChild(tr);
+                    // tr.appendChild(td_readerId);
+                    tr.appendChild(td_readerName)
+                    tr.appendChild(td_readerSex)
+                    tr.appendChild(td_readerAge)
+                    tr.appendChild(td_bookNumber)
+
+                    resultBox.appendChild(tr)
                 }
                 if (data[1] != null) {
                     let tr = document.createElement("tr");
@@ -79,46 +83,72 @@ function search() {
                     // td_bookId.innerText = data[1].bookId;
 
                     let td_bookName = document.createElement("td");
-                    td_bookName.innerText = data[1].bookName;
+                    td_bookName.innerText = data[1].book.bookName
 
-                    let td_authorId = document.createElement("td");
-                    td_authorId.innerText = data[1].authorId;
+                    let td_reader = document.createElement("td");
+                    td_reader.innerText = data[1].authorName
+                    td_reader.authorId = data[1].book.authorId
 
                     let td_ibsn = document.createElement("td");
-                    td_ibsn.innerText = data[1].ibsn;
+                    td_ibsn.innerText = data[1].book.ibsn
+                    td_ibsn.style.fontSize = '12pt'
 
-                    let td_publishingCompanyId = document.createElement("td");
-                    td_publishingCompanyId.innerText = data[1].publishingCompanyId;
+                    let td_publishingCompany = document.createElement("td");
+                    td_publishingCompany.innerText = data[1].publishingCompanyName
+                    td_publishingCompany.publishingCompanyId = data[1].book.publishingCompanyId
 
-                    let td_tagId = document.createElement("td");
-                    td_tagId.innerText = data[1].tagId;
+                    let td_tag = document.createElement("td");
+                    td_tag.innerText = data[1].tagName
+                    td_tag.tagId = data[1].book.tagId
 
                     let td_quantity = document.createElement("td");
-                    td_quantity.innerText = data[1].quantity;
+                    td_quantity.innerText = data[1].book.quantity
 
                     let td_price = document.createElement("td");
-                    td_price.innerText = data[1].price;
+                    switch (data[1].book.price) {
+                        case 0:
+                            td_price.innerText = 'free'
+                            break
+                        default:
+                            td_price.innerText = '$' + data[1].book.price
+                    }
 
                     let td_isBeingBorrowed = document.createElement("td");
-                    td_isBeingBorrowed.innerText = data[1].isBeingBorrowed;
+                    switch (data[1].book.isBeingBorrowed) {
+                        case 0:
+                            td_isBeingBorrowed.innerText = '无借出'
+                            break
+                        default:
+                            if (data[1].book.isBeingBorrowed < data[1].book.quantity)
+                                td_isBeingBorrowed.innerText = '借出' + data[1].book.isBeingBorrowed + '本'
+                            else
+                                td_isBeingBorrowed.innerText = '全部借出'
+                    }
 
                     let td_publicationDate = document.createElement("td");
-                    td_publicationDate.innerText = data[1].publicationDate;
+                    td_publicationDate.innerText = data[1].book.publicationDate
+                    td_publicationDate.style.fontSize = '12pt'
 
-                    let td_jointAuthorTableId = document.createElement("td");
-                    td_jointAuthorTableId.innerText = data[1].jointAuthorTableId;
+                    let td_jointAuthorTable = document.createElement("td");
+                    switch (data[1].book.jointAuthorTableId) {
+                        case 0:
+                            td_jointAuthorTable.innerText = ''
+                            break
+                        default:
+                            td_jointAuthorTable.innerText = '合著'    //todo 共同作者链接
+                    }
 
                     // tr.appendChild(td_bookId);
                     tr.appendChild(td_bookName);
-                    tr.appendChild(td_authorId);
+                    tr.appendChild(td_reader);
                     tr.appendChild(td_ibsn);
-                    tr.appendChild(td_publishingCompanyId);
-                    tr.appendChild(td_tagId);
+                    tr.appendChild(td_publishingCompany);
+                    tr.appendChild(td_tag);
                     tr.appendChild(td_quantity);
                     tr.appendChild(td_price);
                     tr.appendChild(td_isBeingBorrowed);
                     tr.appendChild(td_publicationDate);
-                    tr.appendChild(td_jointAuthorTableId);
+                    tr.appendChild(td_jointAuthorTable);
 
                     resultBox.appendChild(tr);
                 }
@@ -157,13 +187,25 @@ function search() {
                     td_readerName.style.width = "25%";
 
                     let td_readerSex = document.createElement("td");
-                    td_readerSex.innerText = data[3].readerSex;
+                    switch (data[3].readerSex) {
+                        case 0:
+                            td_readerSex.innerText = '女';
+                            break
+                        case 1:
+                            td_readerSex.innerText = '男';
+                            break
+                        case 2:
+                            td_readerSex.innerText = '保密';
+                            break
+                        default:
+                            td_readerSex.innerText = '？'
+                    }
 
                     let td_readerAge = document.createElement("td");
-                    td_readerAge.innerText = data[3].readerAge;
+                    td_readerAge.innerText = data[3].readerAge + '岁';
 
                     let td_saving = document.createElement("td");
-                    td_saving.innerText = data[3].saving;
+                    td_saving.innerText = '$' + data[3].saving;
 
                     // tr.appendChild(td_readerId);
                     tr.appendChild(td_readerName);
