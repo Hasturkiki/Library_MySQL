@@ -1,8 +1,11 @@
 package com.example.library_mysql.service;
 
+import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.library_mysql.vo.BookVo;
+
+import java.util.List;
 
 /**
 * @author Hastur kiki
@@ -14,4 +17,6 @@ public interface BookService extends IService<Book> {
     Book selectBookById(int id);
 
     BookVo selectBookVoById(int id);
+
+    R<List<Book>> getBookList();
 }

@@ -1,7 +1,10 @@
 package com.example.library_mysql.service;
 
+import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.JointAuthorTable;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author Hastur kiki
@@ -10,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface JointAuthorTableService extends IService<JointAuthorTable> {
 
+    R<List<JointAuthorTable>> getJointAuthorTableList();
 }

@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
  * 出版社信息
  * @TableName publishing_company
  */
+@ApiModel(value = "PublishingCompany对象", description = "出版社")
 @TableName(value ="publishing_company")
 @Data
 public class PublishingCompany implements Serializable {

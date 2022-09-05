@@ -1,10 +1,13 @@
 package com.example.library_mysql.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Reader;
 import com.example.library_mysql.mapper.ReaderMapper;
 import com.example.library_mysql.service.ReaderService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author Hastur kiki
@@ -18,6 +21,15 @@ public class ReaderServiceImpl extends ServiceImpl<ReaderMapper, Reader>
     @Override
     public Reader selectReaderById(int id) {
         return lambdaQuery().eq(Reader::getReaderId, id).one();
+    }
+
+    @Override
+    public R<List<Reader>> getReaderList() {
+        List<Reader> readerList = lambdaQuery().orderByAsc(Reader::getReaderId).list();
+        if(readerList.isEmpty()) {
+            return R.error("无读者数据");
+        }
+        return R.success(readerList);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.library_mysql.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.domain.Book;
 import com.example.library_mysql.service.AuthorService;
@@ -9,6 +10,7 @@ import com.example.library_mysql.service.BookService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
 * @author Hastur kiki
@@ -29,6 +31,15 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
         if (author != null)
             author.setBookNumber(bookNumber);
         return author;
+    }
+
+    @Override
+    public R<List<Author>> getAuthorList() {
+        List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).list();
+        if(authorList.isEmpty()) {
+            return R.error("无作者数据");
+        }
+        return R.success(authorList);
     }
 }
 

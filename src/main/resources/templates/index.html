@@ -4,31 +4,33 @@
     <meta charset="UTF-8">
     <title>Library</title>
     <script src="http://localhost:8080/js/jquery-3.6.0.min.js"></script>
+    <script src="http://localhost:8080/js/my_axios.js"></script>
     <script src="http://localhost:8080/js/index.js"></script>
     <link rel="icon" href="http://localhost:8080/res/index.ico">
     <link rel="stylesheet" href="http://localhost:8080/css/all.css">
     <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" crossorigin="anonymous">-->
 </head>
-<body style="background-color: rgba(52, 52, 52, 0.233)">
-    <img src="http://localhost:8080/res/index.jpg" style="display: block; margin: 0 auto; width: 100px;">
-    <h1 style="text-align: center; color: rgba(23, 23, 233, 0.3); font-size: 24px;">SpringBoot Study</h1>
-    <div style="margin: 42px auto; padding: 7px; width: 80%; height: 800px; background-color: rgba(233, 233, 233, 0.7); border: 3px rgba(64, 160, 160, 0.64) dotted">
-    <label>
-        <input id="search_string" type="text">
-        <button onclick="search()" id="search">search</button>
-    </label>
-    <div>
-        <a href="/author/searchAuthor" class="a_link">searchAuthor</a>
-        <a href="/book/searchBook" class="a_link">searchBook</a>
-        <a href="/publishingCompany/searchPublishingCompany" class="a_link">searchPublishingCompany</a>
-        <a href="/reader/searchReader" class="a_link">searchReader</a>
-        <a href="/tag/searchTag" class="a_link">searchTag</a>
+<body class="my_body">
+    <div class="home_header">
+        <img class="home_img">
+        <p class="home_p">Library_MySQL</p>
     </div>
-    <label class="search_result_title">search result:</label>
-    <div id="search_result">
-        <div></div>
-<!--        <table style="width: 100%; text-align: center"></table>-->
+    <div class="home_div">
+        <label>
+            <input id="search_string" type="text">
+            <button onclick="search()" id="search">search</button>
+        </label>
+        <div>
+            <a href="/author/authorHome" class="a_link">searchAuthor</a>
+            <a href="/book/bookHome" class="a_link">searchBook</a>
+            <a href="/publishingCompany/publishingCompanyHome" class="a_link">searchPublishingCompany</a>
+            <a href="/reader/readerHome" class="a_link">searchReader</a>
+            <a href="/tag/tagHome" class="a_link">searchTag</a>
+        </div>
+        <label class="search_result_title">search result:</label>
+        <div id="search_result">
+            <div></div>
+        </div>
     </div>
-</div>
 </body>
 </html>

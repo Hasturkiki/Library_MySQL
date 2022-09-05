@@ -2,6 +2,8 @@ package com.example.library_mysql.common;
 
 import lombok.Data;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 @Data
@@ -15,15 +17,16 @@ public class R<T> {
 
     public static <T> R<T> success(T object) {
         R<T> r = new R<>();
-        r.data = object;
         r.code = 200;
+        r.msg = "Data request success at " + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+        r.data = object;
         return r;
     }
 
     public static <T> R<T> error(String msg) {
         R r = new R();
-        r.msg = msg;
         r.code = 0;
+        r.msg = msg + "; Data request fail at " + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
         return r;
     }
 

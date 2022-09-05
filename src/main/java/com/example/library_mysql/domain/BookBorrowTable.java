@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
  * 借书表信息
  * @TableName book_borrow_table
  */
+@ApiModel(value = "BookBorrowTable对象", description = "借书表")
 @TableName(value ="book_borrow_table")
 @Data
 public class BookBorrowTable implements Serializable {

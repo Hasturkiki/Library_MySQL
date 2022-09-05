@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
  * 读者信息
  * @TableName reader
  */
+@ApiModel(value = "Reader对象", description = "读者")
 @TableName(value ="reader")
 @Data
 public class Reader implements Serializable {

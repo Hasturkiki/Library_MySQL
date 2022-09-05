@@ -1,22 +1,56 @@
+.my_body {
+    background-color: #cde;
+}
+
 .main {
     margin: 10% auto;
     width: 80%;
     text-align: center;
 }
 
- #search_string {
-     display: inline-block;
-     position: relative;
-     margin: 3% 0 0 27%;
-     width: 42%;
-     height: 32px;
-     border-radius: 0.3em;
-     align-self: center;
-     font-size: 24px;
-     line-height: 32px;
-     font-family: "Rage Italic", serif;
-     color: #aaccee;
- }
+.home_header {
+    width: 42%;
+    margin: 0 auto;
+    padding-left: 23%;
+}
+
+.home_img {
+    margin: 0 auto;
+    width: 52px;
+    content: url("http://localhost:8080/res/index.jpg");
+}
+
+.home_p {
+    display: inline;
+    color: rgba(23, 23, 233, 0.3);
+    font-size: 24px;
+    position: absolute;
+    top: -3px;
+    margin-left: 1%;
+}
+
+.home_div {
+    margin: 16px auto;
+    padding: 7px;
+    width: 80%;
+    min-height: 800px;
+    background-color: rgba(233, 233, 233, 0.7);
+    border: 3px rgba(64, 160, 160, 0.64) dotted;
+}
+
+#search_string {
+    display: inline-block;
+    position: relative;
+    margin: 3% 0 0 27%;
+    width: 42%;
+    height: 32px;
+    border-radius: 0.3em;
+    align-self: center;
+    font-size: 24px;
+    line-height: 32px;
+    font-family: "Rage Italic", serif;
+    color: #aaccee;
+}
 
 #search {
     padding-top: 0.36%;
@@ -24,7 +58,7 @@
     width: 100px;
     line-height: 32px;
     border-radius: 2.3em;
-    background-color: #bbccdd;
+    background-color: #bcd;
     color: #008848;
     font-size: 20px;
 }
@@ -51,6 +85,13 @@
     font-size: 250%;
     font-family: "Agency FB", serif;
     text-align: center;
+}
+
+#search_result .hint_p {
+    color: #88f;
+    padding-right: 520px;
+    text-align: center;
+    border: 1px solid #48c;
 }
 
 .search_result_table {
@@ -90,4 +131,37 @@
     font-size: 32px;
     font-family: "Adobe Devanagari", ui-sans-serif;
     color: #666666;
+}
+
+.tag_table {
+    width: 80%;
+    margin: 4% auto;
+    border: 4px solid #159;
+}
+
+table button {
+    border: 1px solid #2333;
+    border-radius: 0.3em;
+    font-size: 14px;
+    font-family: ui-sans-serif;
+}
+
+table button:hover {
+    opacity: 0.7;
+}
+
+table button:active {
+    opacity: 0.9;
+}
+
+.table_button_update {
+    background-color: #ace;
+    margin-top: 7px;
+    margin-right: 2px;
+}
+
+.table_button_delete {
+    background-color: #d44;
+    margin-top: 7px;
+    margin-left: 2px;
 }

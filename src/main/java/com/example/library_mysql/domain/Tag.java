@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
  * 书籍标签
  * @TableName tag
  */
+@ApiModel(value = "Tag对象", description = "标签")
 @TableName(value ="tag")
 @Data
 public class Tag implements Serializable {

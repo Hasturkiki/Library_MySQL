@@ -1,7 +1,10 @@
 package com.example.library_mysql.service;
 
+import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Tag;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author Hastur kiki
@@ -11,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface TagService extends IService<Tag> {
 
     Tag selectTagById(int id);
+
+    R<List<Tag>> getTagList();
 }

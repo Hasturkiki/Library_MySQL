@@ -7,12 +7,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
  * 书籍信息
  * @TableName book
  */
+@ApiModel(value = "Book对象", description = "书籍")
 @TableName(value ="book")
 @Data
 public class Book implements Serializable {

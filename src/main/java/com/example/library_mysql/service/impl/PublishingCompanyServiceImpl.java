@@ -1,10 +1,13 @@
 package com.example.library_mysql.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.PublishingCompany;
 import com.example.library_mysql.mapper.PublishingCompanyMapper;
 import com.example.library_mysql.service.PublishingCompanyService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author Hastur kiki
@@ -18,6 +21,15 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
     @Override
     public PublishingCompany selectPublishingCompanyById(int id) {
         return lambdaQuery().eq(PublishingCompany::getPublishingCompanyId, id).one();
+    }
+
+    @Override
+    public R<List<PublishingCompany>> getPublishingCompanyList() {
+        List<PublishingCompany> publishingCompanyList = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).list();
+        if(publishingCompanyList.isEmpty()) {
+            return R.error("无出版社数据");
+        }
+        return R.success(publishingCompanyList);
     }
 }
 

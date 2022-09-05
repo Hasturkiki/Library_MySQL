@@ -35,7 +35,7 @@ function search() {
         dataType: 'json',
         success: (res) => {
             if (res.code === 200) {
-                let data = res.data;
+                let data = res.data
                 if (data[0] != null) {
                     let tr = document.createElement("tr");
                     tr.className = "search_result_content";
@@ -73,9 +73,15 @@ function search() {
                     tr.appendChild(td_readerAge)
                     tr.appendChild(td_bookNumber)
 
+                    let hint_p = document.createElement('p')
+                    hint_p.className = 'hint_p'
+                    hint_p.innerText = '作者'
+                    resultBox.appendChild(hint_p)
+
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
-                    table.innerHTML = '<colgroup>\n' +
+                    table.innerHTML =
+                        '<colgroup>\n' +
                         '    <col style="background-color: #ccc">\n' +
                         '  </colgroup>\n' +
                         '  <tr>\n' +
@@ -162,6 +168,11 @@ function search() {
                     tr.appendChild(td_publicationDate);
                     tr.appendChild(td_jointAuthorTable);
 
+                    let hint_p = document.createElement('p')
+                    hint_p.className = 'hint_p'
+                    hint_p.innerText = '书籍'
+                    resultBox.appendChild(hint_p)
+
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
                     table.innerHTML = '<colgroup>\n' +
@@ -202,6 +213,11 @@ function search() {
                     tr.appendChild(td_publishingCompanyName);
                     tr.appendChild(td_publishingCompanyTelephoneNumber);
                     tr.appendChild(td_publishingCompanyAddress);
+
+                    let hint_p = document.createElement('p')
+                    hint_p.className = 'hint_p'
+                    hint_p.innerText = '出版社'
+                    resultBox.appendChild(hint_p)
 
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
@@ -254,6 +270,11 @@ function search() {
                     tr.appendChild(td_readerAge);
                     tr.appendChild(td_saving);
 
+                    let hint_p = document.createElement('p')
+                    hint_p.className = 'hint_p'
+                    hint_p.innerText = '读者'
+                    resultBox.appendChild(hint_p)
+
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
                     table.innerHTML = '<colgroup>\n' +
@@ -280,6 +301,11 @@ function search() {
 
                     // tr.appendChild(td_tagId);
                     tr.appendChild(td_tagName);
+
+                    let hint_p = document.createElement('p')
+                    hint_p.className = 'hint_p'
+                    hint_p.innerText = '标签'
+                    resultBox.appendChild(hint_p)
 
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
@@ -313,4 +339,8 @@ function search() {
             resultBox.appendChild(p);
         }
     });
+}
+
+window.onload = function () {
+    myAxios.post('/search?searchValue=1').then(res => {console.log(res.msg)})
 }

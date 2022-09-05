@@ -1,7 +1,10 @@
 package com.example.library_mysql.service;
 
+import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.PublishingCompany;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author Hastur kiki
@@ -11,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface PublishingCompanyService extends IService<PublishingCompany> {
 
     PublishingCompany selectPublishingCompanyById(int id);
+
+    R<List<PublishingCompany>> getPublishingCompanyList();
 }

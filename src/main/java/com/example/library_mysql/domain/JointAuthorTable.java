@@ -1,17 +1,19 @@
 package com.example.library_mysql.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
  * 共同作者表信息
  * @TableName joint_author_table
  */
+@ApiModel(value = "JointAuthorTable对象", description = "共同作者表")
 @TableName(value ="joint_author_table")
 @Data
 public class JointAuthorTable implements Serializable {
