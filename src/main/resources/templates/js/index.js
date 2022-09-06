@@ -21,13 +21,13 @@ $(document).keyup(function (e) {
 })
 
 function search() {
-    let searchValue = document.getElementById("search_string").value;
-    let resultBox = document.getElementById("search_result");
+    let searchValue = document.getElementById("search_string").value
+    let resultBox = document.getElementById("search_result")
     resultBox.style.background = '#ffe7'
     if (resultBox.childNodes.length !== 0)
-        resultBox.innerHTML = "";
+        resultBox.innerHTML = ""
     if (document.getElementsByClassName("search_result_emptyHind")[0])
-        document.getElementsByClassName("search_result_emptyHind")[0].remove();
+        document.getElementsByClassName("search_result_emptyHind")[0].remove()
     $.ajax({
         url: '/search',
         type: 'post',
@@ -38,16 +38,16 @@ function search() {
             if (res.code === 200) {
                 let data = res.data
                 if (data[0] != null) {
-                    let tr = document.createElement("tr");
-                    tr.className = "search_result_content";
+                    let tr = document.createElement("tr")
+                    tr.className = "search_result_content"
 
                     // let td_readerId = document.createElement("td");
                     // td_readerId.innerText = data[0].authorId;
 
-                    let td_readerName = document.createElement("td");
+                    let td_readerName = document.createElement("td")
                     td_readerName.innerText = data[0].authorName
 
-                    let td_readerSex = document.createElement("td");
+                    let td_readerSex = document.createElement("td")
                     switch (data[0].authorSex) {
                         case 0:
                             td_readerSex.innerText = '女'
@@ -62,10 +62,10 @@ function search() {
                             td_readerSex.innerText = '？'
                     }
 
-                    let td_readerAge = document.createElement("td");
+                    let td_readerAge = document.createElement("td")
                     td_readerAge.innerText = data[0].authorAge + '岁'
 
-                    let td_bookNumber = document.createElement("td");
+                    let td_bookNumber = document.createElement("td")
                     td_bookNumber.innerText = data[0].bookNumber + '作'  //todo 作品链接
 
                     // tr.appendChild(td_readerId);
@@ -189,7 +189,7 @@ function search() {
                         '    <th>价格</th>\n' +
                         '    <th>借出情况</th>\n' +
                         '    <th>出版日期</th>\n' +
-                        '    <th>others</th>\n' +
+                        '    <th>备注</th>\n' +
                         '  </tr>'
                     table.appendChild(tr)
                     resultBox.appendChild(table)
@@ -329,30 +329,34 @@ function search() {
                     table.appendChild(tr)
                     resultBox.appendChild(table)
                 }
+                window.scrollTo(0,100)
                 if (data[0] == null && data[1].book == null && data[2] == null && data[3] == null && data[4] == null) {
-                    let p = document.createElement("p");
-                    p.className = "search_result_emptyHind";
-                    p.innerText = "无对应内容，请确认后重试。";
-                    resultBox.appendChild(p);
+                    let p = document.createElement("p")
+                    p.className = "search_result_emptyHind"
+                    p.innerText = "无对应内容，请确认后重试。"
+                    resultBox.appendChild(p)
                 }
             } else {
-                let p = document.createElement("p");
-                p.className = "search_result_emptyHind";
-                p.innerText = "无对应内容，请确认后重试。";
-                resultBox.appendChild(p);
+                let p = document.createElement("p")
+                p.className = "search_result_emptyHind"
+                p.innerText = "无对应内容，请确认后重试。"
+                resultBox.appendChild(p)
                 console.log(res.message)
             }
         },
         error: () => {
-            let p = document.createElement("p");
-            p.className = "search_result_emptyHind";
+            let p = document.createElement("p")
+            p.className = "search_result_emptyHind"
             p.innerText = res.msg.split(';')[0]
             console.log(res.msg.split(';')[1])
-            resultBox.appendChild(p);
+            resultBox.appendChild(p)
         }
     });
 }
 
 window.onload = function () {
-    myAxios.post('/search?searchValue=52').then(res => {console.log(res.msg)})
+    window.scrollTo(0,0)
+    myAxios.post('/search?searchValue=52').then(res => {
+        console.log(res.msg)
+    })
 }

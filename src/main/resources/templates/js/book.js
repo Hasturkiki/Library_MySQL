@@ -20,7 +20,7 @@ window.onload = function getAllBook() {
                     '            <th>价格</th>\n' +
                     '            <th>借出情况</th>\n' +
                     '            <th>出版日期</th>\n' +
-                    '            <th>others</th>\n' +
+                    '            <th>备注</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
                 for (const bookVo of bookVoList) {
@@ -88,7 +88,7 @@ window.onload = function getAllBook() {
                             td_jointAuthorTable.innerText = '合著'    //todo 共同作者链接
                     }
 
-                    let td_operate = document.createElement("td");
+                    let td_operate = document.createElement("td")
                     let button_update = document.createElement('button')
                     button_update.innerText = '编辑'
                     button_update.className = 'table_button_update'

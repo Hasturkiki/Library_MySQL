@@ -48,7 +48,7 @@ window.onload = function getAllAuthor() {
                     let td_bookNumber = document.createElement("td");
                     td_bookNumber.innerText = author.bookNumber + '作'  //todo 作品链接
 
-                    let td_operate = document.createElement("td");
+                    let td_operate = document.createElement("td")
                     let button_update = document.createElement('button')
                     button_update.innerText = '编辑'
                     button_update.className = 'table_button_update'

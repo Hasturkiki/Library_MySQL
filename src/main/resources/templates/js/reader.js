@@ -19,24 +19,24 @@ window.onload = function getAllReader() {
                     '        </tr>'
                 for (const reader of readerList) {
                     let tr = document.createElement("tr");
-                    tr.className = "search_result_content";
+                    tr.className = "search_result_content"
 
                     let td_readerId = document.createElement("td");
-                    td_readerId.innerText = reader.readerId;
+                    td_readerId.innerText = reader.readerId
 
                     let td_readerName = document.createElement("td");
-                    td_readerName.innerText = reader.readerName;
+                    td_readerName.innerText = reader.readerName
 
                     let td_readerSex = document.createElement("td");
                     switch (reader.readerSex) {
                         case 0:
-                            td_readerSex.innerText = '女';
+                            td_readerSex.innerText = '女'
                             break
                         case 1:
-                            td_readerSex.innerText = '男';
+                            td_readerSex.innerText = '男'
                             break
                         case 2:
-                            td_readerSex.innerText = '保密';
+                            td_readerSex.innerText = '保密'
                             break
                         default:
                             td_readerSex.innerText = '？'
@@ -48,7 +48,7 @@ window.onload = function getAllReader() {
                     let td_saving = document.createElement("td");
                     td_saving.innerText = reader.saving;
 
-                    let td_operate = document.createElement("td");
+                    let td_operate = document.createElement("td")
                     let button_update = document.createElement('button')
                     button_update.innerText = '编辑'
                     button_update.className = 'table_button_update'

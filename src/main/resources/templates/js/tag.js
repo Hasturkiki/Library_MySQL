@@ -28,7 +28,7 @@ window.onload = function getAllTag() {
                     let td_bookNumber = document.createElement("td");
                     td_bookNumber.innerText = tag.bookNumber
 
-                    let td_operate = document.createElement("td");
+                    let td_operate = document.createElement("td")
                     let button_update = document.createElement('button')
                     button_update.innerText = '编辑'
                     button_update.className = 'table_button_update'

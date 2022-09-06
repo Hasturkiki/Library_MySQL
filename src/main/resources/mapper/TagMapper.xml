@@ -11,9 +11,4 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
-
-    <sql id="Base_Column_List">
-        tag_id,tag_name,create_time,
-        update_time,is_deleted
-    </sql>
 </mapper>

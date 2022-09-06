@@ -22,21 +22,21 @@ window.onload = function getAllPublishingCompanyTable() {
                     tr.className = "search_result_content";
 
                     let td_publishingCompanyId = document.createElement("td");
-                    td_publishingCompanyId.innerText = publishingCompany.publishingCompanyId;
+                    td_publishingCompanyId.innerText = publishingCompany.publishingCompanyId
 
                     let td_publishingCompanyName = document.createElement("td");
-                    td_publishingCompanyName.innerText = publishingCompany.publishingCompanyName;
+                    td_publishingCompanyName.innerText = publishingCompany.publishingCompanyName
 
                     let td_publishingCompanyTelephoneNumber = document.createElement("td");
-                    td_publishingCompanyTelephoneNumber.innerText = publishingCompany.publishingCompanyTelephoneNumber;
+                    td_publishingCompanyTelephoneNumber.innerText = publishingCompany.publishingCompanyTelephoneNumber
 
                     let td_publishingCompanyAddress = document.createElement("td");
-                    td_publishingCompanyAddress.innerText = publishingCompany.publishingCompanyAddress;
+                    td_publishingCompanyAddress.innerText = publishingCompany.publishingCompanyAddress
 
                     let td_bookNumber = document.createElement("td");
-                    td_bookNumber.innerText = publishingCompany.bookNumber;
+                    td_bookNumber.innerText = publishingCompany.bookNumber
 
-                    let td_operate = document.createElement("td");
+                    let td_operate = document.createElement("td")
                     let button_update = document.createElement('button')
                     button_update.innerText = '编辑'
                     button_update.className = 'table_button_update'

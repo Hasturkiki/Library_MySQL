@@ -47,7 +47,7 @@ window.onload = function getAllBookBorrowTable() {
                     td_borrowTime.innerText = bookBorrowTable.borrowTime.split('T')[0] + ' ' + bookBorrowTable.borrowTime.split('T')[1]
 
                     let td_backTime = document.createElement("td");
-                    if(bookBorrowTable.backTime === null) {
+                    if (bookBorrowTable.backTime === null) {
                         td_backTime.innerText = '无'
                     } else {
                         td_backTime.innerText = bookBorrowTable.borrowTime.split('T')[0] + ' ' + bookBorrowTable.borrowTime.split('T')[1]

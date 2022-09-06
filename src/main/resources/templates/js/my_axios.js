@@ -1,6 +1,6 @@
 // const { resolve, reject } = require("core-js/fn/promise")
 
-function iaxios () {
+function iaxios() {
     //保存拦截器中的回调函数
     this.saveRequest = []
     this.saveResponse = []
@@ -8,15 +8,14 @@ function iaxios () {
     this.data = {};
     let _this = this;
     this.interceptors = {
-        request (cb) {
+        request(cb) {
             _this.saveRequest.push(cb)
         },
-        response (aa) {
+        response(aa) {
             _this.saveResponse.push(aa)
         },
     }
 }
-
 
 
 iaxios.prototype.post = function (url, data) {
@@ -107,7 +106,7 @@ iaxios.prototype.create = function (obj) {
 }
 
 //设置请求头的方法
-function setHeader (xhr, headers) {
+function setHeader(xhr, headers) {
     for (var i in headers) {
         xhr.setRequestHeader(i, headers[i]);
     }

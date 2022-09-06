@@ -28,7 +28,7 @@ window.onload = function getAllJointAuthorTable() {
                     td_bookName.innerText = jointAuthorTableVo.bookName;
 
                     let td_authorNames = document.createElement("td");
-                    td_authorNames.innerText = jointAuthorTableVo.authorNames.replaceAll(';','\n');
+                    td_authorNames.innerText = jointAuthorTableVo.authorNames.replaceAll(';', '\n');
 
                     let td_operate = document.createElement("td");
                     let button_update = document.createElement('button')

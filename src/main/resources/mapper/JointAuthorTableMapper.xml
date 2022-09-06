@@ -12,9 +12,4 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
-
-    <sql id="Base_Column_List">
-        joint_author_table_id,table_id,author_id,
-        create_time,update_time,is_deleted
-    </sql>
 </mapper>
