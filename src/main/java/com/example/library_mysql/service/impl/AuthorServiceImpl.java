@@ -13,13 +13,13 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* @author Hastur kiki
-* @description 针对表【author(作者信息)】的数据库操作Service实现
-* @createDate 2022-09-04 16:34:36
-*/
+ * @author Hastur kiki
+ * @description 针对表【author(作者信息)】的数据库操作Service实现
+ * @createDate 2022-09-04 16:34:36
+ */
 @Service
 public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
-    implements AuthorService{
+        implements AuthorService {
 
     @Resource
     private BookService bookService;
@@ -36,8 +36,12 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
     @Override
     public R<List<Author>> getAuthorList() {
         List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).list();
-        if(authorList.isEmpty()) {
+        if (authorList.isEmpty()) {
             return R.error("无作者数据");
+        }
+        for (Author author : authorList) {
+            long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, author.getAuthorId()).count();
+            author.setBookNumber(bookNumber);
         }
         return R.success(authorList);
     }

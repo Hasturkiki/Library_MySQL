@@ -3,6 +3,7 @@ package com.example.library_mysql.controller;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.BookBorrowTable;
 import com.example.library_mysql.service.*;
+import com.example.library_mysql.vo.BookBorrowTableVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class BookBorrowTableController {
     @ResponseBody
     @GetMapping("/getAll")
     @ApiOperation("获取所有借书表的列表")
-    public R<List<BookBorrowTable>> getAllTag() {
-        return bookBorrowTableService.getBookBorrowTableList();
+    public R<List<BookBorrowTableVo>> getAllTag() {
+        return bookBorrowTableService.getBookBorrowTableVoList();
     }
 }

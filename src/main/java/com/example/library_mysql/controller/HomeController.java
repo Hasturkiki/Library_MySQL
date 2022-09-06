@@ -47,7 +47,6 @@ public class HomeController {
             int id = parseInt(searchValue);
             List<Object> result = new ArrayList<>();
             Author author = authorService.selectAuthorById(id);
-//            Book book = bookService.selectBookById(id);
             BookVo bookVo = bookService.selectBookVoById(id);
             PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(id);
             Reader reader = readerService.selectReaderById(id);

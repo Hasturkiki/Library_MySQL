@@ -18,5 +18,5 @@ public interface BookService extends IService<Book> {
 
     BookVo selectBookVoById(int id);
 
-    R<List<Book>> getBookList();
+    R<List<BookVo>> getBookVoList();
 }

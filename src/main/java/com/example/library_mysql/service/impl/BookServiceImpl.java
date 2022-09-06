@@ -9,6 +9,7 @@ import com.example.library_mysql.vo.BookVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,26 +38,27 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         Book book = selectBookById(id);
         BookVo bookVo = new BookVo(book);
         if (book != null) {
-            int authorId = book.getAuthorId();
-            Author author = authorService.selectAuthorById(authorId);
+            Author author = authorService.selectAuthorById(book.getAuthorId());
             bookVo.setAuthorName(author.getAuthorName());
-            int publishingCompanyId = book.getPublishingCompanyId();
-            PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(publishingCompanyId);
+            PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(book.getPublishingCompanyId());
             bookVo.setPublishingCompanyName(publishingCompany.getPublishingCompanyName());
-            int tagId = book.getTagId();
-            Tag tag = tagService.selectTagById(tagId);
+            Tag tag = tagService.selectTagById(book.getTagId());
             bookVo.setTagName(tag.getTagName());
         }
         return bookVo;
     }
 
     @Override
-    public R<List<Book>> getBookList() {
+    public R<List<BookVo>> getBookVoList() {
         List<Book> bookList = lambdaQuery().orderByAsc(Book::getBookId).list();
-        if(bookList.isEmpty()) {
+        if (bookList.isEmpty()) {
             return R.error("无书籍数据");
         }
-        return R.success(bookList);
+        List<BookVo> bookVoList = new ArrayList<>();
+        for (Book book : bookList) {
+            bookVoList.add(selectBookVoById(book.getBookId()));
+        }
+        return R.success(bookVoList);
     }
 }
 

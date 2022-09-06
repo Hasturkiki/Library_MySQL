@@ -15,7 +15,7 @@ public class LibraryMySqlApplication {
         springApplication.setAllowCircularReferences(Boolean.TRUE);
         springApplication.run(args);
 
-        // 通过命令行自动打开首页
+        // 通过cmd自动打开首页
         try {
             Runtime.getRuntime().exec(new String[]{"cmd","/c","start http://localhost:8080/home"});
         } catch (Exception e) {

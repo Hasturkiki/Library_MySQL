@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -20,74 +21,88 @@ import lombok.Data;
 @Data
 public class Book implements Serializable {
     /**
-     * 该书id
+     * 书籍id
      */
     @TableId(type = IdType.AUTO)
+    @ApiModelProperty("书籍id")
     private Integer bookId;
 
     /**
-     * 该书书名
+     * 书籍书名
      */
+    @ApiModelProperty("书籍书名")
     private String bookName;
 
     /**
-     * 该书作者id
+     * 书籍作者id
      */
+    @ApiModelProperty("书籍作者id")
     private Integer authorId;
 
     /**
-     * 该书IBSN号，默认为[IBSN_is_not_exist]
+     * 书籍IBSN号：默认为[IBSN_is_not_exist]
      */
+    @ApiModelProperty("书籍IBSN号：默认为[IBSN_is_not_exist]")
     private String ibsn;
 
     /**
-     * 出版社id为12时代表无出版社，默认为12
+     * 书籍出版社id：id为12时代表无出版社，默认为12
      */
+    @ApiModelProperty("书籍出版社id：id为12时代表无出版社，默认为12")
     private Integer publishingCompanyId;
 
     /**
-     * 该书类型标签id
+     * 书籍类型标签id
      */
+    @ApiModelProperty("书籍类型标签id")
     private Integer tagId;
 
     /**
-     * 该书库存数量，默认为1
+     * 书籍库存数量：默认为1
      */
+    @ApiModelProperty("书籍库存数量：默认为1")
     private Integer quantity;
 
     /**
-     * 单价为0时代表该书为公益书籍，默认为0
+     * 书籍单价：单价为0时代表该书为公益书籍，默认为0
      */
+    @ApiModelProperty("书籍单价：单价为0时代表该书为公益书籍，默认为0")
     private Integer price;
 
     /**
-     * 书籍是否外借，0为否、>=1为是，默认为0，当值大于库存数量时无法借出
+     * 书籍是否外借标志：0为否、>=1为是，默认为0，当值大于库存数量时无法借出
      */
+    @ApiModelProperty("书籍是否外借标志：0为否、>=1为是，默认为0，当值大于库存数量时无法借出")
     private Integer isBeingBorrowed;
 
     /**
-     * 书籍出版日期，默认为'01-1月-1900'
+     * 书籍出版日期：默认为'01-1月-1900'
      */
+    @ApiModelProperty("书籍出版日期：默认为'01-1月-1900'")
     private LocalDate publicationDate;
 
     /**
-     * 该书是否存在共同作者，0为否、>=1则为共同作者表id号，默认为0
+     * 书籍是否为共同创作标志：0为否、>=1则为共同作者表id号，默认为0
      */
+    @ApiModelProperty("书籍是否为共同创作标志：0为否、>=1则为共同作者表id号，默认为0")
     private Integer jointAuthorTableId;
 
     /**
      * 创建时间
      */
+    @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
+    @ApiModelProperty("更新时间")
     private LocalDateTime updateTime;
 
     /**
-     * 是否删除标志，0为未删除、1为已删除，默认为0
+     * 是否删除标志：0为未删除、1为已删除，默认为0
      */
+    @ApiModelProperty("是否删除标志：0为未删除、1为已删除，默认为0")
     private Boolean isDeleted;
 
     @TableField(exist = false)

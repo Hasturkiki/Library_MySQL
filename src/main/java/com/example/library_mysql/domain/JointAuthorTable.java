@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -18,34 +19,40 @@ import lombok.Data;
 @Data
 public class JointAuthorTable implements Serializable {
     /**
-     * 该书是否存在共同作者，0为否、>=1则为共同作者表id号
+     * 共同作者表id：>=1则代表存在共同作者
      */
     @TableId
+    @ApiModelProperty("共同作者表id：>=1则代表存在共同作者")
     private Integer jointAuthorTableId;
 
     /**
-     * 存在共同作者的书的共同作者表id
+     * 共同作者表实例id
      */
+    @ApiModelProperty("共同作者表实例id")
     private Integer tableId;
 
     /**
-     * 相同table_id的作者为该joint_author_table_id对应的书的共同作者
+     * 共同作者表对应的作者id：相同table_id的作者为该joint_author_table_id对应的书的共同作者
      */
+    @ApiModelProperty("共同作者表对应的作者id：相同table_id的作者为该joint_author_table_id对应的书的共同作者")
     private Integer authorId;
 
     /**
      * 创建时间
      */
+    @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
+    @ApiModelProperty("更新时间")
     private LocalDateTime updateTime;
 
     /**
-     * 是否删除标志，0为未删除、1为已删除，默认为0
+     * 是否删除标志：0为未删除、1为已删除，默认为0
      */
+    @ApiModelProperty("是否删除标志：0为未删除、1为已删除，默认为0")
     private Boolean isDeleted;
 
     @TableField(exist = false)

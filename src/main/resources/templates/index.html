@@ -12,25 +12,25 @@
 </head>
 <body class="my_body">
     <div class="home_header">
-        <img class="home_img">
-        <p class="home_p">Library_MySQL</p>
+        <a href="/doc.html"><img class="home_img"></a>
+        <a class="home_a" href="/home">Library_MySQL</a>
+    </div>
+    <div class="link_div">
+        <a href="/author/authorHome" class="a_link">作者</a>
+        <a href="/bookBorrowTable/bookBorrowTableHome" class="a_link">借书表</a>
+        <a href="/book/bookHome" class="a_link">书籍</a>
+        <a href="/jointAuthorTable/jointAuthorTableHome" class="a_link">共同作者表</a>
+        <a href="/publishingCompany/publishingCompanyHome" class="a_link">出版社</a>
+        <a href="/reader/readerHome" class="a_link">读者</a>
+        <a href="/tag/tagHome" class="a_link">标签</a>
     </div>
     <div class="home_div">
-        <label>
+        <div>
             <input id="search_string" type="text">
             <button onclick="search()" id="search">search</button>
-        </label>
-        <div>
-            <a href="/author/authorHome" class="a_link">searchAuthor</a>
-            <a href="/book/bookHome" class="a_link">searchBook</a>
-            <a href="/publishingCompany/publishingCompanyHome" class="a_link">searchPublishingCompany</a>
-            <a href="/reader/readerHome" class="a_link">searchReader</a>
-            <a href="/tag/tagHome" class="a_link">searchTag</a>
         </div>
         <label class="search_result_title">search result:</label>
-        <div id="search_result">
-            <div></div>
-        </div>
+        <div id="search_result"></div>
     </div>
 </body>
 </html>

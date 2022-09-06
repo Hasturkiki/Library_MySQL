@@ -6,12 +6,13 @@ window.onload = function getAllTag() {
             if (tagList.length !== 0) {
                 tagTable.innerHTML = '<colgroup>\n' +
                     '            <col style="background-color: #bcc">\n' +
-                    '            <col style="background-color: #cdd">\n' +
+                    '            <col span="2" style="background-color: #cdd">\n' +
                     '            <col style="background-color: #dee">\n' +
                     '        </colgroup>\n' +
                     '        <tr>\n' +
                     '            <th>标签ID</th>\n' +
                     '            <th>标签名称</th>\n' +
+                    '            <th>作品数</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
                 for (const tag of tagList) {
@@ -19,10 +20,13 @@ window.onload = function getAllTag() {
                     tr.className = "search_result_content";
 
                     let td_tagId = document.createElement("td");
-                    td_tagId.innerText = tag.tagId;
+                    td_tagId.innerText = tag.tagId
 
                     let td_tagName = document.createElement("td");
-                    td_tagName.innerText = tag.tagName;
+                    td_tagName.innerText = tag.tagName
+
+                    let td_bookNumber = document.createElement("td");
+                    td_bookNumber.innerText = tag.bookNumber
 
                     let td_operate = document.createElement("td");
                     let button_update = document.createElement('button')
@@ -34,9 +38,10 @@ window.onload = function getAllTag() {
                     td_operate.appendChild(button_update)
                     td_operate.appendChild(button_delete)
 
-                    tr.appendChild(td_tagId);
-                    tr.appendChild(td_tagName);
-                    tr.appendChild(td_operate);
+                    tr.appendChild(td_tagId)
+                    tr.appendChild(td_tagName)
+                    tr.appendChild(td_bookNumber)
+                    tr.appendChild(td_operate)
 
                     tagTable.appendChild(tr)
                 }
@@ -49,7 +54,8 @@ window.onload = function getAllTag() {
         } else {
             let p = document.createElement("p");
             p.className = "search_result_emptyHind";
-            p.innerText = "无对应内容，请确认后重试。";
+            p.innerText = res.msg.split(';')[0]
+            console.log(res.msg.split(';')[1])
             tagTable.appendChild(p);
         }
     })

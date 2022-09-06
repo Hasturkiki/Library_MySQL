@@ -22,7 +22,8 @@ $(document).keyup(function (e) {
 
 function search() {
     let searchValue = document.getElementById("search_string").value;
-    let resultBox = document.getElementById("search_result").firstElementChild;
+    let resultBox = document.getElementById("search_result");
+    resultBox.style.background = '#ffe7'
     if (resultBox.childNodes.length !== 0)
         resultBox.innerHTML = "";
     if (document.getElementsByClassName("search_result_emptyHind")[0])
@@ -209,10 +210,14 @@ function search() {
                     let td_publishingCompanyAddress = document.createElement("td");
                     td_publishingCompanyAddress.innerText = data[2].publishingCompanyAddress;
 
+                    let td_bookNumber = document.createElement("td");
+                    td_bookNumber.innerText = data[2].bookNumber;
+
                     // tr.appendChild(td_publishingCompanyId);
                     tr.appendChild(td_publishingCompanyName);
                     tr.appendChild(td_publishingCompanyTelephoneNumber);
                     tr.appendChild(td_publishingCompanyAddress);
+                    tr.appendChild(td_bookNumber);
 
                     let hint_p = document.createElement('p')
                     hint_p.className = 'hint_p'
@@ -228,6 +233,7 @@ function search() {
                         '    <th>出版社名称</th>\n' +
                         '    <th>联系方式</th>\n' +
                         '    <th>通信地址</th>\n' +
+                        '    <th>作品数</th>\n' +
                         '  </tr>'
                     table.appendChild(tr)
                     resultBox.appendChild(table)
@@ -299,8 +305,12 @@ function search() {
                     let td_tagName = document.createElement("td");
                     td_tagName.innerText = data[4].tagName;
 
+                    let td_bookNumber = document.createElement("td");
+                    td_bookNumber.innerText = data[4].bookNumber + '作'  //todo 作品链接
+
                     // tr.appendChild(td_tagId);
                     tr.appendChild(td_tagName);
+                    tr.appendChild(td_bookNumber);
 
                     let hint_p = document.createElement('p')
                     hint_p.className = 'hint_p'
@@ -314,6 +324,7 @@ function search() {
                         '  </colgroup>\n' +
                         '  <tr>\n' +
                         '    <th>标签名称</th>\n' +
+                        '    <th>作品数</th>\n' +
                         '  </tr>'
                     table.appendChild(tr)
                     resultBox.appendChild(table)
@@ -335,12 +346,13 @@ function search() {
         error: () => {
             let p = document.createElement("p");
             p.className = "search_result_emptyHind";
-            p.innerText = "无对应内容，请确认后重试。";
+            p.innerText = res.msg.split(';')[0]
+            console.log(res.msg.split(';')[1])
             resultBox.appendChild(p);
         }
     });
 }
 
 window.onload = function () {
-    myAxios.post('/search?searchValue=1').then(res => {console.log(res.msg)})
+    myAxios.post('/search?searchValue=52').then(res => {console.log(res.msg)})
 }

@@ -1,28 +1,34 @@
-window.onload = function getAllTag() {
-    let tagTable = document.getElementsByClassName("tag_table")[0];
-    myAxios.get('/tag/getAll').then(res => {
+window.onload = function getAllJointAuthorTable() {
+    let jointAuthorTableTable = document.getElementsByClassName("jointAuthorTable_table")[0];
+    myAxios.get('/jointAuthorTable/getAll').then(res => {
         if (res.code === 200) {
-            let tagList = res.data
-            if (tagList.length !== 0) {
-                tagTable.innerHTML = '<colgroup>\n' +
+            let jointAuthorTableVoList = res.data
+            if (jointAuthorTableVoList.length !== 0) {
+                jointAuthorTableTable.innerHTML = '<colgroup>\n' +
                     '            <col style="background-color: #bcc">\n' +
-                    '            <col style="background-color: #cdd">\n' +
+                    '            <col span="2" style="background-color: #cdd">\n' +
                     '            <col style="background-color: #dee">\n' +
                     '        </colgroup>\n' +
                     '        <tr>\n' +
-                    '            <th>标签ID</th>\n' +
-                    '            <th>标签名称</th>\n' +
+                    '            <th>共同作者表ID</th>\n' +
+                    '            <th>书籍名称</th>\n' +
+                    '            <th>共同作者</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
-                for (const tag of tagList) {
+                for (const jointAuthorTableVo of jointAuthorTableVoList) {
                     let tr = document.createElement("tr");
                     tr.className = "search_result_content";
 
-                    let td_tagId = document.createElement("td");
-                    td_tagId.innerText = tag.tagId;
+                    const jointAuthorTable = jointAuthorTableVo.jointAuthorTable
 
-                    let td_tagName = document.createElement("td");
-                    td_tagName.innerText = tag.tagName;
+                    let td_jointAuthorTableId = document.createElement("td");
+                    td_jointAuthorTableId.innerText = jointAuthorTable.jointAuthorTableId;
+
+                    let td_bookName = document.createElement("td");
+                    td_bookName.innerText = jointAuthorTableVo.bookName;
+
+                    let td_authorNames = document.createElement("td");
+                    td_authorNames.innerText = jointAuthorTableVo.authorNames.replaceAll(';','\n');
 
                     let td_operate = document.createElement("td");
                     let button_update = document.createElement('button')
@@ -34,31 +40,33 @@ window.onload = function getAllTag() {
                     td_operate.appendChild(button_update)
                     td_operate.appendChild(button_delete)
 
-                    tr.appendChild(td_tagId);
-                    tr.appendChild(td_tagName);
+                    tr.appendChild(td_jointAuthorTableId);
+                    tr.appendChild(td_bookName);
+                    tr.appendChild(td_authorNames);
                     tr.appendChild(td_operate);
 
-                    tagTable.appendChild(tr)
+                    jointAuthorTableTable.appendChild(tr)
                 }
             } else {
                 let p = document.createElement("p");
                 p.className = "search_result_emptyHind";
                 p.innerText = "无对应内容，请确认后重试。";
-                tagTable.appendChild(p);
+                jointAuthorTableTable.appendChild(p);
             }
         } else {
             let p = document.createElement("p");
             p.className = "search_result_emptyHind";
-            p.innerText = "无对应内容，请确认后重试。";
-            tagTable.appendChild(p);
+            p.innerText = res.msg.split(';')[0]
+            console.log(res.msg.split(';')[1])
+            jointAuthorTableTable.appendChild(p);
         }
     })
 }
 
 $('.table_button_update').click({
-//    todo update tag
+//    todo update jointAuthorTable
 })
 
 $('.table_button_delete').click({
-//    todo delete tag
+//    todo delete jointAuthorTable
 })

@@ -3,6 +3,7 @@ package com.example.library_mysql.controller;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Book;
 import com.example.library_mysql.service.*;
+import com.example.library_mysql.vo.BookVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,7 @@ public class BookController {
     @ResponseBody
     @GetMapping("/getAll")
     @ApiOperation("获取所有书籍的列表")
-    public R<List<Book>> getAllTag() {
-        return bookService.getBookList();
+    public R<List<BookVo>> getAllTag() {
+        return bookService.getBookVoList();
     }
 }

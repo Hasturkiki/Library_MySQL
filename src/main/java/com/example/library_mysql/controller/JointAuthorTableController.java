@@ -3,6 +3,7 @@ package com.example.library_mysql.controller;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.JointAuthorTable;
 import com.example.library_mysql.service.*;
+import com.example.library_mysql.vo.JointAuthorTableVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class JointAuthorTableController {
     @ResponseBody
     @GetMapping("/getAll")
     @ApiOperation("获取所有共同作者表的列表")
-    public R<List<JointAuthorTable>> getAllTag() {
-        return jointAuthorTableService.getJointAuthorTableList();
+    public R<List<JointAuthorTableVo>> getAllTag() {
+        return jointAuthorTableService.getJointAuthorTableVoList();
     }
 }

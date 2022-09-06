@@ -17,16 +17,38 @@
 .home_img {
     margin: 0 auto;
     width: 52px;
-    content: url("http://localhost:8080/res/index.jpg");
+    content: url("http://localhost:8080/res/index.jpg")
 }
 
-.home_p {
+.home_a {
+    text-decoration: none;
     display: inline;
-    color: rgba(23, 23, 233, 0.3);
-    font-size: 24px;
+    color: #aff;
+    font-size: 32px;
+    font-weight: 600;
     position: absolute;
-    top: -3px;
-    margin-left: 1%;
+    top: 1.7%;
+    margin-left: 1.7%;
+    -webkit-text-stroke: 2px #ffa;
+}
+
+.link_div {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    border: 3px solid #095;
+    top: 23%;
+    width: 7%;
+}
+
+.a_link {
+    margin: 3% 1%;
+    padding: 7% 2%;
+    text-decoration: none;
+    color: #b9f;
+    font-family: serif;
+    background: #eff;
+    font-size: 20px;
 }
 
 .home_div {
@@ -49,26 +71,39 @@
     font-size: 24px;
     line-height: 32px;
     font-family: "Rage Italic", serif;
-    color: #aaccee;
+    color: #ace;
+    padding-left: 1%;
 }
 
 #search {
-    padding-top: 0.36%;
-    margin-bottom: 1%;
-    width: 100px;
+    width: 111px;
     line-height: 32px;
     border-radius: 2.3em;
-    background-color: #bcd;
-    color: #008848;
+    color: #567;
+    font-family: system-ui;
+    background: #bdf;
     font-size: 20px;
+    position: absolute;
+    top: 16.7%;
+    left: 66.7%;
 }
 
 #search:hover {
-    background-color: rgba(233, 233, 233, 0.7);
+    background-color: #def;
 }
 
 #search:active {
-    background-color: rgba(23, 233, 23, 0.233);
+    background-color: #aee;
+}
+
+.search_result_title {
+    display: block;
+    margin: 1% 10% 0;
+    font-size: 32px;
+    font-family: "Adobe Devanagari", serif;
+    color: #765;
+    -webkit-text-stroke: 1px #123;
+    text-shadow: 2px 2px #8ac;
 }
 
 #search_result {
@@ -76,8 +111,9 @@
     height: 80%;
     background-color: transparent;
     font-family: "Adobe Devanagari", serif;
-    font-size: 17px;
-    margin: 23px auto;
+    font-size: 16px;
+    margin: 0 auto;
+    padding: 7px 13px;
 }
 
 .search_result_emptyHind {
@@ -115,22 +151,40 @@
     text-align: center;
 }
 
-.a_link {
-    position: relative;
-    left: 7%;
-    top: 7px;
-    margin: 3%;
-    text-decoration: none;
-    color: #00bbdd;
+.author_table {
+    width: 80%;
+    margin: 4% auto;
+    border: 4px solid #159;
 }
 
-.search_result_title {
-    display: block;
-    margin: 1% 10% 0;
+.bookBorrowTable_table {
     width: 80%;
-    font-size: 32px;
-    font-family: "Adobe Devanagari", ui-sans-serif;
-    color: #666666;
+    margin: 4% auto;
+    border: 4px solid #159;
+}
+
+.book_table {
+    width: 100%;
+    margin: 4% auto;
+    border: 4px solid #159;
+}
+
+.jointAuthorTable_table {
+    width: 80%;
+    margin: 4% auto;
+    border: 4px solid #159;
+}
+
+.publishingCompany_table {
+    width: 80%;
+    margin: 4% auto;
+    border: 4px solid #159;
+}
+
+.reader_table {
+    width: 80%;
+    margin: 4% auto;
+    border: 4px solid #159;
 }
 
 .tag_table {
