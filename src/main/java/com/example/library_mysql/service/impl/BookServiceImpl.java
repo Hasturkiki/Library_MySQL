@@ -39,7 +39,10 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         BookVo bookVo = new BookVo(book);
         if (book != null) {
             Author author = authorService.selectAuthorById(book.getAuthorId());
-            bookVo.setAuthorName(author.getAuthorName());
+            if (book.getJointAuthorTableId() == 0)
+                bookVo.setAuthorName(author.getAuthorName());
+            else
+                bookVo.setAuthorName(author.getAuthorName()+ " 等");
             PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(book.getPublishingCompanyId());
             bookVo.setPublishingCompanyName(publishingCompany.getPublishingCompanyName());
             Tag tag = tagService.selectTagById(book.getTagId());

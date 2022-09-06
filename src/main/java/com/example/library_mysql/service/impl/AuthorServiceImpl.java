@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.domain.Book;
+import com.example.library_mysql.domain.JointAuthorTable;
 import com.example.library_mysql.service.AuthorService;
 import com.example.library_mysql.mapper.AuthorMapper;
 import com.example.library_mysql.service.BookService;
+import com.example.library_mysql.service.JointAuthorTableService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,10 +26,14 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
     @Resource
     private BookService bookService;
 
+    @Resource
+    private JointAuthorTableService jointAuthorTableService;
+
     @Override
     public Author selectAuthorById(int id) {
         Author author = lambdaQuery().eq(Author::getAuthorId, id).one();
-        long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, id).count();
+        long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, id).eq(Book::getJointAuthorTableId, 0).count();
+        bookNumber += jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getAuthorId, id).count();
         if (author != null)
             author.setBookNumber(bookNumber);
         return author;
@@ -40,7 +46,8 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
             return R.error("无作者数据");
         }
         for (Author author : authorList) {
-            long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, author.getAuthorId()).count();
+            long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, author.getAuthorId()).eq(Book::getJointAuthorTableId, 0).count();
+            bookNumber += jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getAuthorId, author.getAuthorId()).count();
             author.setBookNumber(bookNumber);
         }
         return R.success(authorList);
