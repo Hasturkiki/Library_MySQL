@@ -16,4 +16,6 @@ public interface PublishingCompanyService extends IService<PublishingCompany> {
     PublishingCompany selectPublishingCompanyById(int id);
 
     R<List<PublishingCompany>> getPublishingCompanyList();
+
+    List<PublishingCompany> searchByName(String searchKey);
 }

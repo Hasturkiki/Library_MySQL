@@ -39,10 +39,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         BookVo bookVo = new BookVo(book);
         if (book != null) {
             Author author = authorService.selectAuthorById(book.getAuthorId());
-            if (book.getJointAuthorTableId() == 0)
-                bookVo.setAuthorName(author.getAuthorName());
-            else
-                bookVo.setAuthorName(author.getAuthorName()+ " 等");
+            bookVo.setAuthorName(author.getAuthorName());
             PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(book.getPublishingCompanyId());
             bookVo.setPublishingCompanyName(publishingCompany.getPublishingCompanyName());
             Tag tag = tagService.selectTagById(book.getTagId());
@@ -62,6 +59,19 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
             bookVoList.add(selectBookVoById(book.getBookId()));
         }
         return R.success(bookVoList);
+    }
+
+    @Override
+    public List<BookVo> searchByName(String searchKey) {
+        List<Book> bookList = lambdaQuery().like(Book::getBookName, searchKey).list();
+        if(bookList.isEmpty()) {
+            return null;
+        }
+        List<BookVo> bookVoList = new ArrayList<>();
+        for (Book book : bookList) {
+            bookVoList.add(selectBookVoById(book.getBookId()));
+        }
+        return bookVoList;
     }
 }
 

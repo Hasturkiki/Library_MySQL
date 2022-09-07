@@ -16,4 +16,6 @@ public interface TagService extends IService<Tag> {
     Tag selectTagById(int id);
 
     R<List<Tag>> getTagList();
+
+    List<Tag> searchByName(String searchKey);
 }

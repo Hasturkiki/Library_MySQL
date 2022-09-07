@@ -31,6 +31,15 @@ public class ReaderServiceImpl extends ServiceImpl<ReaderMapper, Reader>
         }
         return R.success(readerList);
     }
+
+    @Override
+    public List<Reader> searchByName(String searchKey) {
+        List<Reader> readerList = lambdaQuery().like(Reader::getReaderName, searchKey).list();
+        if(readerList.isEmpty()) {
+            return null;
+        }
+        return readerList;
+    }
 }
 
 

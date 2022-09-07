@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "JointAuthorTable对象", description = "共同作者表扩展")
+@ApiModel(value = "JointAuthorTableVo对象", description = "共同作者表扩展")
 public class JointAuthorTableVo {
 
     @ApiModelProperty("共同作者表原型")

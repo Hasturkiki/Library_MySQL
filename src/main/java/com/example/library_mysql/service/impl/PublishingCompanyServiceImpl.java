@@ -13,13 +13,13 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* @author Hastur kiki
-* @description 针对表【publishing_company(出版社信息)】的数据库操作Service实现
-* @createDate 2022-09-04 16:34:36
-*/
+ * @author Hastur kiki
+ * @description 针对表【publishing_company(出版社信息)】的数据库操作Service实现
+ * @createDate 2022-09-04 16:34:36
+ */
 @Service
 public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyMapper, PublishingCompany>
-    implements PublishingCompanyService{
+        implements PublishingCompanyService {
 
     @Resource
     private BookService bookService;
@@ -36,14 +36,28 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
     @Override
     public R<List<PublishingCompany>> getPublishingCompanyList() {
         List<PublishingCompany> publishingCompanyList = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).list();
-        if(publishingCompanyList.isEmpty()) {
+        if (publishingCompanyList.isEmpty()) {
             return R.error("无出版社数据");
         }
-        for(PublishingCompany publishingCompany:publishingCompanyList) {
+        setBookNumber(publishingCompanyList);
+        return R.success(publishingCompanyList);
+    }
+
+    @Override
+    public List<PublishingCompany> searchByName(String searchKey) {
+        List<PublishingCompany> publishingCompanyList = lambdaQuery().like(PublishingCompany::getPublishingCompanyName, searchKey).list();
+        if (publishingCompanyList.isEmpty()) {
+            return null;
+        }
+        setBookNumber(publishingCompanyList);
+        return publishingCompanyList;
+    }
+
+    private void setBookNumber(List<PublishingCompany> publishingCompanyList) {
+        for (PublishingCompany publishingCompany : publishingCompanyList) {
             long bookNumber = bookService.lambdaQuery().eq(Book::getPublishingCompanyId, publishingCompany.getPublishingCompanyId()).count();
             publishingCompany.setBookNumber(bookNumber);
         }
-        return R.success(publishingCompanyList);
     }
 }
 

@@ -45,12 +45,26 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
         if (authorList.isEmpty()) {
             return R.error("无作者数据");
         }
+        setBookNumber(authorList);
+        return R.success(authorList);
+    }
+
+    @Override
+    public List<Author> searchByName(String searchKey) {
+        List<Author> authorList = lambdaQuery().like(Author::getAuthorName, searchKey).list();
+        if (authorList.isEmpty()) {
+            return null;
+        }
+        setBookNumber(authorList);
+        return authorList;
+    }
+
+    private void setBookNumber(List<Author> authorList) {
         for (Author author : authorList) {
             long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, author.getAuthorId()).eq(Book::getJointAuthorTableId, 0).count();
             bookNumber += jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getAuthorId, author.getAuthorId()).count();
             author.setBookNumber(bookNumber);
         }
-        return R.success(authorList);
     }
 }
 

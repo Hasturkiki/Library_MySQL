@@ -16,4 +16,6 @@ public interface ReaderService extends IService<Reader> {
     Reader selectReaderById(int id);
 
     R<List<Reader>> getReaderList();
+
+    List<Reader> searchByName(String searchKey);
 }

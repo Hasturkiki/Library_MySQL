@@ -145,6 +145,12 @@
     padding: 3px 7px 7px;
 }
 
+.search_result_content > td > a {
+    text-decoration: none;
+    color: #996;
+    font-family: "Times New Roman", serif;
+}
+
 .search_result_content p {
     display: inline-block;
     width: 52px;

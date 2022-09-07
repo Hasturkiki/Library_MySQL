@@ -19,4 +19,6 @@ public interface BookService extends IService<Book> {
     BookVo selectBookVoById(int id);
 
     R<List<BookVo>> getBookVoList();
+
+    List<BookVo> searchByName(String searchKey);
 }

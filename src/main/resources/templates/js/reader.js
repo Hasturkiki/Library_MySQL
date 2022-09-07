@@ -1,9 +1,10 @@
 window.onload = function getAllReader() {
-    let readerTable = document.getElementsByClassName("reader_table")[0];
+    let readerTable = document.getElementsByClassName("reader_table")[0]
     myAxios.get('/reader/getAll').then(res => {
         if (res.code === 200) {
             let readerList = res.data
             if (readerList.length !== 0) {
+
                 readerTable.innerHTML = '<colgroup>\n' +
                     '            <col style="background-color: #bcc">\n' +
                     '            <col span="4" style="background-color: #cdd">\n' +
@@ -17,18 +18,22 @@ window.onload = function getAllReader() {
                     '            <th>余额</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
+
                 for (const reader of readerList) {
-                    let tr = document.createElement("tr");
+                    let tr = document.createElement("tr")
                     tr.className = "search_result_content"
 
-                    let td_readerId = document.createElement("td");
-                    td_readerId.innerText = reader.readerId
+                    let td_readerId = document.createElement("td")
+                    td_readerId.innerText = reader["readerId"]
 
-                    let td_readerName = document.createElement("td");
-                    td_readerName.innerText = reader.readerName
+                    let td_readerName = document.createElement("td")
+                    let td_readerName_a = document.createElement("a")
+                    td_readerName_a.innerText = reader["readerName"]
+                    td_readerName_a.href = '/reader/getOne?readerId=' + reader["readerId"]
+                    td_readerName.appendChild(td_readerName_a)
 
-                    let td_readerSex = document.createElement("td");
-                    switch (reader.readerSex) {
+                    let td_readerSex = document.createElement("td")
+                    switch (reader["readerSex"]) {
                         case 0:
                             td_readerSex.innerText = '女'
                             break
@@ -42,11 +47,11 @@ window.onload = function getAllReader() {
                             td_readerSex.innerText = '？'
                     }
 
-                    let td_readerAge = document.createElement("td");
-                    td_readerAge.innerText = reader.readerAge;
+                    let td_readerAge = document.createElement("td")
+                    td_readerAge.innerText = reader["readerAge"] + '岁'
 
-                    let td_saving = document.createElement("td");
-                    td_saving.innerText = reader.saving;
+                    let td_saving = document.createElement("td")
+                    td_saving.innerText = '$' + reader["saving"]
 
                     let td_operate = document.createElement("td")
                     let button_update = document.createElement('button')
@@ -58,27 +63,27 @@ window.onload = function getAllReader() {
                     td_operate.appendChild(button_update)
                     td_operate.appendChild(button_delete)
 
-                    tr.appendChild(td_readerId);
-                    tr.appendChild(td_readerName);
-                    tr.appendChild(td_readerSex);
-                    tr.appendChild(td_readerAge);
-                    tr.appendChild(td_saving);
-                    tr.appendChild(td_operate);
+                    tr.appendChild(td_readerId)
+                    tr.appendChild(td_readerName)
+                    tr.appendChild(td_readerSex)
+                    tr.appendChild(td_readerAge)
+                    tr.appendChild(td_saving)
+                    tr.appendChild(td_operate)
 
                     readerTable.appendChild(tr)
                 }
             } else {
-                let p = document.createElement("p");
-                p.className = "search_result_emptyHind";
-                p.innerText = "无对应内容，请确认后重试。";
-                readerTable.appendChild(p);
+                let p = document.createElement("p")
+                p.className = "search_result_emptyHind"
+                p.innerText = "无对应内容，请确认后重试。"
+                readerTable.appendChild(p)
             }
         } else {
-            let p = document.createElement("p");
-            p.className = "search_result_emptyHind";
-            p.innerText = res.msg.split(';')[0]
-            console.log(res.msg.split(';')[1])
-            readerTable.appendChild(p);
+            let p = document.createElement("p")
+            p.className = "search_result_emptyHind"
+            p.innerText = res["msg"].split(';')[0]
+            console.log(res["msg"].split(';')[1])
+            readerTable.appendChild(p)
         }
     })
 }
