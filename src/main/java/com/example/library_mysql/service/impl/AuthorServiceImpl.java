@@ -1,5 +1,6 @@
 package com.example.library_mysql.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Author;
@@ -9,6 +10,7 @@ import com.example.library_mysql.service.AuthorService;
 import com.example.library_mysql.mapper.AuthorMapper;
 import com.example.library_mysql.service.BookService;
 import com.example.library_mysql.service.JointAuthorTableService;
+import com.example.library_mysql.vo.AuthorListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,16 +42,6 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
     }
 
     @Override
-    public R<List<Author>> getAuthorList() {
-        List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).list();
-        if (authorList.isEmpty()) {
-            return R.error("无作者数据");
-        }
-        setBookNumber(authorList);
-        return R.success(authorList);
-    }
-
-    @Override
     public List<Author> searchByName(String searchKey) {
         List<Author> authorList = lambdaQuery().like(Author::getAuthorName, searchKey).list();
         if (authorList.isEmpty()) {
@@ -57,6 +49,31 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
         }
         setBookNumber(authorList);
         return authorList;
+    }
+
+    @Override
+    public R<AuthorListVo> getAuthorList() {
+        List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).list();
+        if (authorList.isEmpty()) {
+            return R.error("无作者数据");
+        }
+        setBookNumber(authorList);
+        AuthorListVo authorListVo = new AuthorListVo(authorList);
+        authorListVo.setPagesNumber(0L);
+        return R.success(authorListVo);
+    }
+
+    @Override
+    public R<AuthorListVo> getAuthorListByPage(int page) {
+        List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page,10)).getRecords();
+        long pagesNumber = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page,10)).getPages();
+        if (authorList.isEmpty()) {
+            return R.error("无作者数据");
+        }
+        setBookNumber(authorList);
+        AuthorListVo authorListVo = new AuthorListVo(authorList);
+        authorListVo.setPagesNumber(pagesNumber);
+        return R.success(authorListVo);
     }
 
     private void setBookNumber(List<Author> authorList) {

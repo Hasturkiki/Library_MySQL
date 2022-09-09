@@ -403,6 +403,7 @@ function search() {
 
 window.onload = function () {
     window.scrollTo(0, 0)
+    // 预先进行一次空查询，减少后续响应时间
     myAxios.post('/search?searchKey=null').then(res => {
         console.log(res["msg"])
     })

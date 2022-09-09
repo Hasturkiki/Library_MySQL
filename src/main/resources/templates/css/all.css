@@ -159,44 +159,44 @@
 
 .author_table {
     width: 80%;
-    margin: 4% auto;
-    border: 4px solid #159;
+    margin: 4% auto 1%;
+    border: 2px solid #9c9;
 }
 
 .bookBorrowTable_table {
     width: 80%;
-    margin: 4% auto;
-    border: 4px solid #159;
+    margin: 4% auto 1%;
+    border: 2px solid #9c9;
 }
 
 .book_table {
     width: 100%;
-    margin: 4% auto;
-    border: 4px solid #159;
+    margin: 2% auto;
+    border: 2px solid #9c9;
 }
 
 .jointAuthorTable_table {
     width: 80%;
-    margin: 4% auto;
-    border: 4px solid #159;
+    margin: 4% auto 1%;
+    border: 2px solid #9c9;
 }
 
 .publishingCompany_table {
     width: 80%;
-    margin: 4% auto;
-    border: 4px solid #159;
+    margin: 4% auto 1%;
+    border: 2px solid #9c9;
 }
 
 .reader_table {
     width: 80%;
-    margin: 4% auto;
-    border: 4px solid #159;
+    margin: 4% auto 1%;
+    border: 2px solid #9c9;
 }
 
 .tag_table {
     width: 80%;
-    margin: 4% auto;
-    border: 4px solid #159;
+    margin: 4% auto 1%;
+    border: 2px solid #9c9;
 }
 
 table button {
@@ -224,4 +224,22 @@ table button:active {
     background-color: #d44;
     margin-top: 7px;
     margin-left: 2px;
+}
+
+.pageLink_ul {
+    display: flex;
+    flex-direction: row-reverse;
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    width: 20%;
+}
+
+.pageLink_ul > li {
+    display: block;
+    text-align: center;
+    background-color: #dee;
+    width: 24px;
+    font-size: 24px;
+    margin: 1% auto;
 }
