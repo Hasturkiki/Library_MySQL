@@ -3,7 +3,7 @@ package com.example.library_mysql.service;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.BookBorrowTable;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.library_mysql.vo.BookBorrowTableVo;
+import com.example.library_mysql.vo.BookBorrowTableVoListVo;
 
 import java.util.List;
 
@@ -16,5 +16,7 @@ public interface BookBorrowTableService extends IService<BookBorrowTable> {
 
     R<List<BookBorrowTable>> getBookBorrowTableList();
 
-    R<List<BookBorrowTableVo>> getBookBorrowTableVoList();
+    R<BookBorrowTableVoListVo> getAllBookBorrowTableVoListVo();
+
+    R<BookBorrowTableVoListVo> getBookBorrowTableVoListVoByPage(int page);
 }

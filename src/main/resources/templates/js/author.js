@@ -1,10 +1,10 @@
 window.onload = function () {
-    getAllAuthor(1)
+    getAuthorListVoByPage(1)
 }
 
-function getAllAuthor(page) {
+function getAuthorListVoByPage(page) {
     let authorTable = document.getElementsByClassName("author_table")[0]
-    myAxios.post('/author/getAuthorListByPage?page=' + page).then(res => {
+    myAxios.post('/author/getAuthorListVoByPage?page=' + page).then(res => {
         if (res.code === 200) {
             let authorListVo = res.data
             let authorList = authorListVo["authorList"]
@@ -82,15 +82,14 @@ function getAllAuthor(page) {
                     authorTable.appendChild(tr)
                 }
 
-                if (pagesNumber !== 0) {
-                    let pageLink_ul = document.getElementsByClassName("pageLink_ul")[0]
-                    pageLink_ul.innerHTML = ''
-
+                let pageLink_ul = document.getElementsByClassName("pageLink_ul")[0]
+                pageLink_ul.innerHTML = ''
+                if (pagesNumber > 1) {
                     if (page !== pagesNumber) {
                         let pageLink_right = document.createElement("li")
                         pageLink_right.innerText = '>'
                         pageLink_right.addEventListener('click', function () {
-                            getAllAuthor(Number(page) + 1)
+                            getAuthorListVoByPage(Number(page) + 1)
                         })
                         pageLink_ul.appendChild(pageLink_right)
                     }
@@ -100,7 +99,7 @@ function getAllAuthor(page) {
                             let pageLink_right_2 = document.createElement("li")
                             pageLink_right_2.innerText = String(page + 2)
                             pageLink_right_2.addEventListener('click', function () {
-                                getAllAuthor(Number(page) + 2)
+                                getAuthorListVoByPage(Number(page) + 2)
                             })
                             pageLink_ul.appendChild(pageLink_right_2)
                         }
@@ -108,7 +107,7 @@ function getAllAuthor(page) {
                             let pageLink_right_1 = document.createElement("li")
                             pageLink_right_1.innerText = String(page + 1)
                             pageLink_right_1.addEventListener('click', function () {
-                                getAllAuthor(Number(page) + 1)
+                                getAuthorListVoByPage(Number(page) + 1)
                             })
                             pageLink_ul.appendChild(pageLink_right_1)
                         }
@@ -117,14 +116,14 @@ function getAllAuthor(page) {
                         pageLink_now.style.color = '#1aa'
                         pageLink_now.style.borderBottom = '1px solid #aa1'
                         pageLink_now.addEventListener('click', function () {
-                            getAllAuthor(Number(page))
+                            getAuthorListVoByPage(Number(page))
                         })
                         pageLink_ul.appendChild(pageLink_now)
                         if (page - 1 >= 1) {
                             let pageLink_left_1 = document.createElement("li")
                             pageLink_left_1.innerText = String(page - 1)
                             pageLink_left_1.addEventListener('click', function () {
-                                getAllAuthor(Number(page) - 1)
+                                getAuthorListVoByPage(Number(page) - 1)
                             })
                             pageLink_ul.appendChild(pageLink_left_1)
                         }
@@ -132,7 +131,7 @@ function getAllAuthor(page) {
                             let pageLink_left_2 = document.createElement("li")
                             pageLink_left_2.innerText = String(page - 2)
                             pageLink_left_2.addEventListener('click', function () {
-                                getAllAuthor(Number(page) - 2)
+                                getAuthorListVoByPage(Number(page) - 2)
                             })
                             pageLink_ul.appendChild(pageLink_left_2)
                         }
@@ -141,7 +140,7 @@ function getAllAuthor(page) {
                             let pageLink_li = document.createElement("li")
                             pageLink_li.innerText = pagesNumber
                             pageLink_li.addEventListener('click', function () {
-                                getAllAuthor(Number(this.innerText))
+                                getAuthorListVoByPage(Number(this.innerText))
                             })
                             if (pagesNumber === page) {
                                 pageLink_li.style.color = '#1aa'
@@ -151,17 +150,16 @@ function getAllAuthor(page) {
                             pagesNumber--
                         }
                     }
+
                     if (page !== 1) {
                         let pageLink_left = document.createElement("li")
                         pageLink_left.innerText = '<'
                         pageLink_left.addEventListener('click', function () {
-                            getAllAuthor(Number(page) - 1)
+                            getAuthorListVoByPage(Number(page) - 1)
                         })
                         pageLink_ul.appendChild(pageLink_left)
                     }
-
                 }
-
             } else {
                 let p = document.createElement("p")
                 p.className = "search_result_emptyHind"

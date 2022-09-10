@@ -8,12 +8,12 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@ApiModel(value = "AuthorListVo¶ÔÏó", description = "×÷ÕßÁĞ±íÀ©Õ¹")
+@ApiModel(value = "AuthorListVoå¯¹è±¡", description = "ä½œè€…åˆ—è¡¨æ‰©å±•")
 public class AuthorListVo {
-    @ApiModelProperty("×÷ÕßÁĞ±íÔ­ĞÍ")
+    @ApiModelProperty("ä½œè€…åˆ—è¡¨åŸå‹")
     private List<Author> authorList;
 
-    @ApiModelProperty("×÷ÕßÁĞ±í·ÖÒ³Ò³Êı£ºÒ³ÊıÎª0Ê±´ú±í»ñÈ¡ËùÓĞ×÷Õß")
+    @ApiModelProperty("ä½œè€…åˆ—è¡¨é¡µæ•°ï¼špagesNumber=0æ—¶ä»£è¡¨è·å–å…¨éƒ¨ä½œè€…çš„åˆ—è¡¨ï¼ŒpagesNumber=1æ—¶ä»£è¡¨ä½œè€…æ¡ç›®æ•°å°‘äºå•é¡µå®¹é‡10æ¡ï¼Œå·²è·å–å…¨éƒ¨ä½œè€…åˆ—è¡¨")
     private Long pagesNumber;
 
     public AuthorListVo(List<Author> authorList) {

@@ -1,5 +1,6 @@
 package com.example.library_mysql.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Book;
@@ -7,6 +8,7 @@ import com.example.library_mysql.domain.PublishingCompany;
 import com.example.library_mysql.mapper.PublishingCompanyMapper;
 import com.example.library_mysql.service.BookService;
 import com.example.library_mysql.service.PublishingCompanyService;
+import com.example.library_mysql.vo.PublishingCompanyListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,16 +36,6 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
     }
 
     @Override
-    public R<List<PublishingCompany>> getPublishingCompanyList() {
-        List<PublishingCompany> publishingCompanyList = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).list();
-        if (publishingCompanyList.isEmpty()) {
-            return R.error("无出版社数据");
-        }
-        setBookNumber(publishingCompanyList);
-        return R.success(publishingCompanyList);
-    }
-
-    @Override
     public List<PublishingCompany> searchByName(String searchKey) {
         List<PublishingCompany> publishingCompanyList = lambdaQuery().like(PublishingCompany::getPublishingCompanyName, searchKey).list();
         if (publishingCompanyList.isEmpty()) {
@@ -51,6 +43,31 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
         }
         setBookNumber(publishingCompanyList);
         return publishingCompanyList;
+    }
+
+    @Override
+    public R<PublishingCompanyListVo> getAllPublishingCompanyListVo() {
+        List<PublishingCompany> publishingCompanyList = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).list();
+        if (publishingCompanyList.isEmpty()) {
+            return R.error("无出版社数据");
+        }
+        setBookNumber(publishingCompanyList);
+        PublishingCompanyListVo publishingCompanyListVo = new PublishingCompanyListVo(publishingCompanyList);
+        publishingCompanyListVo.setPagesNumber(0L);
+        return R.success(publishingCompanyListVo);
+    }
+
+    @Override
+    public R<PublishingCompanyListVo> getPublishingCompanyListVoByPage(int page) {
+        List<PublishingCompany> publishingCompanyList = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page,10)).getRecords();
+        long pagesNumber = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page,10)).getPages();
+        if (publishingCompanyList.isEmpty()) {
+            return R.error("无出版社数据");
+        }
+        setBookNumber(publishingCompanyList);
+        PublishingCompanyListVo publishingCompanyListVo = new PublishingCompanyListVo(publishingCompanyList);
+        publishingCompanyListVo.setPagesNumber(pagesNumber);
+        return R.success(publishingCompanyListVo);
     }
 
     private void setBookNumber(List<PublishingCompany> publishingCompanyList) {

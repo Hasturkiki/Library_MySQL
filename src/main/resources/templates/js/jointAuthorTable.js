@@ -1,8 +1,14 @@
-window.onload = function getAllJointAuthorTable() {
+window.onload = function () {
+    getJointAuthorTableVoListVoByPage(1)
+}
+
+function getJointAuthorTableVoListVoByPage(page) {
     let jointAuthorTableTable = document.getElementsByClassName("jointAuthorTable_table")[0]
-    myAxios.get('/jointAuthorTable/getAll').then(res => {
+    myAxios.post('/jointAuthorTable/getJointAuthorTableVoListVoByPage?page=' + page).then(res => {
         if (res.code === 200) {
-            let jointAuthorTableVoList = res.data
+            let jointAuthorTableVoListVo = res.data
+            let jointAuthorTableVoList = jointAuthorTableVoListVo["jointAuthorTableVoList"]
+            let pagesNumber = jointAuthorTableVoListVo["pagesNumber"]
             if (jointAuthorTableVoList.length !== 0) {
 
                 jointAuthorTableTable.innerHTML = '<colgroup>\n' +
@@ -58,6 +64,85 @@ window.onload = function getAllJointAuthorTable() {
                     tr.appendChild(td_operate)
 
                     jointAuthorTableTable.appendChild(tr)
+                }
+
+                let pageLink_ul = document.getElementsByClassName("pageLink_ul")[0]
+                pageLink_ul.innerHTML = ''
+                if (pagesNumber > 1) {
+                    if (page !== pagesNumber) {
+                        let pageLink_right = document.createElement("li")
+                        pageLink_right.innerText = '>'
+                        pageLink_right.addEventListener('click', function () {
+                            getJointAuthorTableVoListVoByPage(Number(page) + 1)
+                        })
+                        pageLink_ul.appendChild(pageLink_right)
+                    }
+
+                    if (pagesNumber > 5) {
+                        if (page + 2 <= pagesNumber) {
+                            let pageLink_right_2 = document.createElement("li")
+                            pageLink_right_2.innerText = String(page + 2)
+                            pageLink_right_2.addEventListener('click', function () {
+                                getJointAuthorTableVoListVoByPage(Number(page) + 2)
+                            })
+                            pageLink_ul.appendChild(pageLink_right_2)
+                        }
+                        if (page + 1 <= pagesNumber) {
+                            let pageLink_right_1 = document.createElement("li")
+                            pageLink_right_1.innerText = String(page + 1)
+                            pageLink_right_1.addEventListener('click', function () {
+                                getJointAuthorTableVoListVoByPage(Number(page) + 1)
+                            })
+                            pageLink_ul.appendChild(pageLink_right_1)
+                        }
+                        let pageLink_now = document.createElement("li")
+                        pageLink_now.innerText = page
+                        pageLink_now.style.color = '#1aa'
+                        pageLink_now.style.borderBottom = '1px solid #aa1'
+                        pageLink_now.addEventListener('click', function () {
+                            getJointAuthorTableVoListVoByPage(Number(page))
+                        })
+                        pageLink_ul.appendChild(pageLink_now)
+                        if (page - 1 >= 1) {
+                            let pageLink_left_1 = document.createElement("li")
+                            pageLink_left_1.innerText = String(page - 1)
+                            pageLink_left_1.addEventListener('click', function () {
+                                getJointAuthorTableVoListVoByPage(Number(page) - 1)
+                            })
+                            pageLink_ul.appendChild(pageLink_left_1)
+                        }
+                        if (page - 2 >= 1) {
+                            let pageLink_left_2 = document.createElement("li")
+                            pageLink_left_2.innerText = String(page - 2)
+                            pageLink_left_2.addEventListener('click', function () {
+                                getJointAuthorTableVoListVoByPage(Number(page) - 2)
+                            })
+                            pageLink_ul.appendChild(pageLink_left_2)
+                        }
+                    } else {
+                        while (pagesNumber > 0) {
+                            let pageLink_li = document.createElement("li")
+                            pageLink_li.innerText = pagesNumber
+                            pageLink_li.addEventListener('click', function () {
+                                getJointAuthorTableVoListVoByPage(Number(this.innerText))
+                            })
+                            if (pagesNumber === page) {
+                                pageLink_li.style.color = '#1aa'
+                                pageLink_li.style.borderBottom = '1px solid #aa1'
+                            }
+                            pageLink_ul.appendChild(pageLink_li)
+                            pagesNumber--
+                        }
+                    }
+
+                    if (page !== 1) {
+                        let pageLink_left = document.createElement("li")
+                        pageLink_left.innerText = '<'
+                        pageLink_left.addEventListener('click', function () {
+                            getJointAuthorTableVoListVoByPage(Number(page) - 1)
+                        })
+                        pageLink_ul.appendChild(pageLink_left)
+                    }
                 }
             } else {
                 let p = document.createElement("p")

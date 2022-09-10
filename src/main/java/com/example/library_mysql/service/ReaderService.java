@@ -3,6 +3,7 @@ package com.example.library_mysql.service;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Reader;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.library_mysql.vo.ReaderListVo;
 
 import java.util.List;
 
@@ -15,7 +16,9 @@ public interface ReaderService extends IService<Reader> {
 
     Reader selectReaderById(int id);
 
-    R<List<Reader>> getReaderList();
-
     List<Reader> searchByName(String searchKey);
+
+    R<ReaderListVo> getAllReaderListVo();
+
+    R<ReaderListVo> getReaderListVoByPage(int page);
 }

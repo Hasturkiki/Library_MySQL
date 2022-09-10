@@ -1,11 +1,13 @@
 package com.example.library_mysql.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.*;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.mapper.BookMapper;
 import com.example.library_mysql.vo.BookVo;
+import com.example.library_mysql.vo.BookVoListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,7 +51,20 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     }
 
     @Override
-    public R<List<BookVo>> getBookVoList() {
+    public List<BookVo> searchByName(String searchKey) {
+        List<Book> bookList = lambdaQuery().like(Book::getBookName, searchKey).list();
+        if (bookList.isEmpty()) {
+            return null;
+        }
+        List<BookVo> bookVoList = new ArrayList<>();
+        for (Book book : bookList) {
+            bookVoList.add(selectBookVoById(book.getBookId()));
+        }
+        return bookVoList;
+    }
+
+    @Override
+    public R<BookVoListVo> getAllBookVoListVo() {
         List<Book> bookList = lambdaQuery().orderByAsc(Book::getBookId).list();
         if (bookList.isEmpty()) {
             return R.error("无书籍数据");
@@ -58,20 +73,25 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         for (Book book : bookList) {
             bookVoList.add(selectBookVoById(book.getBookId()));
         }
-        return R.success(bookVoList);
+        BookVoListVo bookVoListVo = new BookVoListVo(bookVoList);
+        bookVoListVo.setPagesNumber(0L);
+        return R.success(bookVoListVo);
     }
 
     @Override
-    public List<BookVo> searchByName(String searchKey) {
-        List<Book> bookList = lambdaQuery().like(Book::getBookName, searchKey).list();
-        if(bookList.isEmpty()) {
-            return null;
+    public R<BookVoListVo> getBookVoListVoByPage(int page) {
+        List<Book> bookList = lambdaQuery().orderByAsc(Book::getBookId).page(new Page<>(page, 10)).getRecords();
+        long pagesNumber = lambdaQuery().orderByAsc(Book::getBookId).page(new Page<>(page, 10)).getPages();
+        if (bookList.isEmpty()) {
+            return R.error("无书籍数据");
         }
         List<BookVo> bookVoList = new ArrayList<>();
         for (Book book : bookList) {
             bookVoList.add(selectBookVoById(book.getBookId()));
         }
-        return bookVoList;
+        BookVoListVo bookVoListVo = new BookVoListVo(bookVoList);
+        bookVoListVo.setPagesNumber(pagesNumber);
+        return R.success(bookVoListVo);
     }
 }
 

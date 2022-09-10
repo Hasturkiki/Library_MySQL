@@ -3,6 +3,7 @@ package com.example.library_mysql.service;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.PublishingCompany;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.library_mysql.vo.PublishingCompanyListVo;
 
 import java.util.List;
 
@@ -15,7 +16,9 @@ public interface PublishingCompanyService extends IService<PublishingCompany> {
 
     PublishingCompany selectPublishingCompanyById(int id);
 
-    R<List<PublishingCompany>> getPublishingCompanyList();
-
     List<PublishingCompany> searchByName(String searchKey);
+
+    R<PublishingCompanyListVo> getAllPublishingCompanyListVo();
+
+    R<PublishingCompanyListVo> getPublishingCompanyListVoByPage(int page);
 }

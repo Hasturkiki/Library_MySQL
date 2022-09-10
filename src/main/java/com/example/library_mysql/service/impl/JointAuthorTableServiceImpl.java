@@ -1,5 +1,6 @@
 package com.example.library_mysql.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Book;
@@ -9,12 +10,12 @@ import com.example.library_mysql.service.BookService;
 import com.example.library_mysql.service.JointAuthorTableService;
 import com.example.library_mysql.mapper.JointAuthorTableMapper;
 import com.example.library_mysql.vo.JointAuthorTableVo;
+import com.example.library_mysql.vo.JointAuthorTableVoListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Hastur kiki
@@ -41,11 +42,29 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
     }
 
     @Override
-    public R<List<JointAuthorTableVo>> getJointAuthorTableVoList() {
+    public R<JointAuthorTableVoListVo> getAllJointAuthorTableVoListVo() {
         List<JointAuthorTable> jointAuthorTableList = lambdaQuery().orderByAsc(JointAuthorTable::getJointAuthorTableId).list();
         if (jointAuthorTableList.isEmpty()) {
             return R.error("无共同作者表数据");
         }
+        JointAuthorTableVoListVo jointAuthorTableVoListVo = setJointAuthorTableVoListVo(jointAuthorTableList);
+        jointAuthorTableVoListVo.setPagesNumber(0L);
+        return R.success(jointAuthorTableVoListVo);
+    }
+
+    @Override
+    public R<JointAuthorTableVoListVo> getJointAuthorTableVoListVoByPage(int page) {
+        List<JointAuthorTable> jointAuthorTableList = lambdaQuery().orderByAsc(JointAuthorTable::getJointAuthorTableId).page(new Page<>(page, 10)).getRecords();
+        Long pagesNumber = lambdaQuery().orderByAsc(JointAuthorTable::getJointAuthorTableId).page(new Page<>(page, 10)).getPages();
+        if (jointAuthorTableList.isEmpty()) {
+            return R.error("无共同作者表数据");
+        }
+        JointAuthorTableVoListVo jointAuthorTableVoListVo = setJointAuthorTableVoListVo(jointAuthorTableList);
+        jointAuthorTableVoListVo.setPagesNumber(pagesNumber);
+        return R.success(jointAuthorTableVoListVo);
+    }
+
+    private JointAuthorTableVoListVo setJointAuthorTableVoListVo(List<JointAuthorTable> jointAuthorTableList) {
         List<JointAuthorTableVo> jointAuthorTableVoList = new ArrayList<>();
         for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
             int tableId = jointAuthorTable.getTableId();
@@ -60,6 +79,6 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
                 jointAuthorTableVoList.add(jointAuthorTableVo);
             }
         }
-        return R.success(jointAuthorTableVoList);
+        return new JointAuthorTableVoListVo(jointAuthorTableVoList);
     }
 }

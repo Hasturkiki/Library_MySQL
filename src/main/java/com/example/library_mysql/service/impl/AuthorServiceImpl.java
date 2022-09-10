@@ -52,7 +52,7 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
     }
 
     @Override
-    public R<AuthorListVo> getAuthorList() {
+    public R<AuthorListVo> getAllAuthorListVo() {
         List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).list();
         if (authorList.isEmpty()) {
             return R.error("无作者数据");
@@ -64,7 +64,7 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
     }
 
     @Override
-    public R<AuthorListVo> getAuthorListByPage(int page) {
+    public R<AuthorListVo> getAuthorListVoByPage(int page) {
         List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page,10)).getRecords();
         long pagesNumber = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page,10)).getPages();
         if (authorList.isEmpty()) {

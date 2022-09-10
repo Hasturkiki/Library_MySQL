@@ -3,7 +3,7 @@ package com.example.library_mysql.service;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.JointAuthorTable;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.library_mysql.vo.JointAuthorTableVo;
+import com.example.library_mysql.vo.JointAuthorTableVoListVo;
 
 import java.util.List;
 
@@ -16,5 +16,7 @@ public interface JointAuthorTableService extends IService<JointAuthorTable> {
 
     R<List<JointAuthorTable>> getJointAuthorTableList();
 
-    R<List<JointAuthorTableVo>> getJointAuthorTableVoList();
+    R<JointAuthorTableVoListVo> getAllJointAuthorTableVoListVo();
+
+    R<JointAuthorTableVoListVo> getJointAuthorTableVoListVoByPage(int page);
 }

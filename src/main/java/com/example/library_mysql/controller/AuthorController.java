@@ -2,7 +2,7 @@ package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.service.*;
-import com.example.library_mysql.vo.AuthorListVo;
+import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -34,13 +34,13 @@ public class AuthorController {
     private TagService tagService;
 
     @ResponseBody
-    @PostMapping("/getAuthorListByPage")
-    @ApiOperation("分页获取作者列表，page=0时为获取所有作者")
+    @PostMapping("/getAuthorListVoByPage")
+    @ApiOperation("分页获取作者列表扩展：page=0时代表获取所有作者")
     @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int")
-    public R<AuthorListVo> getAuthorListByPage(int page) {
+    public R<AuthorListVo> getAuthorListVoByPage(int page) {
         if (page == 0)
-            return authorService.getAuthorList();
+            return authorService.getAllAuthorListVo();
         else
-            return authorService.getAuthorListByPage(page);
+            return authorService.getAuthorListVoByPage(page);
     }
 }

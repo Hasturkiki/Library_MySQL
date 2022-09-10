@@ -1,8 +1,14 @@
-window.onload = function getAllBook() {
+window.onload = function () {
+    getBookVoListVoByPage(1)
+}
+
+function getBookVoListVoByPage(page) {
     let bookTable = document.getElementsByClassName("book_table")[0]
-    myAxios.get('/book/getAll').then(res => {
+    myAxios.post('/book/getBookVoListVoByPage?page=' + page).then(res => {
         if (res.code === 200) {
-            let bookVoList = res.data
+            let bookVoListVo = res.data
+            let bookVoList = bookVoListVo["bookVoList"]
+            let pagesNumber = bookVoListVo["pagesNumber"]
             if (bookVoList.length !== 0) {
 
                 bookTable.innerHTML = '<colgroup>\n' +
@@ -59,6 +65,7 @@ window.onload = function getAllBook() {
 
                     let td_ibsn = document.createElement("td")
                     td_ibsn.innerText = book["ibsn"]
+                    td_ibsn.style.width = '13%'
 
                     let td_publishingCompany = document.createElement("td")
                     let td_publishingCompanyName_a = document.createElement("a")
@@ -98,9 +105,11 @@ window.onload = function getAllBook() {
                     }
                     td_bookBorrowTable_a.href = '/bookBorrowTable/selectByBook?bookId=' + book["bookId"]
                     td_isBeingBorrowed.appendChild(td_bookBorrowTable_a)
+                    td_isBeingBorrowed.style.width = '7%'
 
                     let td_publicationDate = document.createElement("td")
                     td_publicationDate.innerText = book["publicationDate"]
+                    td_publicationDate.style.width = '8%'
 
                     let td_jointAuthorTable = document.createElement("td")
                     let td_jointAuthorTable_a = document.createElement("a")
@@ -114,6 +123,7 @@ window.onload = function getAllBook() {
                             td_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableId=' + book["jointAuthorTableId"]
                     }
                     td_jointAuthorTable.appendChild(td_jointAuthorTable_a)
+                    td_jointAuthorTable.style.width = '4%'
 
                     let td_operate = document.createElement("td")
                     let button_update = document.createElement('button')
@@ -140,6 +150,85 @@ window.onload = function getAllBook() {
                     tr.appendChild(td_operate)
 
                     bookTable.appendChild(tr)
+                }
+
+                let pageLink_ul = document.getElementsByClassName("pageLink_ul")[0]
+                pageLink_ul.innerHTML = ''
+                if (pagesNumber > 1) {
+                    if (page !== pagesNumber) {
+                        let pageLink_right = document.createElement("li")
+                        pageLink_right.innerText = '>'
+                        pageLink_right.addEventListener('click', function () {
+                            getBookVoListVoByPage(Number(page) + 1)
+                        })
+                        pageLink_ul.appendChild(pageLink_right)
+                    }
+
+                    if (pagesNumber > 5) {
+                        if (page + 2 <= pagesNumber) {
+                            let pageLink_right_2 = document.createElement("li")
+                            pageLink_right_2.innerText = String(page + 2)
+                            pageLink_right_2.addEventListener('click', function () {
+                                getBookVoListVoByPage(Number(page) + 2)
+                            })
+                            pageLink_ul.appendChild(pageLink_right_2)
+                        }
+                        if (page + 1 <= pagesNumber) {
+                            let pageLink_right_1 = document.createElement("li")
+                            pageLink_right_1.innerText = String(page + 1)
+                            pageLink_right_1.addEventListener('click', function () {
+                                getBookVoListVoByPage(Number(page) + 1)
+                            })
+                            pageLink_ul.appendChild(pageLink_right_1)
+                        }
+                        let pageLink_now = document.createElement("li")
+                        pageLink_now.innerText = page
+                        pageLink_now.style.color = '#1aa'
+                        pageLink_now.style.borderBottom = '1px solid #aa1'
+                        pageLink_now.addEventListener('click', function () {
+                            getBookVoListVoByPage(Number(page))
+                        })
+                        pageLink_ul.appendChild(pageLink_now)
+                        if (page - 1 >= 1) {
+                            let pageLink_left_1 = document.createElement("li")
+                            pageLink_left_1.innerText = String(page - 1)
+                            pageLink_left_1.addEventListener('click', function () {
+                                getBookVoListVoByPage(Number(page) - 1)
+                            })
+                            pageLink_ul.appendChild(pageLink_left_1)
+                        }
+                        if (page - 2 >= 1) {
+                            let pageLink_left_2 = document.createElement("li")
+                            pageLink_left_2.innerText = String(page - 2)
+                            pageLink_left_2.addEventListener('click', function () {
+                                getBookVoListVoByPage(Number(page) - 2)
+                            })
+                            pageLink_ul.appendChild(pageLink_left_2)
+                        }
+                    } else {
+                        while (pagesNumber > 0) {
+                            let pageLink_li = document.createElement("li")
+                            pageLink_li.innerText = pagesNumber
+                            pageLink_li.addEventListener('click', function () {
+                                getBookVoListVoByPage(Number(this.innerText))
+                            })
+                            if (pagesNumber === page) {
+                                pageLink_li.style.color = '#1aa'
+                                pageLink_li.style.borderBottom = '1px solid #aa1'
+                            }
+                            pageLink_ul.appendChild(pageLink_li)
+                            pagesNumber--
+                        }
+                    }
+
+                    if (page !== 1) {
+                        let pageLink_left = document.createElement("li")
+                        pageLink_left.innerText = '<'
+                        pageLink_left.addEventListener('click', function () {
+                            getBookVoListVoByPage(Number(page) - 1)
+                        })
+                        pageLink_ul.appendChild(pageLink_left)
+                    }
                 }
             } else {
                 let p = document.createElement("p")
