@@ -54,6 +54,7 @@ function search() {
 
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
+                    table.title = 'author'
                     table.innerHTML =
                         '<colgroup>\n' +
                         '    <col style="background-color: #def">\n' +
@@ -117,6 +118,7 @@ function search() {
 
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
+                    table.title = 'book'
                     table.innerHTML = '<colgroup>\n' +
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
@@ -244,6 +246,7 @@ function search() {
 
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
+                    table.title = 'publishingCompany'
                     table.innerHTML = '<colgroup>\n' +
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
@@ -294,6 +297,7 @@ function search() {
 
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
+                    table.title = 'reader'
                     table.innerHTML = '<colgroup>\n' +
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
@@ -353,6 +357,7 @@ function search() {
 
                     let table = document.createElement('table')
                     table.className = 'search_result_table'
+                    table.title = 'tag'
                     table.innerHTML = '<colgroup>\n' +
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
@@ -419,14 +424,17 @@ function tableSort(sortKey) {
         return
     let sortType
     let tableDataListIndex
+    let tableDataListIndexNew
     switch (sortKey.innerText.split(' ')[1]) {
         case '▲':
             sortKey.innerText = sortKey.innerText.split(' ')[0] + ' ▼'
+            sortKey.tableDataListIndexNew = now
             sortType = 'desc'
             break
         case '▼':
             sortKey.innerText = sortKey.innerText.split(' ')[0]
             tableDataListIndex = sortKey.tableDataListIndex
+            tableDataListIndexNew = sortKey.tableDataListIndexNew
             sortType = 'none'
             break
         default:
@@ -437,35 +445,46 @@ function tableSort(sortKey) {
     let tableData = []
     tableContent.each(function () {
         let td = $(this).find('td')
-        tableData.push(td[tableItemIndex].innerText + '.space' + $(this).html())
+        tableData.push(sortTable.title + '.space' + td[tableItemIndex].innerText + '.space' + $(this).html())
         $(this).html('')
     })
+    let tableDataNow = JSON.parse(JSON.stringify(tableData))
     let tableDataAfterSort = []
     switch (sortType) {
         case 'asc':
-            TableDataList[now] = JSON.parse(JSON.stringify(tableData))
+            TableDataList[now] = tableDataNow
             now += 1
             tableDataAfterSort = tableData.sort(sortAsc)
             break
         case 'desc':
+            TableDataList[now] = tableDataNow
+            now += 1
             tableDataAfterSort = tableData.sort(sortDesc)
             break
         case 'none':
-            // todo 还原上一状态（解决了每列对应数据储存问题，但存在多列排序时还原不当问题，待解决）
+            // todo 还原上一状态（剩余一个还原最开始状态未解决）
             tableDataAfterSort = TableDataList[tableDataListIndex]
+            if (now > 1)
+                for (let tableDataIndex in TableDataList) {
+                    if (parseInt(tableDataIndex) > tableDataListIndex && TableDataList[tableDataIndex][0].split('.space')[0] === tableDataAfterSort[0].split('.space')[0] && parseInt(tableDataIndex) !== tableDataListIndexNew)
+                        if (parseInt(tableDataIndex) > tableDataListIndexNew)
+                            tableDataAfterSort = tableDataNow
+                        else
+                            tableDataAfterSort = TableDataList[tableDataListIndexNew]
+                }
             break
         default:
             console.log('tableSort failed.\n' + tableData)
             break
     }
     tableContent.each(function () {
-        $(this).html(tableDataAfterSort[$(this).index() - 2].split('.space')[1])
+        $(this).html(tableDataAfterSort[$(this).index() - 2].split('.space')[2])
     })
 }
 
 function sortAsc(a, b) {
-    let flagA = a.split('.space')[0].replaceAll('-', '').replace('岁', '').replace('$', '')
-    let flagB = b.split('.space')[0].replaceAll('-', '')
+    let flagA = a.split('.space')[1].replaceAll('-', '').replace('岁', '').replace('$', '')
+    let flagB = b.split('.space')[1].replaceAll('-', '').replace('岁', '').replace('$', '')
     if (0 < flagA[0] && flagA[0] < 9 && 0 < flagB[0] && flagB[0] < 9) {
         flagA = parseFloat(flagA)
         flagB = parseFloat(flagB)
@@ -479,8 +498,8 @@ function sortAsc(a, b) {
 }
 
 function sortDesc(a, b) {
-    let flagA = a.split('.space')[0].replaceAll('-', '')
-    let flagB = b.split('.space')[0].replaceAll('-', '')
+    let flagA = a.split('.space')[1].replaceAll('-', '').replace('岁', '').replace('$', '')
+    let flagB = b.split('.space')[1].replaceAll('-', '').replace('岁', '').replace('$', '')
     if (0 < flagA[0] && flagA[0] < 9 && 0 < flagB[0] && flagB[0] < 9) {
         flagA = parseFloat(flagA)
         flagB = parseFloat(flagB)
