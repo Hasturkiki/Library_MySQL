@@ -57,7 +57,7 @@ public class HomeController {
             result.add(readerList);
             result.add(tagList);
 
-            //to_do 修复中文显示问题 （尚未完全解决，clean后会无法运行，需重设项目编码为UTF-8后编译一次再重设为GBK才能正确显示）
+            //to_do 修复中文显示问题 （尚未完全解决，clean后会无法显示中文字符，需重设项目编码为UTF-8后编译一次再重设为GBK才能正确显示）
             System.out.println("\nsearch '" + new String(searchKey.getBytes(), "GBK") + "' success.");
             if (result.stream().anyMatch(Objects::nonNull)) {
                 System.out.println("result: {");

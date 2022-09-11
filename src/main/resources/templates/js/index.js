@@ -1,6 +1,12 @@
+window.onload = function () {
+    window.scrollTo(0, 0)
+    // 预先进行一次空查询，减少后续响应时间
+    myAxios.post('/search?searchKey=null').then(res => {
+        console.log(res["msg"])
+    })
+}
+
 $(document).keyup(function (e) {
-    // let key = String.fromCharCode(e.keyCode || e.which)
-    // console.log(key)
     let searchString = $('#search_string')
     if (searchString.is(":focus"))
         switch (e.keyCode) {
@@ -11,19 +17,21 @@ $(document).keyup(function (e) {
                 searchString.blur()
                 return
         }
-    else {
+    else
         switch (e.keyCode) {
             case 191:
                 searchString.focus()
                 return
         }
-    }
 })
+
+let TableDataList = {}
+let now = 0
 
 function search() {
     let searchKey = document.getElementById("search_string").value
     let resultBox = document.getElementById("search_result")
-    resultBox.style.background = '#ffe7'
+    resultBox.style.backgroundColor = '#ffe7'
     if (resultBox.childNodes.length !== 0)
         resultBox.innerHTML = ""
     if (document.getElementsByClassName("search_result_emptyHind")[0])
@@ -51,10 +59,10 @@ function search() {
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
                         '  <tr>\n' +
-                        '    <th>作者名</th>\n' +
-                        '    <th>性别</th>\n' +
-                        '    <th>年龄</th>\n' +
-                        '    <th>作品数</th>\n' +
+                        '    <th onclick="tableSort(this)">作者名</th>\n' +
+                        '    <th onclick="tableSort(this)">性别</th>\n' +
+                        '    <th onclick="tableSort(this)">年龄</th>\n' +
+                        '    <th onclick="tableSort(this)">作品数</th>\n' +
                         '  </tr>'
 
                     let authorList = data[0]
@@ -113,16 +121,16 @@ function search() {
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
                         '  <tr>\n' +
-                        '    <th>书名</th>\n' +
-                        '    <th>作者</th>\n' +
-                        '    <th>IBSN号</th>\n' +
-                        '    <th>出版社</th>\n' +
-                        '    <th>标签</th>\n' +
-                        '    <th>库存</th>\n' +
-                        '    <th>价格</th>\n' +
-                        '    <th>借出情况</th>\n' +
-                        '    <th>出版日期</th>\n' +
-                        '    <th>备注</th>\n' +
+                        '    <th onclick="tableSort(this)">书名</th>\n' +
+                        '    <th onclick="tableSort(this)">作者</th>\n' +
+                        '    <th onclick="tableSort(this)">IBSN号</th>\n' +
+                        '    <th onclick="tableSort(this)">出版社</th>\n' +
+                        '    <th onclick="tableSort(this)">标签</th>\n' +
+                        '    <th onclick="tableSort(this)">库存</th>\n' +
+                        '    <th onclick="tableSort(this)">价格</th>\n' +
+                        '    <th onclick="tableSort(this)">借出情况</th>\n' +
+                        '    <th onclick="tableSort(this)">出版日期</th>\n' +
+                        '    <th onclick="tableSort(this)">备注</th>\n' +
                         '  </tr>'
 
                     let bookVoList = data[1]
@@ -240,10 +248,10 @@ function search() {
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
                         '  <tr>\n' +
-                        '    <th>出版社名称</th>\n' +
-                        '    <th>联系方式</th>\n' +
-                        '    <th>通信地址</th>\n' +
-                        '    <th>作品数</th>\n' +
+                        '    <th onclick="tableSort(this)">出版社名称</th>\n' +
+                        '    <th onclick="tableSort(this)">联系方式</th>\n' +
+                        '    <th onclick="tableSort(this)">通信地址</th>\n' +
+                        '    <th onclick="tableSort(this)">作品数</th>\n' +
                         '  </tr>'
 
                     let publishingCompanyList = data[2]
@@ -290,10 +298,10 @@ function search() {
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
                         '  <tr>\n' +
-                        '    <th>用户名</th>\n' +
-                        '    <th>性别</th>\n' +
-                        '    <th>年龄</th>\n' +
-                        '    <th>余额</th>\n' +
+                        '    <th onclick="tableSort(this)">用户名</th>\n' +
+                        '    <th onclick="tableSort(this)">性别</th>\n' +
+                        '    <th onclick="tableSort(this)">年龄</th>\n' +
+                        '    <th onclick="tableSort(this)">余额</th>\n' +
                         '  </tr>'
 
                     let readerList = data[3]
@@ -349,8 +357,8 @@ function search() {
                         '    <col style="background-color: #def">\n' +
                         '  </colgroup>\n' +
                         '  <tr>\n' +
-                        '    <th>标签名称</th>\n' +
-                        '    <th>作品数</th>\n' +
+                        '    <th onclick="tableSort(this)">标签名称</th>\n' +
+                        '    <th onclick="tableSort(this)">作品数</th>\n' +
                         '  </tr>'
 
                     let tagList = data[4]
@@ -378,6 +386,8 @@ function search() {
                     resultBox.appendChild(table)
                 }
                 window.scrollTo(0, 100)
+                TableDataList = {}
+                now = 0
                 if (data[0] == null && data[1] == null && data[2] == null && data[3] == null && data[4] == null) {
                     let p = document.createElement("p")
                     p.className = "search_result_emptyHind"
@@ -395,16 +405,90 @@ function search() {
         error: () => {
             let p = document.createElement("p")
             p.className = "search_result_emptyHind"
-            p.innerText = "无对应内容，请确认后重试。"
+            p.innerText = "搜索失败，请确认后重试。"
             resultBox.appendChild(p)
         }
     })
 }
 
-window.onload = function () {
-    window.scrollTo(0, 0)
-    // 预先进行一次空查询，减少后续响应时间
-    myAxios.post('/search?searchKey=null').then(res => {
-        console.log(res["msg"])
+function tableSort(sortKey) {
+    let tableItemIndex = $(sortKey).index()
+    let sortTable = sortKey.parentNode.parentNode.parentNode
+    let tableContent = $(sortTable).find('.search_result_content')
+    if (tableContent.length <= 1)
+        return
+    let sortType
+    let tableDataListIndex
+    switch (sortKey.innerText.split(' ')[1]) {
+        case '▲':
+            sortKey.innerText = sortKey.innerText.split(' ')[0] + ' ▼'
+            sortType = 'desc'
+            break
+        case '▼':
+            sortKey.innerText = sortKey.innerText.split(' ')[0]
+            tableDataListIndex = sortKey.tableDataListIndex
+            sortType = 'none'
+            break
+        default:
+            sortKey.innerText = sortKey.innerText.split(' ')[0] + ' ▲'
+            sortKey.tableDataListIndex = now
+            sortType = 'asc'
+    }
+    let tableData = []
+    tableContent.each(function () {
+        let td = $(this).find('td')
+        tableData.push(td[tableItemIndex].innerText + '.space' + $(this).html())
+        $(this).html('')
     })
+    let tableDataAfterSort = []
+    switch (sortType) {
+        case 'asc':
+            TableDataList[now] = JSON.parse(JSON.stringify(tableData))
+            now += 1
+            tableDataAfterSort = tableData.sort(sortAsc)
+            break
+        case 'desc':
+            tableDataAfterSort = tableData.sort(sortDesc)
+            break
+        case 'none':
+            // todo 还原上一状态（解决了每列对应数据储存问题，但存在多列排序时还原不当问题，待解决）
+            tableDataAfterSort = TableDataList[tableDataListIndex]
+            break
+        default:
+            console.log('tableSort failed.\n' + tableData)
+            break
+    }
+    tableContent.each(function () {
+        $(this).html(tableDataAfterSort[$(this).index() - 2].split('.space')[1])
+    })
+}
+
+function sortAsc(a, b) {
+    let flagA = a.split('.space')[0].replaceAll('-', '').replace('岁', '').replace('$', '')
+    let flagB = b.split('.space')[0].replaceAll('-', '')
+    if (0 < flagA[0] && flagA[0] < 9 && 0 < flagB[0] && flagB[0] < 9) {
+        flagA = parseFloat(flagA)
+        flagB = parseFloat(flagB)
+    }
+    if (flagA < flagB)
+        return -1
+    else if (flagA > flagB)
+        return 1
+    else
+        return 0
+}
+
+function sortDesc(a, b) {
+    let flagA = a.split('.space')[0].replaceAll('-', '')
+    let flagB = b.split('.space')[0].replaceAll('-', '')
+    if (0 < flagA[0] && flagA[0] < 9 && 0 < flagB[0] && flagB[0] < 9) {
+        flagA = parseFloat(flagA)
+        flagB = parseFloat(flagB)
+    }
+    if (flagA < flagB)
+        return 1
+    else if (flagA > flagB)
+        return -1
+    else
+        return 0
 }
