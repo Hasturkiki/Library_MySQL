@@ -425,6 +425,7 @@ function tableSort(sortKey) {
     let sortType
     let tableDataListIndex
     let tableDataListIndexNew
+    let tableDataListIndexNewIsEnd = false
     switch (sortKey.innerText.split(' ')[1]) {
         case '▲':
             sortKey.innerText = sortKey.innerText.split(' ')[0] + ' ▼'
@@ -435,6 +436,7 @@ function tableSort(sortKey) {
             sortKey.innerText = sortKey.innerText.split(' ')[0]
             tableDataListIndex = sortKey.tableDataListIndex
             tableDataListIndexNew = sortKey.tableDataListIndexNew
+            tableDataListIndexNewIsEnd = true
             sortType = 'none'
             break
         default:
@@ -462,16 +464,26 @@ function tableSort(sortKey) {
             tableDataAfterSort = tableData.sort(sortDesc)
             break
         case 'none':
-            // todo 还原上一状态（剩余一个还原最开始状态未解决）
             tableDataAfterSort = TableDataList[tableDataListIndex]
+            let oldTableData = {}
+            let oldTableDataIndex = 0
+            let isBackToFirst = true
             if (now > 1)
                 for (let tableDataIndex in TableDataList) {
-                    if (parseInt(tableDataIndex) > tableDataListIndex && TableDataList[tableDataIndex][0].split('.space')[0] === tableDataAfterSort[0].split('.space')[0] && parseInt(tableDataIndex) !== tableDataListIndexNew)
-                        if (parseInt(tableDataIndex) > tableDataListIndexNew)
-                            tableDataAfterSort = tableDataNow
-                        else
-                            tableDataAfterSort = TableDataList[tableDataListIndexNew]
+                    if (TableDataList[tableDataIndex].length !== 0)
+                        if (TableDataList[tableDataIndex][0].split('.space')[0] === tableDataAfterSort[0].split('.space')[0])
+                            if (parseInt(tableDataIndex) > tableDataListIndex && parseInt(tableDataIndex) !== tableDataListIndexNew) {
+                                isBackToFirst = false
+                                if (parseInt(tableDataIndex) > tableDataListIndexNew)
+                                    tableDataAfterSort = tableDataNow
+                                else
+                                    tableDataAfterSort = JSON.parse(JSON.stringify(TableDataList[tableDataListIndexNew]))
+                            } else if (parseInt(tableDataIndex) < tableDataListIndex)
+                                oldTableData[oldTableDataIndex++] = TableDataList[tableDataIndex]
                 }
+            if (isBackToFirst && Object.keys(oldTableData).length !== 0)
+                tableDataAfterSort = oldTableData[0]
+            TableDataList[tableDataListIndexNew] = []
             break
         default:
             console.log('tableSort failed.\n' + tableData)
