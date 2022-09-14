@@ -25,8 +25,10 @@ $(document).keyup(function (e) {
         }
 })
 
-let TableDataList = {}
-let now = 0
+// 储存表格状态数据用以排序恢复
+let tableDataList = {}
+let tableDataListIndex = 0
+let tableDataOrigin = {}
 
 function search() {
     let searchKey = document.getElementById("search_string").value
@@ -390,9 +392,11 @@ function search() {
                     }
                     resultBox.appendChild(table)
                 }
+
                 window.scrollTo(0, 100)
-                TableDataList = {}
-                now = 0
+                tableDataList = {}
+                tableDataListIndex = 0
+                tableDataOrigin = {}
                 if (data[0] == null && data[1] == null && data[2] == null && data[3] == null && data[4] == null) {
                     let p = document.createElement("p")
                     p.className = "search_result_emptyHind"
@@ -420,87 +424,110 @@ function tableSort(sortKey) {
     let tableItemIndex = $(sortKey).index()
     let sortTable = sortKey.parentNode.parentNode.parentNode
     let tableContent = $(sortTable).find('.search_result_content')
+    // 表格数据只有一条的不予排序
     if (tableContent.length <= 1)
         return
-    let sortType
-    let tableDataListIndex
-    let tableDataListIndexNew
-    let tableDataListIndexNewIsEnd = false
+
+    let tableName = sortTable.title   // 表格类型
+    let sortType    // 排序类型
+    let tableDataListIndexAsc   // 升序前数据索引
+    let tableDataListIndexDesc   // 降序前数据索引
     switch (sortKey.innerText.split(' ')[1]) {
         case '▲':
             sortKey.innerText = sortKey.innerText.split(' ')[0] + ' ▼'
-            sortKey.tableDataListIndexNew = now
+            sortKey.tableDataListIndexNewDesc = tableDataListIndex
             sortType = 'desc'
             break
         case '▼':
             sortKey.innerText = sortKey.innerText.split(' ')[0]
-            tableDataListIndex = sortKey.tableDataListIndex
-            tableDataListIndexNew = sortKey.tableDataListIndexNew
-            tableDataListIndexNewIsEnd = true
+            tableDataListIndexAsc = sortKey.tableDataListIndexAsc
+            tableDataListIndexDesc = sortKey.tableDataListIndexNewDesc
             sortType = 'none'
             break
         default:
             sortKey.innerText = sortKey.innerText.split(' ')[0] + ' ▲'
-            sortKey.tableDataListIndex = now
+            sortKey.tableDataListIndexAsc = tableDataListIndex
             sortType = 'asc'
     }
     let tableData = []
     tableContent.each(function () {
         let td = $(this).find('td')
-        tableData.push(sortTable.title + '.space' + td[tableItemIndex].innerText + '.space' + $(this).html())
+        tableData.push(tableName + '.space' + td[tableItemIndex].innerText + '.space' + $(this).html())
         $(this).html('')
     })
-    let tableDataNow = JSON.parse(JSON.stringify(tableData))
+    let tableDataNow = JSON.parse(JSON.stringify(tableData))  // 当前表格数据
     let tableDataAfterSort = []
     switch (sortType) {
         case 'asc':
-            TableDataList[now] = tableDataNow
-            now += 1
+            tableDataList[tableDataListIndex] = tableDataNow
+            tableDataListIndex++
             tableDataAfterSort = tableData.sort(sortAsc)
+            if (tableDataOrigin[tableName] == null)
+                tableDataOrigin[tableName] = JSON.parse(JSON.stringify(tableDataNow))
             break
         case 'desc':
-            TableDataList[now] = tableDataNow
-            now += 1
+            tableDataList[tableDataListIndex] = tableDataNow
+            tableDataListIndex++
             tableDataAfterSort = tableData.sort(sortDesc)
             break
         case 'none':
-            tableDataAfterSort = TableDataList[tableDataListIndex]
-            let oldTableData = {}
-            let oldTableDataIndex = 0
-            let isBackToFirst = true
-            if (now > 1)
-                for (let tableDataIndex in TableDataList) {
-                    if (TableDataList[tableDataIndex].length !== 0)
-                        if (TableDataList[tableDataIndex][0].split('.space')[0] === tableDataAfterSort[0].split('.space')[0])
-                            if (parseInt(tableDataIndex) > tableDataListIndex && parseInt(tableDataIndex) !== tableDataListIndexNew) {
-                                isBackToFirst = false
-                                if (parseInt(tableDataIndex) > tableDataListIndexNew)
-                                    tableDataAfterSort = tableDataNow
-                                else
-                                    tableDataAfterSort = JSON.parse(JSON.stringify(TableDataList[tableDataListIndexNew]))
-                            } else if (parseInt(tableDataIndex) < tableDataListIndex)
-                                oldTableData[oldTableDataIndex++] = TableDataList[tableDataIndex]
-                }
-            if (isBackToFirst && Object.keys(oldTableData).length !== 0)
-                tableDataAfterSort = oldTableData[0]
-            TableDataList[tableDataListIndexNew] = []
+            tableDataAfterSort = tableDataList[tableDataListIndexAsc]  // 先设置为该项升序前数据
+            let oldTableDataList = {}   // 该列表存放该项参与排序前已开启排序且尚处于排序状态的表格数据
+            let oldTableDataListIndex = 0
+            let isBackToOrigin = true   // 是否返回表格初始状态
+            for (let tableDataIndex in tableDataList)
+                if (tableDataList[tableDataIndex][0].split('.space')[0] === tableName && parseInt(tableDataIndex) !== tableDataListIndexDesc)
+                    if (parseInt(tableDataIndex) > tableDataListIndexAsc) {
+                        if (parseInt(tableDataIndex) > tableDataListIndexDesc) {
+                            tableDataAfterSort = tableDataNow
+                            break
+                        } else
+                            tableDataAfterSort = JSON.parse(JSON.stringify(tableDataList[tableDataListIndexDesc]))
+                    } else {
+                        oldTableDataList[oldTableDataListIndex] = tableDataList[tableDataIndex]
+                        oldTableDataListIndex++
+                    }
+
+            // 该排序终结，重设该排序对应列表值
+            for (let tableDataIndex in tableDataList)
+                if (tableDataList[tableDataIndex].indexOf(' is finished.') === -1)
+                    if (tableDataList[tableDataIndex][0].split('.space')[0] === tableName)
+                        if (parseInt(tableDataIndex) > tableDataListIndexAsc && parseInt(tableDataIndex) !== tableDataListIndexDesc) {
+                            tableDataList[tableDataIndex] = JSON.parse(JSON.stringify(tableDataList[tableDataListIndexAsc]))
+                            break
+                        }
+            tableDataList[tableDataListIndexAsc] = tableName + tableDataListIndexAsc + ' is finished.'
+            tableDataList[tableDataListIndexDesc] = tableName + tableDataListIndexAsc + ' is finished.'
+
+            // 是否返回表格初始状态
+            for (let tableDataIndex in tableDataList)
+                if (tableDataList[tableDataIndex].indexOf(' is finished.') === -1)
+                    if (tableDataList[tableDataIndex][0].split('.space')[0] === tableName)
+                        isBackToOrigin = false
+            if (isBackToOrigin)
+                tableDataAfterSort = tableDataOrigin[tableName]
             break
         default:
             console.log('tableSort failed.\n' + tableData)
-            break
     }
+
+    // 表格数据注入
     tableContent.each(function () {
         $(this).html(tableDataAfterSort[$(this).index() - 2].split('.space')[2])
     })
 }
 
 function sortAsc(a, b) {
-    let flagA = a.split('.space')[1].replaceAll('-', '').replace('岁', '').replace('$', '')
-    let flagB = b.split('.space')[1].replaceAll('-', '').replace('岁', '').replace('$', '')
+    let flagA = a.split('.space')[1].replaceAll('-', '').replace('$', '')
+    let flagB = b.split('.space')[1].replaceAll('-', '').replace('$', '')
     if (0 < flagA[0] && flagA[0] < 9 && 0 < flagB[0] && flagB[0] < 9) {
         flagA = parseFloat(flagA)
         flagB = parseFloat(flagB)
     }
+    if (flagA === 'free')
+        flagA = 0
+    if (flagB === 'free')
+        flagB = 0
     if (flagA < flagB)
         return -1
     else if (flagA > flagB)
@@ -510,12 +537,16 @@ function sortAsc(a, b) {
 }
 
 function sortDesc(a, b) {
-    let flagA = a.split('.space')[1].replaceAll('-', '').replace('岁', '').replace('$', '')
-    let flagB = b.split('.space')[1].replaceAll('-', '').replace('岁', '').replace('$', '')
+    let flagA = a.split('.space')[1].replaceAll('-', '').replace('$', '')
+    let flagB = b.split('.space')[1].replaceAll('-', '').replace('$', '')
     if (0 < flagA[0] && flagA[0] < 9 && 0 < flagB[0] && flagB[0] < 9) {
         flagA = parseFloat(flagA)
         flagB = parseFloat(flagB)
     }
+    if (flagA === 'free')
+        flagA = 0
+    if (flagB === 'free')
+        flagB = 0
     if (flagA < flagB)
         return 1
     else if (flagA > flagB)
