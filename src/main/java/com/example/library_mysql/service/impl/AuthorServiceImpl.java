@@ -6,14 +6,15 @@ import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.domain.Book;
 import com.example.library_mysql.domain.JointAuthorTable;
-import com.example.library_mysql.service.AuthorService;
 import com.example.library_mysql.mapper.AuthorMapper;
+import com.example.library_mysql.service.AuthorService;
 import com.example.library_mysql.service.BookService;
 import com.example.library_mysql.service.JointAuthorTableService;
 import com.example.library_mysql.vo.AuthorListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -65,12 +66,51 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
 
     @Override
     public R<AuthorListVo> getAuthorListVoByPage(int page) {
-        List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page,10)).getRecords();
-        long pagesNumber = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page,10)).getPages();
+        List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
+        long pagesNumber = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getPages();
         if (authorList.isEmpty()) {
             return R.error("无作者数据");
         }
         setBookNumber(authorList);
+        AuthorListVo authorListVo = new AuthorListVo(authorList);
+        authorListVo.setPagesNumber(pagesNumber);
+        return R.success(authorListVo);
+    }
+
+    @Override
+    public R<AuthorListVo> getAuthorListVo(int page, String sortItem, String sortType) {
+        List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
+        long pagesNumber = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getPages();
+        switch (sortType) {
+            case "asc" -> authorList = switch (sortItem) {
+                case "authorId" -> lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
+                case "authorName" -> lambdaQuery().orderByAsc(Author::getAuthorName).page(new Page<>(page, 10)).getRecords();
+                case "authorSex" -> lambdaQuery().orderByAsc(Author::getAuthorSex).page(new Page<>(page, 10)).getRecords();
+                case "authorAge" -> lambdaQuery().orderByAsc(Author::getAuthorAge).page(new Page<>(page, 10)).getRecords();
+                case "bookNumber" -> lambdaQuery().orderByAsc(Author::getAuthorId).list();
+                default -> lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 12)).getRecords();
+            };
+            case "desc" -> authorList = switch (sortItem) {
+                case "authorId" -> lambdaQuery().orderByDesc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
+                case "authorName" -> lambdaQuery().orderByDesc(Author::getAuthorName).page(new Page<>(page, 10)).getRecords();
+                case "authorSex" -> lambdaQuery().orderByDesc(Author::getAuthorSex).page(new Page<>(page, 10)).getRecords();
+                case "authorAge" -> lambdaQuery().orderByDesc(Author::getAuthorAge).page(new Page<>(page, 10)).getRecords();
+                case "bookNumber" -> lambdaQuery().orderByDesc(Author::getAuthorId).list();
+                default -> lambdaQuery().orderByDesc(Author::getAuthorId).page(new Page<>(page, 12)).getRecords();
+            };
+            case "none" -> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
+        }
+
+        if (authorList.isEmpty()) {
+            return R.error("无作者数据");
+        }
+        setBookNumber(authorList);
+        if (sortItem.equals("bookNumber"))
+            if (sortType.equals("asc"))
+                authorList = authorList.stream().sorted(Comparator.comparing(Author::getBookNumber)).skip((page - 1) * 10L).limit(10).toList();
+            else if (sortType.equals("desc"))
+                authorList = authorList.stream().sorted(Comparator.comparing(Author::getBookNumber).reversed()).skip((page - 1) * 10L).limit(10).toList();
+
         AuthorListVo authorListVo = new AuthorListVo(authorList);
         authorListVo.setPagesNumber(pagesNumber);
         return R.success(authorListVo);
