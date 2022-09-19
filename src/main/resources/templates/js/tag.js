@@ -1,10 +1,13 @@
+const sortItems = ['tagId', 'tagName', 'bookNumber']
+const sortTypes = ['none', 'asc', 'desc']
+
 window.onload = function () {
-    getTagListVoByPage(1)
+    getTagListVo(1, sortItems[0], sortTypes[0])
 }
 
-function getTagListVoByPage(page) {
+function getTagListVo(page, sortItem, sortType) {
     let tagTable = document.getElementsByClassName("tag_table")[0]
-    myAxios.post('/tag/getTagListVoByPage?page=' + page).then(res => {
+    myAxios.post('/tag/getTagListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let tagListVo = res.data
             let tagList = tagListVo["tagList"]
@@ -17,11 +20,24 @@ function getTagListVoByPage(page) {
                     '            <col style="background-color: #dee">\n' +
                     '        </colgroup>\n' +
                     '        <tr>\n' +
-                    '            <th>标签ID</th>\n' +
-                    '            <th>标签名称</th>\n' +
-                    '            <th>作品数</th>\n' +
+                    '            <th onclick="tableSort(this)">标签ID</th>\n' +
+                    '            <th onclick="tableSort(this)">标签名称</th>\n' +
+                    '            <th onclick="tableSort(this)">作品数</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
+
+                let sortIndex = sortItems.indexOf(sortItem)
+                let sortItemTh = $($(tagTable).find('tr')[0]).find('th')[sortIndex]
+                switch (sortType) {
+                    case 'asc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▲'
+                        break
+                    case 'desc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▼'
+                        break
+                    default:
+                        $($(tagTable).find('tr')[0]).find('th')[0].innerText += ' ▲'
+                }
 
                 for (const tag of tagList) {
                     let tr = document.createElement("tr")
@@ -67,7 +83,7 @@ function getTagListVoByPage(page) {
                         let pageLink_right = document.createElement("li")
                         pageLink_right.innerText = '>'
                         pageLink_right.addEventListener('click', function () {
-                            getTagListVoByPage(Number(page) + 1)
+                            getTagListVo(Number(page) + 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_right)
                     }
@@ -77,7 +93,7 @@ function getTagListVoByPage(page) {
                             let pageLink_right_2 = document.createElement("li")
                             pageLink_right_2.innerText = String(page + 2)
                             pageLink_right_2.addEventListener('click', function () {
-                                getTagListVoByPage(Number(page) + 2)
+                                getTagListVo(Number(page) + 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_2)
                         }
@@ -85,7 +101,7 @@ function getTagListVoByPage(page) {
                             let pageLink_right_1 = document.createElement("li")
                             pageLink_right_1.innerText = String(page + 1)
                             pageLink_right_1.addEventListener('click', function () {
-                                getTagListVoByPage(Number(page) + 1)
+                                getTagListVo(Number(page) + 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_1)
                         }
@@ -94,14 +110,14 @@ function getTagListVoByPage(page) {
                         pageLink_now.style.color = '#1aa'
                         pageLink_now.style.borderBottom = '1px solid #aa1'
                         pageLink_now.addEventListener('click', function () {
-                            getTagListVoByPage(Number(page))
+                            getTagListVo(Number(page), sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_now)
                         if (page - 1 >= 1) {
                             let pageLink_left_1 = document.createElement("li")
                             pageLink_left_1.innerText = String(page - 1)
                             pageLink_left_1.addEventListener('click', function () {
-                                getTagListVoByPage(Number(page) - 1)
+                                getTagListVo(Number(page) - 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_1)
                         }
@@ -109,7 +125,7 @@ function getTagListVoByPage(page) {
                             let pageLink_left_2 = document.createElement("li")
                             pageLink_left_2.innerText = String(page - 2)
                             pageLink_left_2.addEventListener('click', function () {
-                                getTagListVoByPage(Number(page) - 2)
+                                getTagListVo(Number(page) - 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_2)
                         }
@@ -118,7 +134,7 @@ function getTagListVoByPage(page) {
                             let pageLink_li = document.createElement("li")
                             pageLink_li.innerText = pagesNumber
                             pageLink_li.addEventListener('click', function () {
-                                getTagListVoByPage(Number(this.innerText))
+                                getTagListVo(Number(this.innerText), sortItem, sortType)
                             })
                             if (pagesNumber === page) {
                                 pageLink_li.style.color = '#1aa'
@@ -133,7 +149,7 @@ function getTagListVoByPage(page) {
                         let pageLink_left = document.createElement("li")
                         pageLink_left.innerText = '<'
                         pageLink_left.addEventListener('click', function () {
-                            getTagListVoByPage(Number(page) - 1)
+                            getTagListVo(Number(page) - 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_left)
                     }
@@ -152,6 +168,30 @@ function getTagListVoByPage(page) {
             tagTable.appendChild(p)
         }
     })
+}
+
+function tableSort(sortItem) {
+    let sortIndex = $(sortItem).index()
+    let sortKey = sortItems[sortIndex]
+    let sortTable = sortItem.parentNode.parentNode.parentNode
+    let tableContent = $(sortTable).find('.search_result_content')
+    // 表格数据只有一条的不予排序
+    if (tableContent.length <= 1)
+        return
+
+    // 排序方式
+    let sortType
+    switch (sortItem.innerText.split(' ')[1]) {
+        case '▲':
+            sortType = 'desc'
+            break
+        case '▼':
+            sortType = 'none'
+            break
+        default:
+            sortType = 'asc'
+    }
+    getTagListVo(1, sortKey, sortType)
 }
 
 $('.table_button_update').click({

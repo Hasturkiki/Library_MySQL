@@ -12,6 +12,7 @@ import com.example.library_mysql.vo.PublishingCompanyListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -59,12 +60,48 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
 
     @Override
     public R<PublishingCompanyListVo> getPublishingCompanyListVoByPage(int page) {
-        List<PublishingCompany> publishingCompanyList = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page,10)).getRecords();
-        long pagesNumber = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page,10)).getPages();
+        List<PublishingCompany> publishingCompanyList = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page, 10)).getRecords();
+        long pagesNumber = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page, 10)).getPages();
         if (publishingCompanyList.isEmpty()) {
             return R.error("无出版社数据");
         }
         setBookNumber(publishingCompanyList);
+        PublishingCompanyListVo publishingCompanyListVo = new PublishingCompanyListVo(publishingCompanyList);
+        publishingCompanyListVo.setPagesNumber(pagesNumber);
+        return R.success(publishingCompanyListVo);
+    }
+
+    @Override
+    public R<PublishingCompanyListVo> getPublishingCompanyListVo(int page, String sortItem, String sortType) {
+        List<PublishingCompany> publishingCompanyList = switch (sortType) {
+            case "asc" -> switch (sortItem) {
+                case "publishingCompanyId" -> lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page, 10)).getRecords();
+                case "publishingCompanyName" -> lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyName).page(new Page<>(page, 10)).getRecords();
+                case "publishingCompanyTelephoneNumber" -> lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyTelephoneNumber).page(new Page<>(page, 10)).getRecords();
+                case "publishingCompanyAddress" -> lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyAddress).page(new Page<>(page, 10)).getRecords();
+                default -> lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).list();
+            };
+            case "desc" -> switch (sortItem) {
+                case "publishingCompanyId" -> lambdaQuery().orderByDesc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page, 10)).getRecords();
+                case "publishingCompanyName" -> lambdaQuery().orderByDesc(PublishingCompany::getPublishingCompanyName).page(new Page<>(page, 10)).getRecords();
+                case "publishingCompanyTelephoneNumber" -> lambdaQuery().orderByDesc(PublishingCompany::getPublishingCompanyTelephoneNumber).page(new Page<>(page, 10)).getRecords();
+                case "publishingCompanyAddress" -> lambdaQuery().orderByDesc(PublishingCompany::getPublishingCompanyAddress).page(new Page<>(page, 10)).getRecords();
+                default -> lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).list();
+            };
+            default -> lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page, 10)).getRecords();
+        };
+        long pagesNumber = lambdaQuery().orderByAsc(PublishingCompany::getPublishingCompanyId).page(new Page<>(page, 10)).getPages();
+
+        if (publishingCompanyList.isEmpty()) {
+            return R.error("无出版社数据");
+        }
+        setBookNumber(publishingCompanyList);
+        if (sortItem.equals("bookNumber"))
+            if (sortType.equals("asc"))
+                publishingCompanyList = publishingCompanyList.stream().sorted(Comparator.comparing(PublishingCompany::getBookNumber)).skip((page - 1) * 10L).limit(10).toList();
+            else if (sortType.equals("desc"))
+                publishingCompanyList = publishingCompanyList.stream().sorted(Comparator.comparing(PublishingCompany::getBookNumber).reversed()).skip((page - 1) * 10L).limit(10).toList();
+
         PublishingCompanyListVo publishingCompanyListVo = new PublishingCompanyListVo(publishingCompanyList);
         publishingCompanyListVo.setPagesNumber(pagesNumber);
         return R.success(publishingCompanyListVo);

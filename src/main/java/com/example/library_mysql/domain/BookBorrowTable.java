@@ -1,15 +1,14 @@
 package com.example.library_mysql.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 借书表信息
@@ -73,7 +72,4 @@ public class BookBorrowTable implements Serializable {
      */
     @ApiModelProperty("是否删除标志：0为未删除、1为已删除，默认为0")
     private Boolean isDeleted;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

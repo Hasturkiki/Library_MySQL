@@ -79,27 +79,24 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
 
     @Override
     public R<AuthorListVo> getAuthorListVo(int page, String sortItem, String sortType) {
-        List<Author> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
-        long pagesNumber = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getPages();
-        switch (sortType) {
-            case "asc" -> authorList = switch (sortItem) {
+        List<Author> authorList = switch (sortType) {
+            case "asc" -> switch (sortItem) {
                 case "authorId" -> lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
                 case "authorName" -> lambdaQuery().orderByAsc(Author::getAuthorName).page(new Page<>(page, 10)).getRecords();
                 case "authorSex" -> lambdaQuery().orderByAsc(Author::getAuthorSex).page(new Page<>(page, 10)).getRecords();
                 case "authorAge" -> lambdaQuery().orderByAsc(Author::getAuthorAge).page(new Page<>(page, 10)).getRecords();
-                case "bookNumber" -> lambdaQuery().orderByAsc(Author::getAuthorId).list();
-                default -> lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 12)).getRecords();
+                default -> lambdaQuery().orderByAsc(Author::getAuthorId).list();
             };
-            case "desc" -> authorList = switch (sortItem) {
+            case "desc" -> switch (sortItem) {
                 case "authorId" -> lambdaQuery().orderByDesc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
                 case "authorName" -> lambdaQuery().orderByDesc(Author::getAuthorName).page(new Page<>(page, 10)).getRecords();
                 case "authorSex" -> lambdaQuery().orderByDesc(Author::getAuthorSex).page(new Page<>(page, 10)).getRecords();
                 case "authorAge" -> lambdaQuery().orderByDesc(Author::getAuthorAge).page(new Page<>(page, 10)).getRecords();
-                case "bookNumber" -> lambdaQuery().orderByDesc(Author::getAuthorId).list();
-                default -> lambdaQuery().orderByDesc(Author::getAuthorId).page(new Page<>(page, 12)).getRecords();
+                default -> lambdaQuery().orderByAsc(Author::getAuthorId).list();
             };
-            case "none" -> authorList = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
-        }
+            default -> lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getRecords();
+        };
+        long pagesNumber = lambdaQuery().orderByAsc(Author::getAuthorId).page(new Page<>(page, 10)).getPages();
 
         if (authorList.isEmpty()) {
             return R.error("无作者数据");

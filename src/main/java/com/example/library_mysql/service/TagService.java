@@ -21,4 +21,6 @@ public interface TagService extends IService<Tag> {
     R<TagListVo> getAllTagListVo();
 
     R<TagListVo> getTagListVoByPage(int page);
+
+    R<TagListVo> getTagListVo(int page, String sortItem, String sortType);
 }

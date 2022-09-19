@@ -19,4 +19,6 @@ public interface BookBorrowTableService extends IService<BookBorrowTable> {
     R<BookBorrowTableVoListVo> getAllBookBorrowTableVoListVo();
 
     R<BookBorrowTableVoListVo> getBookBorrowTableVoListVoByPage(int page);
+
+    R<BookBorrowTableVoListVo> getBookBorrowTableVoListVo(int page, String sortItem, String sortType);
 }

@@ -19,4 +19,6 @@ public interface JointAuthorTableService extends IService<JointAuthorTable> {
     R<JointAuthorTableVoListVo> getAllJointAuthorTableVoListVo();
 
     R<JointAuthorTableVoListVo> getJointAuthorTableVoListVoByPage(int page);
+
+    R<JointAuthorTableVoListVo> getJointAuthorTableVoListVo(int page, String sortItem, String sortType);
 }

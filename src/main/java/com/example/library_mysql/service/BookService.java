@@ -24,4 +24,6 @@ public interface BookService extends IService<Book> {
     R<BookVoListVo> getAllBookVoListVo();
 
     R<BookVoListVo> getBookVoListVoByPage(int page);
+
+    R<BookVoListVo> getBookVoListVo(int page, String sortItem, String sortType);
 }

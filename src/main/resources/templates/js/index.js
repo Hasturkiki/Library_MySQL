@@ -201,10 +201,9 @@ function search() {
                                 td_book_bookBorrowTable_a.innerText = '无借出'
                                 break
                             default:
-                                if (book["isBeingBorrowed"] < book["quantity"])
-                                    td_book_bookBorrowTable_a.innerText = '借出' + book["isBeingBorrowed"] + '本'
-                                else
-                                    td_book_bookBorrowTable_a.innerText = '全部借出'
+                                td_book_bookBorrowTable_a.innerText = '借出' + book["isBeingBorrowed"] + '本'
+                                if (book["isBeingBorrowed"] === book["quantity"])
+                                    td_isBeingBorrowed.title = '已全部借出'
                         }
                         td_book_bookBorrowTable_a.href = '/bookBorrowTable/selectByBook?bookId=' + book["bookId"]
                         td_isBeingBorrowed.appendChild(td_book_bookBorrowTable_a)

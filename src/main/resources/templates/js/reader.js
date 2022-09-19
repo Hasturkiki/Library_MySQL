@@ -1,10 +1,13 @@
+const sortItems = ['readerId', 'readerName', 'readerSex', 'readerAge', 'saving']
+const sortTypes = ['none', 'asc', 'desc']
+
 window.onload = function () {
-    getReaderListVoByPage(1)
+    getReaderListVo(1, sortItems[0], sortTypes[0])
 }
 
-function getReaderListVoByPage(page) {
+function getReaderListVo(page, sortItem, sortType) {
     let readerTable = document.getElementsByClassName("reader_table")[0]
-    myAxios.post('/reader/getReaderListVoByPage?page=' + page).then(res => {
+    myAxios.post('/reader/getReaderListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let readerListVo = res.data
             let readerList = readerListVo["readerList"]
@@ -17,13 +20,26 @@ function getReaderListVoByPage(page) {
                     '            <col style="background-color: #dee">\n' +
                     '        </colgroup>\n' +
                     '        <tr>\n' +
-                    '            <th>读者ID</th>\n' +
-                    '            <th>用户名</th>\n' +
-                    '            <th>性别</th>\n' +
-                    '            <th>年龄</th>\n' +
-                    '            <th>余额</th>\n' +
+                    '            <th onclick="tableSort(this)">读者ID</th>\n' +
+                    '            <th onclick="tableSort(this)">用户名</th>\n' +
+                    '            <th onclick="tableSort(this)">性别</th>\n' +
+                    '            <th onclick="tableSort(this)">年龄</th>\n' +
+                    '            <th onclick="tableSort(this)">余额</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
+
+                let sortIndex = sortItems.indexOf(sortItem)
+                let sortItemTh = $($(readerTable).find('tr')[0]).find('th')[sortIndex]
+                switch (sortType) {
+                    case 'asc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▲'
+                        break
+                    case 'desc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▼'
+                        break
+                    default:
+                        $($(readerTable).find('tr')[0]).find('th')[0].innerText += ' ▲'
+                }
 
                 for (const reader of readerList) {
                     let tr = document.createElement("tr")
@@ -86,7 +102,7 @@ function getReaderListVoByPage(page) {
                         let pageLink_right = document.createElement("li")
                         pageLink_right.innerText = '>'
                         pageLink_right.addEventListener('click', function () {
-                            getReaderListVoByPage(Number(page) + 1)
+                            getReaderListVo(Number(page) + 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_right)
                     }
@@ -96,7 +112,7 @@ function getReaderListVoByPage(page) {
                             let pageLink_right_2 = document.createElement("li")
                             pageLink_right_2.innerText = String(page + 2)
                             pageLink_right_2.addEventListener('click', function () {
-                                getReaderListVoByPage(Number(page) + 2)
+                                getReaderListVo(Number(page) + 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_2)
                         }
@@ -104,7 +120,7 @@ function getReaderListVoByPage(page) {
                             let pageLink_right_1 = document.createElement("li")
                             pageLink_right_1.innerText = String(page + 1)
                             pageLink_right_1.addEventListener('click', function () {
-                                getReaderListVoByPage(Number(page) + 1)
+                                getReaderListVo(Number(page) + 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_1)
                         }
@@ -113,14 +129,14 @@ function getReaderListVoByPage(page) {
                         pageLink_now.style.color = '#1aa'
                         pageLink_now.style.borderBottom = '1px solid #aa1'
                         pageLink_now.addEventListener('click', function () {
-                            getReaderListVoByPage(Number(page))
+                            getReaderListVo(Number(page), sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_now)
                         if (page - 1 >= 1) {
                             let pageLink_left_1 = document.createElement("li")
                             pageLink_left_1.innerText = String(page - 1)
                             pageLink_left_1.addEventListener('click', function () {
-                                getReaderListVoByPage(Number(page) - 1)
+                                getReaderListVo(Number(page) - 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_1)
                         }
@@ -128,7 +144,7 @@ function getReaderListVoByPage(page) {
                             let pageLink_left_2 = document.createElement("li")
                             pageLink_left_2.innerText = String(page - 2)
                             pageLink_left_2.addEventListener('click', function () {
-                                getReaderListVoByPage(Number(page) - 2)
+                                getReaderListVo(Number(page) - 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_2)
                         }
@@ -137,7 +153,7 @@ function getReaderListVoByPage(page) {
                             let pageLink_li = document.createElement("li")
                             pageLink_li.innerText = pagesNumber
                             pageLink_li.addEventListener('click', function () {
-                                getReaderListVoByPage(Number(this.innerText))
+                                getReaderListVo(Number(this.innerText), sortItem, sortType)
                             })
                             if (pagesNumber === page) {
                                 pageLink_li.style.color = '#1aa'
@@ -152,7 +168,7 @@ function getReaderListVoByPage(page) {
                         let pageLink_left = document.createElement("li")
                         pageLink_left.innerText = '<'
                         pageLink_left.addEventListener('click', function () {
-                            getReaderListVoByPage(Number(page) - 1)
+                            getReaderListVo(Number(page) - 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_left)
                     }
@@ -171,6 +187,30 @@ function getReaderListVoByPage(page) {
             readerTable.appendChild(p)
         }
     })
+}
+
+function tableSort(sortItem) {
+    let sortIndex = $(sortItem).index()
+    let sortKey = sortItems[sortIndex]
+    let sortTable = sortItem.parentNode.parentNode.parentNode
+    let tableContent = $(sortTable).find('.search_result_content')
+    // 表格数据只有一条的不予排序
+    if (tableContent.length <= 1)
+        return
+
+    // 排序方式
+    let sortType
+    switch (sortItem.innerText.split(' ')[1]) {
+        case '▲':
+            sortType = 'desc'
+            break
+        case '▼':
+            sortType = 'none'
+            break
+        default:
+            sortType = 'asc'
+    }
+    getReaderListVo(1, sortKey, sortType)
 }
 
 $('.table_button_update').click({

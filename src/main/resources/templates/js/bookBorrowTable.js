@@ -1,10 +1,13 @@
+const sortItems = ['booksBorrowTableId', 'readerName', 'bookName', 'isBorrowing', 'borrowTime', 'backTime']
+const sortTypes = ['none', 'asc', 'desc']
+
 window.onload = function () {
-    getBookBorrowTableVoListVoByPage(1)
+    getBookBorrowTableVoListVo(1, sortItems[0], sortTypes[0])
 }
 
-function getBookBorrowTableVoListVoByPage(page) {
+function getBookBorrowTableVoListVo(page, sortItem, sortType) {
     let bookBorrowTableTable = document.getElementsByClassName("bookBorrowTable_table")[0]
-    myAxios.post('/bookBorrowTable/getBookBorrowTableVoListVoByPage?page=' + page).then(res => {
+    myAxios.post('/bookBorrowTable/getBookBorrowTableVoListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let bookBorrowTableVoListVo = res.data
             let bookBorrowTableVoList = bookBorrowTableVoListVo["bookBorrowTableVoList"]
@@ -17,14 +20,27 @@ function getBookBorrowTableVoListVoByPage(page) {
                     '            <col style="background-color: #dee">\n' +
                     '        </colgroup>\n' +
                     '        <tr>\n' +
-                    '            <th>借书表ID</th>\n' +
-                    '            <th>借书者</th>\n' +
-                    '            <th>所借书</th>\n' +
-                    '            <th>借书状态</th>\n' +
-                    '            <th>外借时间</th>\n' +
-                    '            <th>归还时间</th>\n' +
+                    '            <th onclick="tableSort(this)">借书表ID</th>\n' +
+                    '            <th onclick="tableSort(this)">借书者</th>\n' +
+                    '            <th onclick="tableSort(this)">所借书</th>\n' +
+                    '            <th onclick="tableSort(this)">借书状态</th>\n' +
+                    '            <th onclick="tableSort(this)">外借时间</th>\n' +
+                    '            <th onclick="tableSort(this)">归还时间</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
+
+                let sortIndex = sortItems.indexOf(sortItem)
+                let sortItemTh = $($(bookBorrowTableTable).find('tr')[0]).find('th')[sortIndex]
+                switch (sortType) {
+                    case 'asc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▲'
+                        break
+                    case 'desc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▼'
+                        break
+                    default:
+                        $($(bookBorrowTableTable).find('tr')[0]).find('th')[0].innerText += ' ▲'
+                }
 
                 for (const bookBorrowTableVo of bookBorrowTableVoList) {
                     let bookBorrowTable = bookBorrowTableVo["bookBorrowTable"]
@@ -92,7 +108,7 @@ function getBookBorrowTableVoListVoByPage(page) {
                         let pageLink_right = document.createElement("li")
                         pageLink_right.innerText = '>'
                         pageLink_right.addEventListener('click', function () {
-                            getBookBorrowTableVoListVoByPage(Number(page) + 1)
+                            getBookBorrowTableVoListVo(Number(page) + 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_right)
                     }
@@ -102,7 +118,7 @@ function getBookBorrowTableVoListVoByPage(page) {
                             let pageLink_right_2 = document.createElement("li")
                             pageLink_right_2.innerText = String(page + 2)
                             pageLink_right_2.addEventListener('click', function () {
-                                getBookBorrowTableVoListVoByPage(Number(page) + 2)
+                                getBookBorrowTableVoListVo(Number(page) + 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_2)
                         }
@@ -110,7 +126,7 @@ function getBookBorrowTableVoListVoByPage(page) {
                             let pageLink_right_1 = document.createElement("li")
                             pageLink_right_1.innerText = String(page + 1)
                             pageLink_right_1.addEventListener('click', function () {
-                                getBookBorrowTableVoListVoByPage(Number(page) + 1)
+                                getBookBorrowTableVoListVo(Number(page) + 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_1)
                         }
@@ -119,14 +135,14 @@ function getBookBorrowTableVoListVoByPage(page) {
                         pageLink_now.style.color = '#1aa'
                         pageLink_now.style.borderBottom = '1px solid #aa1'
                         pageLink_now.addEventListener('click', function () {
-                            getBookBorrowTableVoListVoByPage(Number(page))
+                            getBookBorrowTableVoListVo(Number(page), sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_now)
                         if (page - 1 >= 1) {
                             let pageLink_left_1 = document.createElement("li")
                             pageLink_left_1.innerText = String(page - 1)
                             pageLink_left_1.addEventListener('click', function () {
-                                getBookBorrowTableVoListVoByPage(Number(page) - 1)
+                                getBookBorrowTableVoListVo(Number(page) - 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_1)
                         }
@@ -134,7 +150,7 @@ function getBookBorrowTableVoListVoByPage(page) {
                             let pageLink_left_2 = document.createElement("li")
                             pageLink_left_2.innerText = String(page - 2)
                             pageLink_left_2.addEventListener('click', function () {
-                                getBookBorrowTableVoListVoByPage(Number(page) - 2)
+                                getBookBorrowTableVoListVo(Number(page) - 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_2)
                         }
@@ -143,7 +159,7 @@ function getBookBorrowTableVoListVoByPage(page) {
                             let pageLink_li = document.createElement("li")
                             pageLink_li.innerText = pagesNumber
                             pageLink_li.addEventListener('click', function () {
-                                getBookBorrowTableVoListVoByPage(Number(this.innerText))
+                                getBookBorrowTableVoListVo(Number(this.innerText), sortItem, sortType)
                             })
                             if (pagesNumber === page) {
                                 pageLink_li.style.color = '#1aa'
@@ -158,7 +174,7 @@ function getBookBorrowTableVoListVoByPage(page) {
                         let pageLink_left = document.createElement("li")
                         pageLink_left.innerText = '<'
                         pageLink_left.addEventListener('click', function () {
-                            getBookBorrowTableVoListVoByPage(Number(page) - 1)
+                            getBookBorrowTableVoListVo(Number(page) - 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_left)
                     }
@@ -177,6 +193,30 @@ function getBookBorrowTableVoListVoByPage(page) {
             bookBorrowTableTable.appendChild(p)
         }
     })
+}
+
+function tableSort(sortItem) {
+    let sortIndex = $(sortItem).index()
+    let sortKey = sortItems[sortIndex]
+    let sortTable = sortItem.parentNode.parentNode.parentNode
+    let tableContent = $(sortTable).find('.search_result_content')
+    // 表格数据只有一条的不予排序
+    if (tableContent.length <= 1)
+        return
+
+    // 排序方式
+    let sortType
+    switch (sortItem.innerText.split(' ')[1]) {
+        case '▲':
+            sortType = 'desc'
+            break
+        case '▼':
+            sortType = 'none'
+            break
+        default:
+            sortType = 'asc'
+    }
+    getBookBorrowTableVoListVo(1, sortKey, sortType)
 }
 
 $('.table_button_update').click({

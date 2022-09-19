@@ -56,7 +56,4 @@ public class Tag implements Serializable {
     @TableField(exist = false)
     @ApiModelProperty("标签下作品数量")
     private long bookNumber;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

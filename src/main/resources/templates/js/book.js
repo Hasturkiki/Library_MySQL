@@ -1,10 +1,13 @@
+const sortItems = ['bookId', 'bookName', 'authorName', 'ibsn', 'publishingCompanyName', 'tagName', 'quantity', 'price', 'isBeingBorrowed', 'publicationDate', 'jointAuthorTableId']
+const sortTypes = ['none', 'asc', 'desc']
+
 window.onload = function () {
-    getBookVoListVoByPage(1)
+    getBookVoListVo(1, sortItems[0], sortTypes[0])
 }
 
-function getBookVoListVoByPage(page) {
+function getBookVoListVo(page, sortItem, sortType) {
     let bookTable = document.getElementsByClassName("book_table")[0]
-    myAxios.post('/book/getBookVoListVoByPage?page=' + page).then(res => {
+    myAxios.post('/book/getBookVoListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let bookVoListVo = res.data
             let bookVoList = bookVoListVo["bookVoList"]
@@ -17,19 +20,32 @@ function getBookVoListVoByPage(page) {
                     '            <col style="background-color: #dee">\n' +
                     '        </colgroup>\n' +
                     '        <tr>\n' +
-                    '            <th>书籍ID</th>\n' +
-                    '            <th>书名</th>\n' +
-                    '            <th>作者</th>\n' +
-                    '            <th>IBSN号</th>\n' +
-                    '            <th>出版社</th>\n' +
-                    '            <th>标签</th>\n' +
-                    '            <th>库存</th>\n' +
-                    '            <th>价格</th>\n' +
-                    '            <th>借出情况</th>\n' +
-                    '            <th>出版日期</th>\n' +
-                    '            <th>备注</th>\n' +
+                    '            <th onclick="tableSort(this)">书籍ID</th>\n' +
+                    '            <th onclick="tableSort(this)">书名</th>\n' +
+                    '            <th onclick="tableSort(this)">作者</th>\n' +
+                    '            <th onclick="tableSort(this)">IBSN号</th>\n' +
+                    '            <th onclick="tableSort(this)">出版社</th>\n' +
+                    '            <th onclick="tableSort(this)">标签</th>\n' +
+                    '            <th onclick="tableSort(this)">库存</th>\n' +
+                    '            <th onclick="tableSort(this)">价格</th>\n' +
+                    '            <th onclick="tableSort(this)">借出情况</th>\n' +
+                    '            <th onclick="tableSort(this)">出版日期</th>\n' +
+                    '            <th onclick="tableSort(this)">备注</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
+
+                let sortIndex = sortItems.indexOf(sortItem)
+                let sortItemTh = $($(bookTable).find('tr')[0]).find('th')[sortIndex]
+                switch (sortType) {
+                    case 'asc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▲'
+                        break
+                    case 'desc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▼'
+                        break
+                    default:
+                        $($(bookTable).find('tr')[0]).find('th')[0].innerText += ' ▲'
+                }
 
                 for (const bookVo of bookVoList) {
                     let book = bookVo["book"]
@@ -98,10 +114,9 @@ function getBookVoListVoByPage(page) {
                             td_bookBorrowTable_a.innerText = '无借出'
                             break
                         default:
-                            if (book["isBeingBorrowed"] < book["quantity"])
-                                td_bookBorrowTable_a.innerText = '借出' + book["isBeingBorrowed"] + '本'
-                            else
-                                td_bookBorrowTable_a.innerText = '全部借出'
+                            td_bookBorrowTable_a.innerText = '借出' + book["isBeingBorrowed"] + '本'
+                            if (book["isBeingBorrowed"] === book["quantity"])
+                                td_isBeingBorrowed.title = '已全部借出'
                     }
                     td_bookBorrowTable_a.href = '/bookBorrowTable/selectByBook?bookId=' + book["bookId"]
                     td_isBeingBorrowed.appendChild(td_bookBorrowTable_a)
@@ -159,7 +174,7 @@ function getBookVoListVoByPage(page) {
                         let pageLink_right = document.createElement("li")
                         pageLink_right.innerText = '>'
                         pageLink_right.addEventListener('click', function () {
-                            getBookVoListVoByPage(Number(page) + 1)
+                            getBookVoListVo(Number(page) + 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_right)
                     }
@@ -169,7 +184,7 @@ function getBookVoListVoByPage(page) {
                             let pageLink_right_2 = document.createElement("li")
                             pageLink_right_2.innerText = String(page + 2)
                             pageLink_right_2.addEventListener('click', function () {
-                                getBookVoListVoByPage(Number(page) + 2)
+                                getBookVoListVo(Number(page) + 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_2)
                         }
@@ -177,7 +192,7 @@ function getBookVoListVoByPage(page) {
                             let pageLink_right_1 = document.createElement("li")
                             pageLink_right_1.innerText = String(page + 1)
                             pageLink_right_1.addEventListener('click', function () {
-                                getBookVoListVoByPage(Number(page) + 1)
+                                getBookVoListVo(Number(page) + 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_1)
                         }
@@ -186,14 +201,14 @@ function getBookVoListVoByPage(page) {
                         pageLink_now.style.color = '#1aa'
                         pageLink_now.style.borderBottom = '1px solid #aa1'
                         pageLink_now.addEventListener('click', function () {
-                            getBookVoListVoByPage(Number(page))
+                            getBookVoListVo(Number(page), sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_now)
                         if (page - 1 >= 1) {
                             let pageLink_left_1 = document.createElement("li")
                             pageLink_left_1.innerText = String(page - 1)
                             pageLink_left_1.addEventListener('click', function () {
-                                getBookVoListVoByPage(Number(page) - 1)
+                                getBookVoListVo(Number(page) - 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_1)
                         }
@@ -201,7 +216,7 @@ function getBookVoListVoByPage(page) {
                             let pageLink_left_2 = document.createElement("li")
                             pageLink_left_2.innerText = String(page - 2)
                             pageLink_left_2.addEventListener('click', function () {
-                                getBookVoListVoByPage(Number(page) - 2)
+                                getBookVoListVo(Number(page) - 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_2)
                         }
@@ -210,7 +225,7 @@ function getBookVoListVoByPage(page) {
                             let pageLink_li = document.createElement("li")
                             pageLink_li.innerText = pagesNumber
                             pageLink_li.addEventListener('click', function () {
-                                getBookVoListVoByPage(Number(this.innerText))
+                                getBookVoListVo(Number(this.innerText), sortItem, sortType)
                             })
                             if (pagesNumber === page) {
                                 pageLink_li.style.color = '#1aa'
@@ -225,7 +240,7 @@ function getBookVoListVoByPage(page) {
                         let pageLink_left = document.createElement("li")
                         pageLink_left.innerText = '<'
                         pageLink_left.addEventListener('click', function () {
-                            getBookVoListVoByPage(Number(page) - 1)
+                            getBookVoListVo(Number(page) - 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_left)
                     }
@@ -244,6 +259,30 @@ function getBookVoListVoByPage(page) {
             bookTable.appendChild(p)
         }
     })
+}
+
+function tableSort(sortItem) {
+    let sortIndex = $(sortItem).index()
+    let sortKey = sortItems[sortIndex]
+    let sortTable = sortItem.parentNode.parentNode.parentNode
+    let tableContent = $(sortTable).find('.search_result_content')
+    // 表格数据只有一条的不予排序
+    if (tableContent.length <= 1)
+        return
+
+    // 排序方式
+    let sortType
+    switch (sortItem.innerText.split(' ')[1]) {
+        case '▲':
+            sortType = 'desc'
+            break
+        case '▼':
+            sortType = 'none'
+            break
+        default:
+            sortType = 'asc'
+    }
+    getBookVoListVo(1, sortKey, sortType)
 }
 
 $('.table_button_update').click({

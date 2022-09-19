@@ -68,7 +68,4 @@ public class Author implements Serializable {
     @TableField(exist = false)
     @ApiModelProperty("作者名下作品数量")
     private long bookNumber;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

@@ -1,10 +1,13 @@
+const sortItems = ['jointAuthorTableId', 'bookName', 'authorNames']
+const sortTypes = ['none', 'asc', 'desc']
+
 window.onload = function () {
-    getJointAuthorTableVoListVoByPage(1)
+    getJointAuthorTableVoListVo(1, sortItems[0], sortTypes[0])
 }
 
-function getJointAuthorTableVoListVoByPage(page) {
+function getJointAuthorTableVoListVo(page, sortItem, sortType) {
     let jointAuthorTableTable = document.getElementsByClassName("jointAuthorTable_table")[0]
-    myAxios.post('/jointAuthorTable/getJointAuthorTableVoListVoByPage?page=' + page).then(res => {
+    myAxios.post('/jointAuthorTable/getJointAuthorTableVoListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let jointAuthorTableVoListVo = res.data
             let jointAuthorTableVoList = jointAuthorTableVoListVo["jointAuthorTableVoList"]
@@ -17,11 +20,24 @@ function getJointAuthorTableVoListVoByPage(page) {
                     '            <col style="background-color: #dee">\n' +
                     '        </colgroup>\n' +
                     '        <tr>\n' +
-                    '            <th>共同作者表ID</th>\n' +
-                    '            <th>书籍名称</th>\n' +
-                    '            <th>共同作者</th>\n' +
+                    '            <th onclick="tableSort(this)">共同作者表ID</th>\n' +
+                    '            <th onclick="tableSort(this)">书籍名称</th>\n' +
+                    '            <th onclick="tableSort(this)">共同作者</th>\n' +
                     '            <th>操作</th>\n' +
                     '        </tr>'
+
+                let sortIndex = sortItems.indexOf(sortItem)
+                let sortItemTh = $($(jointAuthorTableTable).find('tr')[0]).find('th')[sortIndex]
+                switch (sortType) {
+                    case 'asc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▲'
+                        break
+                    case 'desc':
+                        sortItemTh.innerText = sortItemTh.innerText.split(' ')[0] + ' ▼'
+                        break
+                    default:
+                        $($(jointAuthorTableTable).find('tr')[0]).find('th')[0].innerText += ' ▲'
+                }
 
                 for (const jointAuthorTableVo of jointAuthorTableVoList) {
                     let jointAuthorTable = jointAuthorTableVo["jointAuthorTable"]
@@ -73,7 +89,7 @@ function getJointAuthorTableVoListVoByPage(page) {
                         let pageLink_right = document.createElement("li")
                         pageLink_right.innerText = '>'
                         pageLink_right.addEventListener('click', function () {
-                            getJointAuthorTableVoListVoByPage(Number(page) + 1)
+                            getJointAuthorTableVoListVo(Number(page) + 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_right)
                     }
@@ -83,7 +99,7 @@ function getJointAuthorTableVoListVoByPage(page) {
                             let pageLink_right_2 = document.createElement("li")
                             pageLink_right_2.innerText = String(page + 2)
                             pageLink_right_2.addEventListener('click', function () {
-                                getJointAuthorTableVoListVoByPage(Number(page) + 2)
+                                getJointAuthorTableVoListVo(Number(page) + 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_2)
                         }
@@ -91,7 +107,7 @@ function getJointAuthorTableVoListVoByPage(page) {
                             let pageLink_right_1 = document.createElement("li")
                             pageLink_right_1.innerText = String(page + 1)
                             pageLink_right_1.addEventListener('click', function () {
-                                getJointAuthorTableVoListVoByPage(Number(page) + 1)
+                                getJointAuthorTableVoListVo(Number(page) + 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_right_1)
                         }
@@ -100,14 +116,14 @@ function getJointAuthorTableVoListVoByPage(page) {
                         pageLink_now.style.color = '#1aa'
                         pageLink_now.style.borderBottom = '1px solid #aa1'
                         pageLink_now.addEventListener('click', function () {
-                            getJointAuthorTableVoListVoByPage(Number(page))
+                            getJointAuthorTableVoListVo(Number(page), sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_now)
                         if (page - 1 >= 1) {
                             let pageLink_left_1 = document.createElement("li")
                             pageLink_left_1.innerText = String(page - 1)
                             pageLink_left_1.addEventListener('click', function () {
-                                getJointAuthorTableVoListVoByPage(Number(page) - 1)
+                                getJointAuthorTableVoListVo(Number(page) - 1, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_1)
                         }
@@ -115,7 +131,7 @@ function getJointAuthorTableVoListVoByPage(page) {
                             let pageLink_left_2 = document.createElement("li")
                             pageLink_left_2.innerText = String(page - 2)
                             pageLink_left_2.addEventListener('click', function () {
-                                getJointAuthorTableVoListVoByPage(Number(page) - 2)
+                                getJointAuthorTableVoListVo(Number(page) - 2, sortItem, sortType)
                             })
                             pageLink_ul.appendChild(pageLink_left_2)
                         }
@@ -124,7 +140,7 @@ function getJointAuthorTableVoListVoByPage(page) {
                             let pageLink_li = document.createElement("li")
                             pageLink_li.innerText = pagesNumber
                             pageLink_li.addEventListener('click', function () {
-                                getJointAuthorTableVoListVoByPage(Number(this.innerText))
+                                getJointAuthorTableVoListVo(Number(this.innerText), sortItem, sortType)
                             })
                             if (pagesNumber === page) {
                                 pageLink_li.style.color = '#1aa'
@@ -139,7 +155,7 @@ function getJointAuthorTableVoListVoByPage(page) {
                         let pageLink_left = document.createElement("li")
                         pageLink_left.innerText = '<'
                         pageLink_left.addEventListener('click', function () {
-                            getJointAuthorTableVoListVoByPage(Number(page) - 1)
+                            getJointAuthorTableVoListVo(Number(page) - 1, sortItem, sortType)
                         })
                         pageLink_ul.appendChild(pageLink_left)
                     }
@@ -158,6 +174,30 @@ function getJointAuthorTableVoListVoByPage(page) {
             jointAuthorTableTable.appendChild(p)
         }
     })
+}
+
+function tableSort(sortItem) {
+    let sortIndex = $(sortItem).index()
+    let sortKey = sortItems[sortIndex]
+    let sortTable = sortItem.parentNode.parentNode.parentNode
+    let tableContent = $(sortTable).find('.search_result_content')
+    // 表格数据只有一条的不予排序
+    if (tableContent.length <= 1)
+        return
+
+    // 排序方式
+    let sortType
+    switch (sortItem.innerText.split(' ')[1]) {
+        case '▲':
+            sortType = 'desc'
+            break
+        case '▼':
+            sortType = 'none'
+            break
+        default:
+            sortType = 'asc'
+    }
+    getJointAuthorTableVoListVo(1, sortKey, sortType)
 }
 
 $('.table_button_update').click({

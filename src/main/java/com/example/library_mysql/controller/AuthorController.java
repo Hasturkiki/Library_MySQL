@@ -8,7 +8,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
@@ -25,14 +27,6 @@ public class AuthorController {
 
     @Resource
     private AuthorService authorService;
-    @Resource
-    private BookService bookService;
-    @Resource
-    private PublishingCompanyService publishingCompanyService;
-    @Resource
-    private ReaderService readerService;
-    @Resource
-    private TagService tagService;
 
     @ResponseBody
     @PostMapping("/getAuthorListVoByPage")
@@ -56,8 +50,7 @@ public class AuthorController {
     public R<AuthorListVo> getAuthorListVo(int page, String sortItem, String sortType) {
         if (page == 0)
             return authorService.getAllAuthorListVo();
-        else {
+        else
             return authorService.getAuthorListVo(page, sortItem, sortType);
-        }
     }
 }

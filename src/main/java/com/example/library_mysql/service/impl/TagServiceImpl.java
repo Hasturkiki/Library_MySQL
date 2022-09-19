@@ -12,6 +12,7 @@ import com.example.library_mysql.vo.TagListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -59,12 +60,44 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
 
     @Override
     public R<TagListVo> getTagListVoByPage(int page) {
-        List<Tag> tagList = lambdaQuery().orderByAsc(Tag::getTagId).page(new Page<>(page,10)).getRecords();
-        long pagesNumber = lambdaQuery().orderByAsc(Tag::getTagId).page(new Page<>(page,10)).getPages();
+        List<Tag> tagList = lambdaQuery().orderByAsc(Tag::getTagId).page(new Page<>(page, 10)).getRecords();
+        long pagesNumber = lambdaQuery().orderByAsc(Tag::getTagId).page(new Page<>(page, 10)).getPages();
         if (tagList.isEmpty()) {
             return R.error("无标签数据");
         }
         setBookNumber(tagList);
+        TagListVo tagListVo = new TagListVo(tagList);
+        tagListVo.setPagesNumber(pagesNumber);
+        return R.success(tagListVo);
+    }
+
+    @Override
+    public R<TagListVo> getTagListVo(int page, String sortItem, String sortType) {
+        List<Tag> tagList = switch (sortType) {
+            case "asc" -> switch (sortItem) {
+                case "tagId" -> lambdaQuery().orderByAsc(Tag::getTagId).page(new Page<>(page, 10)).getRecords();
+                case "tagName" -> lambdaQuery().orderByAsc(Tag::getTagName).page(new Page<>(page, 10)).getRecords();
+                default -> lambdaQuery().orderByAsc(Tag::getTagId).list();
+            };
+            case "desc" -> switch (sortItem) {
+                case "tagId" -> lambdaQuery().orderByDesc(Tag::getTagId).page(new Page<>(page, 10)).getRecords();
+                case "tagName" -> lambdaQuery().orderByDesc(Tag::getTagName).page(new Page<>(page, 10)).getRecords();
+                default -> lambdaQuery().orderByAsc(Tag::getTagId).list();
+            };
+            default -> lambdaQuery().orderByAsc(Tag::getTagId).page(new Page<>(page, 10)).getRecords();
+        };
+        long pagesNumber = lambdaQuery().orderByAsc(Tag::getTagId).page(new Page<>(page, 10)).getPages();
+
+        if (tagList.isEmpty()) {
+            return R.error("无标签数据");
+        }
+        setBookNumber(tagList);
+        if (sortItem.equals("bookNumber"))
+            if (sortType.equals("asc"))
+                tagList = tagList.stream().sorted(Comparator.comparing(Tag::getBookNumber)).skip((page - 1) * 10L).limit(10).toList();
+            else if (sortType.equals("desc"))
+                tagList = tagList.stream().sorted(Comparator.comparing(Tag::getBookNumber).reversed()).skip((page - 1) * 10L).limit(10).toList();
+
         TagListVo tagListVo = new TagListVo(tagList);
         tagListVo.setPagesNumber(pagesNumber);
         return R.success(tagListVo);
