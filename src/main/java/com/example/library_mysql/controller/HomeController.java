@@ -9,9 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
@@ -32,7 +30,11 @@ public class HomeController {
     @Resource
     private AuthorService authorService;
     @Resource
+    private BookBorrowTableService bookBorrowTableService;
+    @Resource
     private BookService bookService;
+    @Resource
+    private JointAuthorTableService jointAuthorTableService;
     @Resource
     private PublishingCompanyService publishingCompanyService;
     @Resource
@@ -73,10 +75,10 @@ public class HomeController {
                         System.out.println("\t" + strings[i] + ": ");
                         for (Object object : objectList) {
                             String str = object.toString().split("[(]", 2)[1]
-                                    .replaceFirst(".$", "").replace("=",": ");
+                                    .replaceFirst(".$", "").replace("=", ": ");
                             if (str.split("[(]").length == 2)
-                                str = str.split("[(]")[1].replace(")","");
-                            System.out.println("\t\t[" + str+"]");
+                                str = str.split("[(]")[1].replace(")", "");
+                            System.out.println("\t\t[" + str + "]");
                         }
                     }
                     i++;
@@ -89,5 +91,35 @@ public class HomeController {
             System.out.println("search fail.");
             return R.error("search fail.");
         }
+    }
+
+    @ApiIgnore
+    @RequestMapping("/getOne")
+    public String getOne() {
+        return "showOne";
+    }
+
+    @ResponseBody
+    @PostMapping("/showOne")
+    @ApiOperation("单个展示测试")
+    @ApiImplicitParam(name = "key", value = "索引ID", required = true, paramType = "query", dataType = "int")
+    public R<Object> showOne(int key) {
+        List<Object> result = new ArrayList<>();
+        Author author = authorService.selectAuthorById(key);
+        BookBorrowTable bookBorrowTable = bookBorrowTableService.lambdaQuery().eq(BookBorrowTable::getBooksBorrowTableId, key).one();
+        Book book = bookService.selectBookById(key);
+        JointAuthorTable jointAuthorTable = jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getJointAuthorTableId, key).one();
+        PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(key);
+        Reader reader = readerService.selectReaderById(key);
+        Tag tag = tagService.selectTagById(key);
+
+        result.add(author);
+        result.add(bookBorrowTable);
+        result.add(book);
+        result.add(jointAuthorTable);
+        result.add(publishingCompany);
+        result.add(reader);
+        result.add(tag);
+        return R.success(result);
     }
 }

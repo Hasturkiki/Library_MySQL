@@ -1,6 +1,7 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
+import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
@@ -8,9 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
@@ -52,5 +51,20 @@ public class AuthorController {
             return authorService.getAllAuthorListVo();
         else
             return authorService.getAuthorListVo(page, sortItem, sortType);
+    }
+
+    @ApiIgnore
+    @RequestMapping("/getOne")
+    public String getOne() {
+        return "showOne";
+    }
+
+    @ResponseBody
+    @PostMapping("/showOne")
+    @ApiOperation("作者信息展示")
+    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
+    public R<Object> showOne(int key) {
+        Author author = authorService.selectAuthorById(key);
+        return R.success(author);
     }
 }
