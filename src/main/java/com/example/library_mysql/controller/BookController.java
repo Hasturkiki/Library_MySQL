@@ -1,6 +1,7 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
+import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
@@ -52,5 +53,22 @@ public class BookController {
             return bookService.getAllBookVoListVo();
         else
             return bookService.getBookVoListVo(page, sortItem, sortType);
+    }
+
+    @ApiIgnore
+    @RequestMapping("/getOne")
+    public String getOne() {
+        return "showOne";
+    }
+
+    @ResponseBody
+    @PostMapping("/showOne")
+    @ApiOperation("书籍扩展信息展示")
+    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
+    public R<BookVo> showOne(int key) {
+        BookVo bookVo = bookService.selectBookVoById(key);
+        if (bookVo == null)
+            return R.error("无对应书籍扩展信息");
+        return R.success(bookVo);
     }
 }

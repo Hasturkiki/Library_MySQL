@@ -53,4 +53,21 @@ public class BookBorrowTableController {
         else
             return bookBorrowTableService.getBookBorrowTableVoListVo(page, sortItem, sortType);
     }
+
+    @ApiIgnore
+    @RequestMapping("/getOne")
+    public String getOne() {
+        return "showOne";
+    }
+
+    @ResponseBody
+    @PostMapping("/showOne")
+    @ApiOperation("借书表扩展信息展示")
+    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
+    public R<BookBorrowTableVo> showOne(int key) {
+        BookBorrowTableVo bookBorrowTableVo = bookBorrowTableService.selectBookBorrowTableVoById(key);
+        if(bookBorrowTableVo == null)
+            return R.error("无对应借书表扩展信息");
+        return R.success(bookBorrowTableVo);
+    }
 }

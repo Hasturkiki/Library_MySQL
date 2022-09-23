@@ -1,6 +1,8 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
+import com.example.library_mysql.domain.Author;
+import com.example.library_mysql.domain.PublishingCompany;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
@@ -52,5 +54,22 @@ public class PublishingCompanyController {
             return publishingCompanyService.getAllPublishingCompanyListVo();
         else
             return publishingCompanyService.getPublishingCompanyListVo(page, sortItem, sortType);
+    }
+
+    @ApiIgnore
+    @RequestMapping("/getOne")
+    public String getOne() {
+        return "showOne";
+    }
+
+    @ResponseBody
+    @PostMapping("/showOne")
+    @ApiOperation("出版社信息展示")
+    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
+    public R<PublishingCompany> showOne(int key) {
+        PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(key);
+        if (publishingCompany == null)
+            return R.error("无对应出版社信息");
+        return R.success(publishingCompany);
     }
 }

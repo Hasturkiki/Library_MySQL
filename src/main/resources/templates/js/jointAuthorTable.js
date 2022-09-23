@@ -51,7 +51,7 @@ function getJointAuthorTableVoListVo(page, sortItem, sortType) {
                     let td_book = document.createElement("td")
                     let td_book_a = document.createElement("a")
                     td_book_a.innerText = jointAuthorTableVo["bookName"]
-                    td_book_a.href = '/book/getOne?bookId=' + jointAuthorTableVo["bookId"]
+                    td_book_a.href = '/book/getOne?bookName=' + jointAuthorTableVo["bookName"]
                     td_book.appendChild(td_book_a)
 
                     let td_author = document.createElement("td")

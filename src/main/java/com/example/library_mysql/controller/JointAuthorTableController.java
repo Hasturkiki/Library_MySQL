@@ -1,6 +1,7 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
+import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
@@ -17,7 +18,7 @@ import javax.annotation.Resource;
 
 @Api(tags = "共同作者表主页")
 @Controller
-@RequestMapping("/jointAuthorTable")
+@RequestMapping({"/jointAuthorTable", "/jointAuthorTableVo"})
 public class JointAuthorTableController {
     @ApiIgnore
     @RequestMapping("/jointAuthorTableHome")
@@ -52,5 +53,22 @@ public class JointAuthorTableController {
             return jointAuthorTableService.getAllJointAuthorTableVoListVo();
         else
             return jointAuthorTableService.getJointAuthorTableVoListVo(page, sortItem, sortType);
+    }
+
+    @ApiIgnore
+    @RequestMapping("/getOne")
+    public String getOne() {
+        return "showOne";
+    }
+
+    @ResponseBody
+    @PostMapping("/showOne")
+    @ApiOperation("共同作者表扩展信息展示")
+    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
+    public R<JointAuthorTableVo> showOne(int key) {
+        JointAuthorTableVo jointAuthorTableVo = jointAuthorTableService.selectJointAuthorTableVoById(key);
+        if (jointAuthorTableVo == null)
+            return R.error("无对应共同作者表扩展信息");
+        return R.success(jointAuthorTableVo);
     }
 }

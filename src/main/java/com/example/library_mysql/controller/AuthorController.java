@@ -63,8 +63,10 @@ public class AuthorController {
     @PostMapping("/showOne")
     @ApiOperation("作者信息展示")
     @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
-    public R<Object> showOne(int key) {
+    public R<Author> showOne(int key) {
         Author author = authorService.selectAuthorById(key);
+        if (author == null)
+            return R.error("无对应作者信息");
         return R.success(author);
     }
 }

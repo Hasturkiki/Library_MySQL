@@ -85,7 +85,7 @@ public class HomeController {
                 }
                 System.out.println("}");
             } else
-                System.out.println("result: null");
+                System.out.println("search_result: null");
             return R.success(result);
         } else {
             System.out.println("search fail.");
@@ -106,20 +106,45 @@ public class HomeController {
     public R<Object> showOne(int key) {
         List<Object> result = new ArrayList<>();
         Author author = authorService.selectAuthorById(key);
-        BookBorrowTable bookBorrowTable = bookBorrowTableService.lambdaQuery().eq(BookBorrowTable::getBooksBorrowTableId, key).one();
-        Book book = bookService.selectBookById(key);
-        JointAuthorTable jointAuthorTable = jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getJointAuthorTableId, key).one();
+        BookBorrowTableVo bookBorrowTableVo = bookBorrowTableService.selectBookBorrowTableVoById(key);
+        BookVo bookVo = bookService.selectBookVoById(key);
+        JointAuthorTableVo jointAuthorTableVo = jointAuthorTableService.selectJointAuthorTableVoById(key);
         PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(key);
         Reader reader = readerService.selectReaderById(key);
         Tag tag = tagService.selectTagById(key);
 
         result.add(author);
-        result.add(bookBorrowTable);
-        result.add(book);
-        result.add(jointAuthorTable);
+        result.add(bookBorrowTableVo);
+        result.add(bookVo);
+        result.add(jointAuthorTableVo);
         result.add(publishingCompany);
         result.add(reader);
         result.add(tag);
-        return R.success(result);
+
+        System.out.println("\nshow '" + key + "' success.");
+        if (result.stream().anyMatch(Objects::nonNull)) {
+            System.out.println("show_result: {");
+            int i = 0;
+            String[] strings = {"Author", "BookBorrowTable", "Book", "JointAuthorTable", "PublishingCompany", "Reader", "Tag"};
+            for (Object object : result) {
+                if (object == null)
+                    System.out.println("\t" + strings[i] + ": null");
+                else {
+                    System.out.println("\t" + strings[i] + ": ");
+                    String str = object.toString().split("[(]", 2)[1]
+                            .replaceFirst(".$", "").replace("=", ": ");
+                    if (str.split("[(]").length == 2)
+                        str = str.split("[(]")[1].replace(")", "");
+                    System.out.println("\t\t[" + str + "]");
+                }
+                i++;
+            }
+
+            System.out.println("}");
+            return R.success(result);
+        } else {
+            System.out.println("result: null");
+            return R.error("无对应信息");
+        }
     }
 }

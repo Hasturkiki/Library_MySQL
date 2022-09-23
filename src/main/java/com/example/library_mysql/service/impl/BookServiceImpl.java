@@ -8,7 +8,6 @@ import com.example.library_mysql.service.*;
 import com.example.library_mysql.mapper.BookMapper;
 import com.example.library_mysql.vo.BookVo;
 import com.example.library_mysql.vo.BookVoListVo;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,15 +38,15 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     @Override
     public BookVo selectBookVoById(int id) {
         Book book = selectBookById(id);
+        if (book == null)
+            return null;
         BookVo bookVo = new BookVo(book);
-        if (book != null) {
-            Author author = authorService.selectAuthorById(book.getAuthorId());
-            bookVo.setAuthorName(author.getAuthorName());
-            PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(book.getPublishingCompanyId());
-            bookVo.setPublishingCompanyName(publishingCompany.getPublishingCompanyName());
-            Tag tag = tagService.selectTagById(book.getTagId());
-            bookVo.setTagName(tag.getTagName());
-        }
+        Author author = authorService.selectAuthorById(book.getAuthorId());
+        bookVo.setAuthorName(author.getAuthorName());
+        PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(book.getPublishingCompanyId());
+        bookVo.setPublishingCompanyName(publishingCompany.getPublishingCompanyName());
+        Tag tag = tagService.selectTagById(book.getTagId());
+        bookVo.setTagName(tag.getTagName());
         return bookVo;
     }
 
@@ -121,7 +120,6 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         return getR_BookVoListVoByPage(page, bookList);
     }
 
-    @NotNull
     private R<BookVoListVo> getR_BookVoListVoByPage(int page, List<Book> bookList) {
         if (bookList.isEmpty()) {
             return R.error("无书籍数据");

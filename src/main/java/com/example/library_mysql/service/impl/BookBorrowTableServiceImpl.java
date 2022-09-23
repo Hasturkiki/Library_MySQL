@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -33,6 +32,19 @@ public class BookBorrowTableServiceImpl extends ServiceImpl<BookBorrowTableMappe
 
     @Resource
     private BookService bookService;
+
+    @Override
+    public BookBorrowTableVo selectBookBorrowTableVoById(int id) {
+        BookBorrowTable bookBorrowTable = lambdaQuery().eq(BookBorrowTable::getBooksBorrowTableId, id).one();
+        if (bookBorrowTable == null)
+            return null;
+        BookBorrowTableVo bookBorrowTableVo = new BookBorrowTableVo(bookBorrowTable);
+        Reader reader = readerService.selectReaderById(bookBorrowTable.getReaderId());
+        bookBorrowTableVo.setReaderName(reader.getReaderName());
+        Book book = bookService.selectBookById(bookBorrowTable.getBookId());
+        bookBorrowTableVo.setBookName(book.getBookName());
+        return bookBorrowTableVo;
+    }
 
     @Override
     public R<List<BookBorrowTable>> getBookBorrowTableList() {

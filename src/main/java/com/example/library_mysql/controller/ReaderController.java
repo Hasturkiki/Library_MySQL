@@ -1,6 +1,8 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
+import com.example.library_mysql.domain.Author;
+import com.example.library_mysql.domain.Reader;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
@@ -52,5 +54,22 @@ public class ReaderController {
             return readerService.getAllReaderListVo();
         else
             return readerService.getReaderListVo(page, sortItem, sortType);
+    }
+
+    @ApiIgnore
+    @RequestMapping("/getOne")
+    public String getOne() {
+        return "showOne";
+    }
+
+    @ResponseBody
+    @PostMapping("/showOne")
+    @ApiOperation("读者信息展示")
+    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
+    public R<Reader> showOne(int key) {
+        Reader reader = readerService.selectReaderById(key);
+        if (reader == null)
+            return R.error("无对应读者信息");
+        return R.success(reader);
     }
 }

@@ -33,6 +33,15 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
     private AuthorService authorService;
 
     @Override
+    public JointAuthorTableVo selectJointAuthorTableVoById(int id) {
+        List<JointAuthorTable> jointAuthorTableList = lambdaQuery().orderByAsc(JointAuthorTable::getJointAuthorTableId).list();
+        JointAuthorTableVoListVo jointAuthorTableVoListVo = setJointAuthorTableVoListVo(jointAuthorTableList);
+        if (id < 1 || id > jointAuthorTableVoListVo.getJointAuthorTableVoList().size())
+            return null;
+        return jointAuthorTableVoListVo.getJointAuthorTableVoList().get(id - 1);
+    }
+
+    @Override
     public R<List<JointAuthorTable>> getJointAuthorTableList() {
         List<JointAuthorTable> jointAuthorTableList = lambdaQuery().orderByAsc(JointAuthorTable::getJointAuthorTableId).list();
         if (jointAuthorTableList.isEmpty()) {

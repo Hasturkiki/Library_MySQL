@@ -5,4 +5,21 @@
     min-height: 800px;
     background-color: rgba(233, 233, 233, 0.7);
     border: 3px rgba(64, 160, 160, 0.64) dotted;
+    text-align: center;
+}
+
+#showOne table {
+    width: 100%;
+    margin-top: 42px;
+    padding: 2%;
+    border: 2px #963 dotted;
+}
+
+#showOne .showOne_result_emptyHind {
+    font-size: 250%;
+    font-family: "Agency FB", serif;
+    text-align: center;
+    width: 80%;
+    margin: 8% auto;
+    color: #777;
 }
