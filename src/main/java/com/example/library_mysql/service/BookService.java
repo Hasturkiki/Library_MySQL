@@ -28,4 +28,16 @@ public interface BookService extends IService<Book> {
     R<BookVoListVo> getBookVoListVoByPage(int page);
 
     R<BookVoListVo> getBookVoListVo(int page, String sortItem, String sortType);
+
+    R<BookVoListVo> selectBooksByAuthor(int id);
+
+    R<BookVoListVo> selectBooksByAuthorWithCondition(int id, int page, String sortItem, String sortType);
+
+    R<BookVoListVo> selectBooksByPublishingCompany(int id);
+
+    R<BookVoListVo> selectBooksByPublishingCompanyWithCondition(int id, int page, String sortItem, String sortType);
+
+    R<BookVoListVo> selectBooksByTag(int id);
+
+    R<BookVoListVo> selectBooksByTagWithCondition(int id, int page, String sortItem, String sortType);
 }

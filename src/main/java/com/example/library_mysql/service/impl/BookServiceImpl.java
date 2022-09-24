@@ -1,11 +1,18 @@
 package com.example.library_mysql.service.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.common.R;
-import com.example.library_mysql.domain.*;
-import com.example.library_mysql.service.*;
+import com.example.library_mysql.domain.Author;
+import com.example.library_mysql.domain.Book;
+import com.example.library_mysql.domain.PublishingCompany;
+import com.example.library_mysql.domain.Tag;
 import com.example.library_mysql.mapper.BookMapper;
+import com.example.library_mysql.service.AuthorService;
+import com.example.library_mysql.service.BookService;
+import com.example.library_mysql.service.PublishingCompanyService;
+import com.example.library_mysql.service.TagService;
 import com.example.library_mysql.vo.BookVo;
 import com.example.library_mysql.vo.BookVoListVo;
 import org.springframework.stereotype.Service;
@@ -135,6 +142,36 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         return getR_BookVoListVoByPage(page, bookList);
     }
 
+    @Override
+    public R<BookVoListVo> selectBooksByAuthor(int id) {
+        return selectBooks(lambdaQuery().eq(Book::getAuthorId, id));
+    }
+
+    @Override
+    public R<BookVoListVo> selectBooksByAuthorWithCondition(int id, int page, String sortItem, String sortType) {
+        return selectBooksWithCondition(page, sortItem, sortType, lambdaQuery().eq(Book::getAuthorId, id));
+    }
+
+    @Override
+    public R<BookVoListVo> selectBooksByPublishingCompany(int id) {
+        return selectBooks(lambdaQuery().eq(Book::getPublishingCompanyId, id));
+    }
+
+    @Override
+    public R<BookVoListVo> selectBooksByPublishingCompanyWithCondition(int id, int page, String sortItem, String sortType) {
+        return selectBooksWithCondition(page, sortItem, sortType, lambdaQuery().eq(Book::getPublishingCompanyId, id));
+    }
+
+    @Override
+    public R<BookVoListVo> selectBooksByTag(int id) {
+        return selectBooks(lambdaQuery().eq(Book::getTagId, id));
+    }
+
+    @Override
+    public R<BookVoListVo> selectBooksByTagWithCondition(int id, int page, String sortItem, String sortType) {
+        return selectBooksWithCondition(page, sortItem, sortType, lambdaQuery().eq(Book::getTagId, id));
+    }
+
     private R<BookVoListVo> getR_BookVoListVoByPage(int page, List<Book> bookList) {
         if (bookList.isEmpty()) {
             return R.error("无书籍数据");
@@ -148,8 +185,63 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         bookVoListVo.setPagesNumber(pagesNumber);
         return R.success(bookVoListVo);
     }
+
+    private R<BookVoListVo> selectBooks(LambdaQueryChainWrapper<Book> eq) {
+        List<Book> bookList = eq.list();
+        if (bookList.isEmpty()) {
+            return R.error("无书籍数据");
+        }
+        List<BookVo> bookVoList = new ArrayList<>();
+        for (Book book : bookList) {
+            bookVoList.add(selectBookVoById(book.getBookId()));
+        }
+        BookVoListVo bookVoListVo = new BookVoListVo(bookVoList);
+        bookVoListVo.setPagesNumber(0L);
+        return R.success(bookVoListVo);
+    }
+
+    private R<BookVoListVo> selectBooksWithCondition(int page, String sortItem, String sortType, LambdaQueryChainWrapper<Book> eq) {
+        List<Book> bookList = switch (sortType) {
+            case "asc" -> switch (sortItem) {
+                case "bookId" -> eq.orderByAsc(Book::getBookId).page(new Page<>(page, 10)).getRecords();
+                case "bookName" -> eq.orderByAsc(Book::getBookName).page(new Page<>(page, 10)).getRecords();
+                case "authorName" -> eq.orderByAsc(Book::getAuthorId).page(new Page<>(page, 10)).getRecords();
+                case "ibsn" -> eq.orderByAsc(Book::getIbsn).page(new Page<>(page, 10)).getRecords();
+                case "publishingCompanyName" -> eq.orderByAsc(Book::getPublishingCompanyId).page(new Page<>(page, 10)).getRecords();
+                case "tagName" -> eq.orderByAsc(Book::getTagId).page(new Page<>(page, 10)).getRecords();
+                case "quantity" -> eq.orderByAsc(Book::getQuantity).page(new Page<>(page, 10)).getRecords();
+                case "price" -> eq.orderByAsc(Book::getPrice).page(new Page<>(page, 10)).getRecords();
+                case "isBeingBorrowed" -> eq.orderByAsc(Book::getIsBeingBorrowed).page(new Page<>(page, 10)).getRecords();
+                case "publicationDate" -> eq.orderByAsc(Book::getPublicationDate).page(new Page<>(page, 10)).getRecords();
+                case "jointAuthorTableId" -> eq.orderByAsc(Book::getJointAuthorTableId).page(new Page<>(page, 10)).getRecords();
+                default -> eq.orderByAsc(Book::getBookId).list();
+            };
+            case "desc" -> switch (sortItem) {
+                case "bookId" -> eq.orderByDesc(Book::getBookId).page(new Page<>(page, 10)).getRecords();
+                case "bookName" -> eq.orderByDesc(Book::getBookName).page(new Page<>(page, 10)).getRecords();
+                case "authorName" -> eq.orderByDesc(Book::getAuthorId).page(new Page<>(page, 10)).getRecords();
+                case "ibsn" -> eq.orderByDesc(Book::getIbsn).page(new Page<>(page, 10)).getRecords();
+                case "publishingCompanyName" -> eq.orderByDesc(Book::getPublishingCompanyId).page(new Page<>(page, 10)).getRecords();
+                case "tagName" -> eq.orderByDesc(Book::getTagId).page(new Page<>(page, 10)).getRecords();
+                case "quantity" -> eq.orderByDesc(Book::getQuantity).page(new Page<>(page, 10)).getRecords();
+                case "price" -> eq.orderByDesc(Book::getPrice).page(new Page<>(page, 10)).getRecords();
+                case "isBeingBorrowed" -> eq.orderByDesc(Book::getIsBeingBorrowed).page(new Page<>(page, 10)).getRecords();
+                case "publicationDate" -> eq.orderByDesc(Book::getPublicationDate).page(new Page<>(page, 10)).getRecords();
+                case "jointAuthorTableId" -> eq.orderByDesc(Book::getJointAuthorTableId).page(new Page<>(page, 10)).getRecords();
+                default -> eq.orderByAsc(Book::getBookId).list();
+            };
+            default -> eq.orderByAsc(Book::getBookId).page(new Page<>(page, 10)).getRecords();
+        };
+        if (bookList.isEmpty()) {
+            return R.error("无书籍数据");
+        }
+        List<BookVo> bookVoList = new ArrayList<>();
+        for (Book book : bookList) {
+            bookVoList.add(selectBookVoById(book.getBookId()));
+        }
+        long pagesNumber = eq.orderByAsc(Book::getBookId).page(new Page<>(page, 10)).getPages();
+        BookVoListVo bookVoListVo = new BookVoListVo(bookVoList);
+        bookVoListVo.setPagesNumber(pagesNumber);
+        return R.success(bookVoListVo);
+    }
 }
-
-
-
-

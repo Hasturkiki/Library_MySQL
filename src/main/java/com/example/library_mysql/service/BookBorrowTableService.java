@@ -5,6 +5,7 @@ import com.example.library_mysql.domain.BookBorrowTable;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.library_mysql.vo.BookBorrowTableVo;
 import com.example.library_mysql.vo.BookBorrowTableVoListVo;
+import com.example.library_mysql.vo.BookVoListVo;
 
 import java.util.List;
 
@@ -24,4 +25,8 @@ public interface BookBorrowTableService extends IService<BookBorrowTable> {
     R<BookBorrowTableVoListVo> getBookBorrowTableVoListVoByPage(int page);
 
     R<BookBorrowTableVoListVo> getBookBorrowTableVoListVo(int page, String sortItem, String sortType);
+
+    R<BookBorrowTableVoListVo> BookBorrowTablesByBook(int id);
+
+    R<BookBorrowTableVoListVo> BookBorrowTablesByBookWithCondition(int id, int page, String sortItem, String sortType);
 }

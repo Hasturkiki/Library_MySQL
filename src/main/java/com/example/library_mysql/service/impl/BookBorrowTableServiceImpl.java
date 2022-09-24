@@ -112,6 +112,51 @@ public class BookBorrowTableServiceImpl extends ServiceImpl<BookBorrowTableMappe
         return R.success(bookBorrowTableVoListVo);
     }
 
+    @Override
+    public R<BookBorrowTableVoListVo> BookBorrowTablesByBook(int id) {
+        List<BookBorrowTable> bookBorrowTableList = lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBooksBorrowTableId).list();
+        if (bookBorrowTableList.isEmpty()) {
+            return R.error("无借书表数据");
+        }
+        BookBorrowTableVoListVo bookBorrowTableVoListVo = setBookBorrowTableVoListVo(bookBorrowTableList);
+        bookBorrowTableVoListVo.setPagesNumber(0L);
+        return R.success(bookBorrowTableVoListVo);
+    }
+
+    @Override
+    public R<BookBorrowTableVoListVo> BookBorrowTablesByBookWithCondition(int id, int page, String sortItem, String sortType) {
+        List<BookBorrowTable> bookBorrowTableList = switch (sortType) {
+            case "asc" -> switch (sortItem) {
+                case "booksBorrowTableId" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBooksBorrowTableId).page(new Page<>(page, 10)).getRecords();
+                case "readerName" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getReaderId).page(new Page<>(page, 10)).getRecords();
+                case "bookName" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBookId).page(new Page<>(page, 10)).getRecords();
+                case "isBorrowing" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getIsBorrowing).page(new Page<>(page, 10)).getRecords();
+                case "borrowTime" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBorrowTime).page(new Page<>(page, 10)).getRecords();
+                case "backTime" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBackTime).page(new Page<>(page, 10)).getRecords();
+                default -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBooksBorrowTableId).list();
+            };
+            case "desc" -> switch (sortItem) {
+                case "booksBorrowTableId" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByDesc(BookBorrowTable::getBooksBorrowTableId).page(new Page<>(page, 10)).getRecords();
+                case "readerName" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByDesc(BookBorrowTable::getReaderId).page(new Page<>(page, 10)).getRecords();
+                case "bookName" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByDesc(BookBorrowTable::getBookId).page(new Page<>(page, 10)).getRecords();
+                case "isBorrowing" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByDesc(BookBorrowTable::getIsBorrowing).page(new Page<>(page, 10)).getRecords();
+                case "borrowTime" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByDesc(BookBorrowTable::getBorrowTime).page(new Page<>(page, 10)).getRecords();
+                case "backTime" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByDesc(BookBorrowTable::getBackTime).page(new Page<>(page, 10)).getRecords();
+                default -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBooksBorrowTableId).list();
+            };
+            default -> lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBooksBorrowTableId).page(new Page<>(page, 10)).getRecords();
+        };
+        long pagesNumber = lambdaQuery().eq(BookBorrowTable::getBookId, id).orderByAsc(BookBorrowTable::getBooksBorrowTableId).page(new Page<>(page, 10)).getPages();
+
+        if (bookBorrowTableList.isEmpty()) {
+            return R.error("无借书表数据");
+        }
+        BookBorrowTableVoListVo bookBorrowTableVoListVo = setBookBorrowTableVoListVo(bookBorrowTableList);
+
+        bookBorrowTableVoListVo.setPagesNumber(pagesNumber);
+        return R.success(bookBorrowTableVoListVo);
+    }
+
     private BookBorrowTableVoListVo setBookBorrowTableVoListVo(List<BookBorrowTable> bookBorrowTableList) {
         List<BookBorrowTableVo> bookBorrowTableVoList = new ArrayList<>();
         for (BookBorrowTable bookBorrowTable : bookBorrowTableList) {
