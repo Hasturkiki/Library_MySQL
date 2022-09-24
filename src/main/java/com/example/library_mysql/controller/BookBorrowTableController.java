@@ -63,10 +63,15 @@ public class BookBorrowTableController {
     @ResponseBody
     @PostMapping("/showOne")
     @ApiOperation("借书表扩展信息展示")
-    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
-    public R<BookBorrowTableVo> showOne(int key) {
-        BookBorrowTableVo bookBorrowTableVo = bookBorrowTableService.selectBookBorrowTableVoById(key);
-        if(bookBorrowTableVo == null)
+    @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
+    public R<BookBorrowTableVo> showOne(String key) {
+        BookBorrowTableVo bookBorrowTableVo;
+        if (key != null && key.chars().anyMatch(Character::isDigit))
+            bookBorrowTableVo = bookBorrowTableService.selectBookBorrowTableVoById(Integer.parseInt(key));
+        else
+            bookBorrowTableVo = null;
+
+        if (bookBorrowTableVo == null)
             return R.error("无对应借书表扩展信息");
         return R.success(bookBorrowTableVo);
     }

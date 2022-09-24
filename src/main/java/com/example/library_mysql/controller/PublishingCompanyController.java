@@ -65,9 +65,14 @@ public class PublishingCompanyController {
     @ResponseBody
     @PostMapping("/showOne")
     @ApiOperation("出版社信息展示")
-    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
-    public R<PublishingCompany> showOne(int key) {
-        PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(key);
+    @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
+    public R<PublishingCompany> showOne(String key) {
+        PublishingCompany publishingCompany;
+        if (key != null && key.chars().anyMatch(Character::isDigit))
+            publishingCompany = publishingCompanyService.selectPublishingCompanyById(Integer.parseInt(key));
+        else
+            publishingCompany = publishingCompanyService.selectPublishingCompanyByName(key);
+
         if (publishingCompany == null)
             return R.error("无对应出版社信息");
         return R.success(publishingCompany);

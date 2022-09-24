@@ -64,9 +64,14 @@ public class JointAuthorTableController {
     @ResponseBody
     @PostMapping("/showOne")
     @ApiOperation("共同作者表扩展信息展示")
-    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
-    public R<JointAuthorTableVo> showOne(int key) {
-        JointAuthorTableVo jointAuthorTableVo = jointAuthorTableService.selectJointAuthorTableVoById(key);
+    @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
+    public R<JointAuthorTableVo> showOne(String key) {
+        JointAuthorTableVo jointAuthorTableVo;
+        if (key != null && key.chars().anyMatch(Character::isDigit))
+            jointAuthorTableVo = jointAuthorTableService.selectJointAuthorTableVoById(Integer.parseInt(key));
+        else
+            jointAuthorTableVo = null;
+
         if (jointAuthorTableVo == null)
             return R.error("无对应共同作者表扩展信息");
         return R.success(jointAuthorTableVo);

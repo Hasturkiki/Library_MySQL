@@ -16,6 +16,8 @@ public interface AuthorService extends IService<Author> {
 
     Author selectAuthorById(int id);
 
+    Author selectAuthorByName(String key);
+
     List<Author> searchByName(String searchKey);
 
     R<AuthorListVo> getAllAuthorListVo();

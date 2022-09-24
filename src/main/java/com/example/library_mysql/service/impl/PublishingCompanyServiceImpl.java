@@ -37,6 +37,16 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
     }
 
     @Override
+    public PublishingCompany selectPublishingCompanyByName(String name) {
+        PublishingCompany publishingCompany = lambdaQuery().eq(PublishingCompany::getPublishingCompanyName, name).one();
+        if (publishingCompany != null) {
+            long bookNumber = bookService.lambdaQuery().eq(Book::getPublishingCompanyId, publishingCompany.getPublishingCompanyId()).count();
+            publishingCompany.setBookNumber(bookNumber);
+        }
+        return publishingCompany;
+    }
+
+    @Override
     public List<PublishingCompany> searchByName(String searchKey) {
         List<PublishingCompany> publishingCompanyList = lambdaQuery().like(PublishingCompany::getPublishingCompanyName, searchKey).list();
         if (publishingCompanyList.isEmpty()) {

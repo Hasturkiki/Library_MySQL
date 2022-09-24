@@ -51,7 +51,7 @@ function getPublishingCompanyListVo(page, sortItem, sortType) {
                     let td_publishingCompanyName = document.createElement("td")
                     let td_publishingCompanyName_a = document.createElement("a")
                     td_publishingCompanyName_a.innerText = publishingCompany["publishingCompanyName"]
-                    td_publishingCompanyName_a.href = '/publishingCompany/getOne?publishingCompanyId=' + publishingCompany["publishingCompanyId"]
+                    td_publishingCompanyName_a.href = '/publishingCompany/getOne?publishingCompanyKey=' + publishingCompany["publishingCompanyId"]
                     td_publishingCompanyName.appendChild(td_publishingCompanyName_a)
 
                     let td_publishingCompanyTelephoneNumber = document.createElement("td")

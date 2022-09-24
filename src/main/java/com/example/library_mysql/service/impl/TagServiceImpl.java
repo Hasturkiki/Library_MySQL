@@ -37,6 +37,16 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
     }
 
     @Override
+    public Tag selectTagByName(String name) {
+        Tag tag = lambdaQuery().eq(Tag::getTagName, name).one();
+        if (tag != null) {
+            long bookNumber = bookService.lambdaQuery().eq(Book::getTagId, tag.getTagId()).count();
+            tag.setBookNumber(bookNumber);
+        }
+        return tag;
+    }
+
+    @Override
     public List<Tag> searchByName(String searchKey) {
         List<Tag> tagList = lambdaQuery().like(Tag::getTagName, searchKey).list();
         if (tagList.isEmpty()) {

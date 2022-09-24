@@ -102,16 +102,33 @@ public class HomeController {
     @ResponseBody
     @PostMapping("/showOne")
     @ApiOperation("单个展示测试")
-    @ApiImplicitParam(name = "key", value = "索引ID", required = true, paramType = "query", dataType = "int")
-    public R<Object> showOne(int key) {
+    @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
+    public R<Object> showOne(String key) {
         List<Object> result = new ArrayList<>();
-        Author author = authorService.selectAuthorById(key);
-        BookBorrowTableVo bookBorrowTableVo = bookBorrowTableService.selectBookBorrowTableVoById(key);
-        BookVo bookVo = bookService.selectBookVoById(key);
-        JointAuthorTableVo jointAuthorTableVo = jointAuthorTableService.selectJointAuthorTableVoById(key);
-        PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(key);
-        Reader reader = readerService.selectReaderById(key);
-        Tag tag = tagService.selectTagById(key);
+        Author author;
+        BookBorrowTableVo bookBorrowTableVo;
+        BookVo bookVo;
+        JointAuthorTableVo jointAuthorTableVo;
+        PublishingCompany publishingCompany;
+        Reader reader;
+        Tag tag;
+        if (key != null && key.chars().anyMatch(Character::isDigit)) {
+            author = authorService.selectAuthorById(Integer.parseInt(key));
+            bookBorrowTableVo = bookBorrowTableService.selectBookBorrowTableVoById(Integer.parseInt(key));
+            bookVo = bookService.selectBookVoById(Integer.parseInt(key));
+            jointAuthorTableVo = jointAuthorTableService.selectJointAuthorTableVoById(Integer.parseInt(key));
+            publishingCompany = publishingCompanyService.selectPublishingCompanyById(Integer.parseInt(key));
+            reader = readerService.selectReaderById(Integer.parseInt(key));
+            tag = tagService.selectTagById(Integer.parseInt(key));
+        } else {
+            author = authorService.selectAuthorByName(key);
+            bookBorrowTableVo = null;
+            bookVo = bookService.selectBookVoByName(key);
+            jointAuthorTableVo = null;
+            publishingCompany = publishingCompanyService.selectPublishingCompanyByName(key);
+            reader = readerService.selectReaderByName(key);
+            tag = tagService.selectTagByName(key);
+        }
 
         result.add(author);
         result.add(bookBorrowTableVo);

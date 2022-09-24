@@ -49,7 +49,7 @@ function getTagListVo(page, sortItem, sortType) {
                     let td_tagName = document.createElement("td")
                     let td_tagName_a = document.createElement("a")
                     td_tagName_a.innerText = tag["tagName"]
-                    td_tagName_a.href = '/tag/getOne?tagId=' + tag["tagId"]
+                    td_tagName_a.href = '/tag/getOne?tagKey=' + tag["tagId"]
                     td_tagName.appendChild(td_tagName_a)
 
                     let td_bookNumber = document.createElement("td")

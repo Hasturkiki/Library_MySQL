@@ -62,9 +62,14 @@ public class AuthorController {
     @ResponseBody
     @PostMapping("/showOne")
     @ApiOperation("作者信息展示")
-    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
-    public R<Author> showOne(int key) {
-        Author author = authorService.selectAuthorById(key);
+    @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
+    public R<Author> showOne(String key) {
+        Author author;
+        if (key != null && key.chars().anyMatch(Character::isDigit))
+            author = authorService.selectAuthorById(Integer.parseInt(key));
+        else
+            author = authorService.selectAuthorByName(key);
+
         if (author == null)
             return R.error("无对应作者信息");
         return R.success(author);

@@ -36,6 +36,21 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     }
 
     @Override
+    public BookVo selectBookVoByName(String name) {
+        Book book = lambdaQuery().eq(Book::getBookName, name).one();
+        if (book == null)
+            return null;
+        BookVo bookVo = new BookVo(book);
+        Author author = authorService.selectAuthorById(book.getAuthorId());
+        bookVo.setAuthorName(author.getAuthorName());
+        PublishingCompany publishingCompany = publishingCompanyService.selectPublishingCompanyById(book.getPublishingCompanyId());
+        bookVo.setPublishingCompanyName(publishingCompany.getPublishingCompanyName());
+        Tag tag = tagService.selectTagById(book.getTagId());
+        bookVo.setTagName(tag.getTagName());
+        return bookVo;
+    }
+
+    @Override
     public BookVo selectBookVoById(int id) {
         Book book = selectBookById(id);
         if (book == null)

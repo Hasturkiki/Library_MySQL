@@ -59,23 +59,23 @@ function getBookVoListVo(page, sortItem, sortType) {
                     let td_bookName = document.createElement("td")
                     let td_bookName_a = document.createElement("a")
                     td_bookName_a.innerText = book["bookName"]
-                    td_bookName_a.href = '/book/getOne?bookId=' + book["bookId"]
+                    td_bookName_a.href = '/book/getOne?bookKey=' + book["bookId"]
                     td_bookName.appendChild(td_bookName_a)
 
                     let td_author = document.createElement("td")
                     if (book["jointAuthorTableId"] !== 0) {
                         let td_authorName_a = document.createElement("a")
                         td_authorName_a.innerText = bookVo["authorName"]
-                        td_authorName_a.href = '/author/getOne?authorId=' + book["authorId"]
+                        td_authorName_a.href = '/author/getOne?authorKey=' + book["authorId"]
                         td_author.appendChild(td_authorName_a)
                         let td_jointAuthorTable_a = document.createElement("a")
                         td_jointAuthorTable_a.innerText = ' 等'
-                        td_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableId=' + book["jointAuthorTableId"]
+                        td_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
                         td_author.appendChild(td_jointAuthorTable_a)
                     } else {
                         let td_authorName_a = document.createElement("a")
                         td_authorName_a.innerText = bookVo["authorName"]
-                        td_authorName_a.href = '/author/getOne?authorId=' + book["authorId"]
+                        td_authorName_a.href = '/author/getOne?authorKey=' + book["authorId"]
                         td_author.appendChild(td_authorName_a)
                     }
 
@@ -86,13 +86,13 @@ function getBookVoListVo(page, sortItem, sortType) {
                     let td_publishingCompany = document.createElement("td")
                     let td_publishingCompanyName_a = document.createElement("a")
                     td_publishingCompanyName_a.innerText = bookVo["publishingCompanyName"]
-                    td_publishingCompanyName_a.href = '/publishingCompany/getOne?publishingCompanyId=' + book["publishingCompanyId"]
+                    td_publishingCompanyName_a.href = '/publishingCompany/getOne?publishingCompanyKey=' + book["publishingCompanyId"]
                     td_publishingCompany.appendChild(td_publishingCompanyName_a)
 
                     let td_tag = document.createElement("td")
                     let td_tagName_a = document.createElement("a")
                     td_tagName_a.innerText = bookVo["tagName"]
-                    td_tagName_a.href = '/tag/getOne?tagId=' + book["tagId"]
+                    td_tagName_a.href = '/tag/getOne?tagKey=' + book["tagId"]
                     td_tag.appendChild(td_tagName_a)
 
                     let td_quantity = document.createElement("td")
@@ -135,7 +135,7 @@ function getBookVoListVo(page, sortItem, sortType) {
                             break
                         default:
                             td_jointAuthorTable_a.innerText = '合著'
-                            td_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableId=' + book["jointAuthorTableId"]
+                            td_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
                     }
                     td_jointAuthorTable.appendChild(td_jointAuthorTable_a)
                     td_jointAuthorTable.style.width = '4%'

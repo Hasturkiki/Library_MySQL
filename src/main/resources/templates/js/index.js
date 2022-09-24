@@ -76,7 +76,7 @@ function search() {
                         let td_authorName = document.createElement("td")
                         let td_author_authorName_a = document.createElement("a")
                         td_author_authorName_a.innerText = author["authorName"]
-                        td_author_authorName_a.href = '/author/getOne?authorId=' + author["authorId"]
+                        td_author_authorName_a.href = '/author/getOne?authorKey=' + author["authorId"]
                         td_authorName.appendChild(td_author_authorName_a)
 
                         let td_authorSex = document.createElement("td")
@@ -147,23 +147,23 @@ function search() {
                         let td_bookName = document.createElement("td")
                         let td_bookName_a = document.createElement("a")
                         td_bookName_a.innerText = book["bookName"]
-                        td_bookName_a.href = '/book/getOne?bookId=' + book["bookId"]
+                        td_bookName_a.href = '/book/getOne?bookKey=' + book["bookId"]
                         td_bookName.appendChild(td_bookName_a)
 
                         let td_author = document.createElement("td")
                         if (book["jointAuthorTableId"] !== 0) {
                             let td_book_authorName_a = document.createElement("a")
                             td_book_authorName_a.innerText = bookVo["authorName"].split(' ')[0]
-                            td_book_authorName_a.href = '/author/getOne?authorId=' + book["authorId"]
+                            td_book_authorName_a.href = '/author/getOne?authorKey=' + book["authorId"]
                             td_author.appendChild(td_book_authorName_a)
                             let td_book_jointAuthorTable_a = document.createElement("a")
                             td_book_jointAuthorTable_a.innerText = ' 等'
-                            td_book_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableId=' + book["jointAuthorTableId"]
+                            td_book_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
                             td_author.appendChild(td_book_jointAuthorTable_a)
                         } else {
                             let td_book_authorName_a = document.createElement("a")
                             td_book_authorName_a.innerText = bookVo["authorName"]
-                            td_book_authorName_a.href = '/author/getOne?authorId=' + book["authorId"]
+                            td_book_authorName_a.href = '/author/getOne?authorKey=' + book["authorId"]
                             td_author.appendChild(td_book_authorName_a)
                         }
 
@@ -173,13 +173,13 @@ function search() {
                         let td_publishingCompany = document.createElement("td")
                         let td_book_publishingCompanyName_a = document.createElement("a")
                         td_book_publishingCompanyName_a.innerText = bookVo["publishingCompanyName"]
-                        td_book_publishingCompanyName_a.href = '/publishingCompany/getOne?publishingCompanyId=' + book["publishingCompanyId"]
+                        td_book_publishingCompanyName_a.href = '/publishingCompany/getOne?publishingCompanyKey=' + book["publishingCompanyId"]
                         td_publishingCompany.appendChild(td_book_publishingCompanyName_a)
 
                         let td_tag = document.createElement("td")
                         let td_book_tagName_a = document.createElement("a")
                         td_book_tagName_a.innerText = bookVo["tagName"]
-                        td_book_tagName_a.href = '/tag/getOne?tagId=' + book["tagId"]
+                        td_book_tagName_a.href = '/tag/getOne?tagKey=' + book["tagId"]
                         td_tag.appendChild(td_book_tagName_a)
 
                         let td_quantity = document.createElement("td")
@@ -220,7 +220,7 @@ function search() {
                                 break
                             default:
                                 td_book_jointAuthorTable_a.innerText = '合著'
-                                td_book_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableId=' + book["jointAuthorTableId"]
+                                td_book_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
                         }
                         td_jointAuthorTable.appendChild(td_book_jointAuthorTable_a)
 
@@ -266,7 +266,7 @@ function search() {
                         let td_publishingCompanyName = document.createElement("td")
                         let td_publishingCompany_publishingCompanyName_a = document.createElement("a")
                         td_publishingCompany_publishingCompanyName_a.innerText = publishingCompany["publishingCompanyName"]
-                        td_publishingCompany_publishingCompanyName_a.href = '/publishingCompany/getOne?publishingCompanyId=' + publishingCompany["publishingCompanyId"]
+                        td_publishingCompany_publishingCompanyName_a.href = '/publishingCompany/getOne?publishingCompanyKey=' + publishingCompany["publishingCompanyId"]
                         td_publishingCompanyName.appendChild(td_publishingCompany_publishingCompanyName_a)
 
                         let td_publishingCompanyTelephoneNumber = document.createElement("td")
@@ -317,7 +317,7 @@ function search() {
                         let td_readerName = document.createElement("td")
                         let td_readerName_a = document.createElement("a")
                         td_readerName_a.innerText = reader["readerName"]
-                        td_readerName_a.href = '/reader/getOne?readerId=' + reader["readerId"]
+                        td_readerName_a.href = '/reader/getOne?readerKey=' + reader["readerId"]
                         td_readerName.appendChild(td_readerName_a)
 
                         let td_readerSex = document.createElement("td")
@@ -376,7 +376,7 @@ function search() {
                         let td_tagName = document.createElement("td")
                         let td_tag_tagName_a = document.createElement("a")
                         td_tag_tagName_a.innerText = tag["tagName"]
-                        td_tag_tagName_a.href = '/tag/getOne?tagId=' + tag["tagId"]
+                        td_tag_tagName_a.href = '/tag/getOne?tagKey=' + tag["tagId"]
                         td_tagName.appendChild(td_tag_tagName_a)
 
                         let td_tag_bookNumber = document.createElement("td")

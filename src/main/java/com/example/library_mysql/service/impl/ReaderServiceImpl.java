@@ -26,6 +26,11 @@ public class ReaderServiceImpl extends ServiceImpl<ReaderMapper, Reader>
     }
 
     @Override
+    public Reader selectReaderByName(String name) {
+        return lambdaQuery().eq(Reader::getReaderName, name).one();
+    }
+
+    @Override
     public List<Reader> searchByName(String searchKey) {
         List<Reader> readerList = lambdaQuery().like(Reader::getReaderName, searchKey).list();
         if (readerList.isEmpty()) {

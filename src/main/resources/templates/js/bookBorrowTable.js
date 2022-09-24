@@ -54,13 +54,13 @@ function getBookBorrowTableVoListVo(page, sortItem, sortType) {
                     let td_reader = document.createElement("td")
                     let td_reader_a = document.createElement("a")
                     td_reader_a.innerText = bookBorrowTableVo["readerName"]
-                    td_reader_a.href = '/reader/getOne?readerId=' + bookBorrowTable["readerId"]
+                    td_reader_a.href = '/reader/getOne?readerKey=' + bookBorrowTable["readerId"]
                     td_reader.appendChild(td_reader_a)
 
                     let td_book = document.createElement("td")
                     let td_book_a = document.createElement("a")
                     td_book_a.innerText = bookBorrowTableVo["bookName"]
-                    td_book_a.href = '/book/getOne?bookId=' + bookBorrowTable["bookId"]
+                    td_book_a.href = '/book/getOne?bookKey=' + bookBorrowTable["bookId"]
                     td_book.appendChild(td_book_a)
 
                     let td_isBorrowing = document.createElement("td")

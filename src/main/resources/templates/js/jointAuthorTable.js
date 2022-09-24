@@ -51,7 +51,7 @@ function getJointAuthorTableVoListVo(page, sortItem, sortType) {
                     let td_book = document.createElement("td")
                     let td_book_a = document.createElement("a")
                     td_book_a.innerText = jointAuthorTableVo["bookName"]
-                    td_book_a.href = '/book/getOne?bookName=' + jointAuthorTableVo["bookName"]
+                    td_book_a.href = '/book/getOne?bookKey=' + jointAuthorTableVo["bookName"]
                     td_book.appendChild(td_book_a)
 
                     let td_author = document.createElement("td")
@@ -59,7 +59,7 @@ function getJointAuthorTableVoListVo(page, sortItem, sortType) {
                     for(let authorName of authorNames) {
                         let td_authorName_a = document.createElement("a")
                         td_authorName_a.innerText = authorName
-                        td_authorName_a.href = '/author/getOne?authorName=' + authorName
+                        td_authorName_a.href = '/author/getOne?authorKey=' + authorName
                         td_author.appendChild(td_authorName_a)
                         td_author.appendChild(document.createElement("br"))
                     }

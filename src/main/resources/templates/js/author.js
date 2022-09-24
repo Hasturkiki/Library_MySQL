@@ -51,7 +51,7 @@ function getAuthorListVo(page, sortItem, sortType) {
                     let td_authorName = document.createElement("td")
                     let td_authorName_a = document.createElement("a")
                     td_authorName_a.innerText = author["authorName"]
-                    td_authorName_a.href = '/author/getOne?authorId=' + author["authorId"]
+                    td_authorName_a.href = '/author/getOne?authorKey=' + author["authorId"]
                     td_authorName.appendChild(td_authorName_a)
 
                     let td_authorSex = document.createElement("td")

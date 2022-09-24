@@ -65,9 +65,14 @@ public class ReaderController {
     @ResponseBody
     @PostMapping("/showOne")
     @ApiOperation("读者信息展示")
-    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
-    public R<Reader> showOne(int key) {
-        Reader reader = readerService.selectReaderById(key);
+    @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
+    public R<Reader> showOne(String key) {
+        Reader reader;
+        if (key != null && key.chars().anyMatch(Character::isDigit))
+            reader = readerService.selectReaderById(Integer.parseInt(key));
+        else
+            reader = readerService.selectReaderByName(key);
+
         if (reader == null)
             return R.error("无对应读者信息");
         return R.success(reader);

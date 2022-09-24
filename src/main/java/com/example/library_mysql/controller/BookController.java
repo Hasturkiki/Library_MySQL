@@ -64,9 +64,14 @@ public class BookController {
     @ResponseBody
     @PostMapping("/showOne")
     @ApiOperation("书籍扩展信息展示")
-    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
-    public R<BookVo> showOne(int key) {
-        BookVo bookVo = bookService.selectBookVoById(key);
+    @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
+    public R<BookVo> showOne(String key) {
+        BookVo bookVo;
+        if (key != null && key.chars().anyMatch(Character::isDigit))
+            bookVo = bookService.selectBookVoById(Integer.parseInt(key));
+        else
+            bookVo = bookService.selectBookVoByName(key);
+
         if (bookVo == null)
             return R.error("无对应书籍扩展信息");
         return R.success(bookVo);

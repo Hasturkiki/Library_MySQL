@@ -64,9 +64,14 @@ public class TagController {
     @ResponseBody
     @PostMapping("/showOne")
     @ApiOperation("标签信息展示")
-    @ApiImplicitParam(name = "key", value = "ID", required = true, paramType = "query", dataType = "int")
-    public R<Tag> showOne(int key) {
-        Tag tag = tagService.selectTagById(key);
+    @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
+    public R<Tag> showOne(String key) {
+        Tag tag;
+        if (key != null && key.chars().anyMatch(Character::isDigit))
+            tag = tagService.selectTagById(Integer.parseInt(key));
+        else
+            tag = tagService.selectTagByName(key);
+
         if (tag == null)
             return R.error("无对应标签信息");
         return R.success(tag);

@@ -43,6 +43,17 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
     }
 
     @Override
+    public Author selectAuthorByName(String name) {
+        Author author = lambdaQuery().eq(Author::getAuthorName, name).one();
+        if (author != null) {
+            long bookNumber = bookService.lambdaQuery().eq(Book::getAuthorId, author.getAuthorId()).eq(Book::getJointAuthorTableId, 0).count();
+            bookNumber += jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getAuthorId, author.getAuthorId()).count();
+            author.setBookNumber(bookNumber);
+        }
+        return author;
+    }
+
+    @Override
     public List<Author> searchByName(String searchKey) {
         List<Author> authorList = lambdaQuery().like(Author::getAuthorName, searchKey).list();
         if (authorList.isEmpty()) {

@@ -51,7 +51,7 @@ function getReaderListVo(page, sortItem, sortType) {
                     let td_readerName = document.createElement("td")
                     let td_readerName_a = document.createElement("a")
                     td_readerName_a.innerText = reader["readerName"]
-                    td_readerName_a.href = '/reader/getOne?readerId=' + reader["readerId"]
+                    td_readerName_a.href = '/reader/getOne?readerKey=' + reader["readerId"]
                     td_readerName.appendChild(td_readerName_a)
 
                     let td_readerSex = document.createElement("td")

@@ -1,7 +1,7 @@
 window.onload = function () {
     let url = window.location.href
     let domain = '/' + url.split('http://localhost:8080/')[1].split('getOne')[0]
-    let key = url.split('http://localhost:8080/')[1].split('=')[1]
+    let key = url.split('http://localhost:8080/')[1].split('Key=')[1]
     let showOneUrl = domain + 'showOne?key=' + key
     showOne(showOneUrl)
 }

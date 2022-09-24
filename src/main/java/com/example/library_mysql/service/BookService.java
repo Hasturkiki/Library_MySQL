@@ -17,6 +17,8 @@ public interface BookService extends IService<Book> {
 
     Book selectBookById(int id);
 
+    BookVo selectBookVoByName(String key);
+
     BookVo selectBookVoById(int id);
 
     List<BookVo> searchByName(String searchKey);
