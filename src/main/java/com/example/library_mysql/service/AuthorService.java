@@ -25,4 +25,6 @@ public interface AuthorService extends IService<Author> {
     R<AuthorListVo> getAuthorListVoByPage(int page);
 
     R<AuthorListVo> getAuthorListVo(int page, String sortItem, String sortType);
+
+    R<Boolean> deleteAuthorById(int id);
 }

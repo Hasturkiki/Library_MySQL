@@ -5,11 +5,17 @@
 <mapper namespace="com.example.library_mysql.mapper.JointAuthorTableMapper">
 
     <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.JointAuthorTable">
-            <id property="jointAuthorTableId" column="joint_author_table_id" jdbcType="INTEGER"/>
-            <result property="tableId" column="table_id" jdbcType="INTEGER"/>
-            <result property="authorId" column="author_id" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
+        <id property="jointAuthorTableId" column="joint_author_table_id" jdbcType="INTEGER"/>
+        <result property="tableId" column="table_id" jdbcType="INTEGER"/>
+        <result property="authorId" column="author_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
+
+    <update id="recoveryById">
+        update joint_author_table
+        set is_deleted = 0
+        where joint_author_table_id = #{id}
+    </update>
 </mapper>

@@ -216,8 +216,27 @@ function tableSort(sortItem) {
     getAuthorListVo(1, sortKey, sortType)
 }
 
-$('.table_button_update').click({
-//    todo update author
+$(".table_button_update").click(function (event) {
+    //    todo update author
+    prompt(event.innerText)
+    prompt("update author")
+
+    $.ajax({
+        url: '/author',
+        type: 'put',
+        async: true,
+        data: {
+            'authorId': this.authorId,
+            'authorName': this.authorName,
+            'authorSex': this.authorSex,
+            'authorAge': this.authorSex,
+        },
+        dataType: 'json',
+        success: (res) => {
+            let author = res.data
+            prompt(author)
+        }
+    })
 })
 
 $('.table_button_delete').click({

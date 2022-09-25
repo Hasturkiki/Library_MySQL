@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface JointAuthorTableMapper extends BaseMapper<JointAuthorTable> {
-
+    public Integer recoveryById(Integer id);
 }
 
 

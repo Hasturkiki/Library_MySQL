@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface ReaderMapper extends BaseMapper<Reader> {
-
+    public Integer recoveryById(Integer id);
 }
 
 

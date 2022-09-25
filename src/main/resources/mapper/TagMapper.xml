@@ -5,10 +5,16 @@
 <mapper namespace="com.example.library_mysql.mapper.TagMapper">
 
     <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.Tag">
-            <id property="tagId" column="tag_id" jdbcType="INTEGER"/>
-            <result property="tagName" column="tag_name" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
+        <id property="tagId" column="tag_id" jdbcType="INTEGER"/>
+        <result property="tagName" column="tag_name" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
+
+    <update id="recoveryById">
+        update tag
+        set is_deleted = 0
+        where tag_id = #{id}
+    </update>
 </mapper>

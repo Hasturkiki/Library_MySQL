@@ -4,22 +4,19 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.common.R;
-import com.example.library_mysql.domain.Author;
-import com.example.library_mysql.domain.Book;
-import com.example.library_mysql.domain.PublishingCompany;
-import com.example.library_mysql.domain.Tag;
+import com.example.library_mysql.domain.*;
 import com.example.library_mysql.mapper.BookMapper;
-import com.example.library_mysql.service.AuthorService;
-import com.example.library_mysql.service.BookService;
-import com.example.library_mysql.service.PublishingCompanyService;
-import com.example.library_mysql.service.TagService;
+import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.BookVo;
 import com.example.library_mysql.vo.BookVoListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Hastur kiki
@@ -33,9 +30,14 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     @Resource
     private AuthorService authorService;
     @Resource
+    private JointAuthorTableService jointAuthorTableService;
+    @Resource
     private PublishingCompanyService publishingCompanyService;
     @Resource
     private TagService tagService;
+
+    @Resource
+    private BookMapper bookMapper;
 
     @Override
     public Book selectBookById(int id) {
@@ -54,6 +56,8 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         bookVo.setPublishingCompanyName(publishingCompany.getPublishingCompanyName());
         Tag tag = tagService.selectTagById(book.getTagId());
         bookVo.setTagName(tag.getTagName());
+        if (jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getTableId, book.getJointAuthorTableId()).count() <= 1)
+            bookVo.setJointIsAlive(false);
         return bookVo;
     }
 
@@ -69,6 +73,8 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         bookVo.setPublishingCompanyName(publishingCompany.getPublishingCompanyName());
         Tag tag = tagService.selectTagById(book.getTagId());
         bookVo.setTagName(tag.getTagName());
+        if (jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getTableId, book.getJointAuthorTableId()).count() <= 1)
+            bookVo.setJointIsAlive(false);
         return bookVo;
     }
 
@@ -170,6 +176,48 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     @Override
     public R<BookVoListVo> selectBooksByTagWithCondition(int id, int page, String sortItem, String sortType) {
         return selectBooksWithCondition(page, sortItem, sortType, lambdaQuery().eq(Book::getTagId, id));
+    }
+
+    @Override
+    public boolean deleteBookByOtherId(String sign, int id) {
+        List<Book> bookList;
+        switch (sign) {
+            case "authorId" -> bookList = lambdaQuery().eq(Book::getAuthorId, id).list();
+            case "publishingCompanyId" -> bookList = lambdaQuery().eq(Book::getPublishingCompanyId, id).list();
+            case "tagId" -> bookList = lambdaQuery().eq(Book::getTagId, id).list();
+            default -> bookList = lambdaQuery().eq(Book::getJointAuthorTableId, id).list();
+        }
+        if (bookList.size() == 0)
+            return true;
+        for (Book book : bookList) {
+            book.setUpdateTime(LocalDateTime.now());
+            updateById(book);
+        }
+        if (sign.equals("authorId")) {
+            for (Book book : bookList) {
+                if (book.getJointAuthorTableId() != 0)
+                    if (jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getTableId, book.getJointAuthorTableId())
+                            .ne(JointAuthorTable::getAuthorId, id).count() > 0) {
+                        bookList.remove(book);
+                        book.setAuthorId(jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getTableId, book.getJointAuthorTableId())
+                                .ne(JointAuthorTable::getAuthorId, id).list().get(0).getAuthorId());
+                        updateById(book);
+                        if (bookList.size() == 0)
+                            return true;
+                    }
+            }
+        }
+        return removeByIds(bookList);
+    }
+
+    @Override
+    public boolean recoveryByOtherId(String sign, int id) {
+        return switch (sign) {
+            case "authorId" -> bookMapper.recoveryByAuthorId(id);
+            case "publishingCompanyId" -> bookMapper.recoveryByPublishingCompanyId(id);
+            case "tagId" -> bookMapper.recoveryByTagId(id);
+            default -> bookMapper.recoveryById(id);
+        };
     }
 
     private R<BookVoListVo> getR_BookVoListVoByPage(int page, List<Book> bookList) {

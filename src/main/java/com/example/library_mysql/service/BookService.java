@@ -40,4 +40,8 @@ public interface BookService extends IService<Book> {
     R<BookVoListVo> selectBooksByTag(int id);
 
     R<BookVoListVo> selectBooksByTagWithCondition(int id, int page, String sortItem, String sortType);
+
+    boolean deleteBookByOtherId(String sign, int id);
+
+    boolean recoveryByOtherId(String sign, int id);
 }

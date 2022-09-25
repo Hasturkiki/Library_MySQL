@@ -14,6 +14,7 @@ import com.example.library_mysql.vo.AuthorListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -28,9 +29,11 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
 
     @Resource
     private BookService bookService;
-
     @Resource
     private JointAuthorTableService jointAuthorTableService;
+
+    @Resource
+    private AuthorMapper authorMapper;
 
     @Override
     public Author selectAuthorById(int id) {
@@ -122,6 +125,35 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
         AuthorListVo authorListVo = new AuthorListVo(authorList);
         authorListVo.setPagesNumber(pagesNumber);
         return R.success(authorListVo);
+    }
+
+    @Override
+    public R<Boolean> deleteAuthorById(int id) {
+        Author author = selectAuthorById(id);
+        if (author == null) {
+            return R.error("作者信息删除失败（不存在该作者）");
+        } else {
+            author.setUpdateTime(LocalDateTime.now());
+            updateById(author);
+            if (removeById(id)) {
+                if (bookService.deleteBookByOtherId("authorId", id))
+                    if (jointAuthorTableService.deleteJointAuthorTableByOtherId("authorId", id))
+                        return R.success(true);
+                    else {
+                        authorMapper.recoveryById(id);
+                        if (bookService.recoveryByOtherId("authorId", id))
+                            return R.error("关联信息删除失败");
+                        else
+                            return R.error("关联信息删除失败、且已删除书籍信息未恢复");
+                    }
+                else {
+                    authorMapper.recoveryById(id);
+                    return R.error("关联信息删除失败");
+                }
+            } else {
+                return R.error("作者信息删除失败");
+            }
+        }
     }
 
     private void setBookNumber(List<Author> authorList) {

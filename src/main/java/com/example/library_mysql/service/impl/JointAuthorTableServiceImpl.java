@@ -13,7 +13,9 @@ import com.example.library_mysql.vo.JointAuthorTableVoListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +30,11 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
 
     @Resource
     private BookService bookService;
-
     @Resource
     private AuthorService authorService;
+
+    @Resource
+    private JointAuthorTableMapper jointAuthorTableMapper;
 
     @Override
     public JointAuthorTableVo selectJointAuthorTableVoById(int id) {
@@ -142,6 +146,31 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
         return R.success(jointAuthorTableVoListVo);
     }
 
+    @Override
+    public boolean deleteJointAuthorTableByOtherId(String sign, int id) {
+        List<JointAuthorTable> jointAuthorTableList = lambdaQuery().eq(JointAuthorTable::getAuthorId, id).list();
+        if (jointAuthorTableList.size() == 0)
+            return true;
+        ArrayList<Integer> bookJointAuthorTableIdList = new ArrayList<>();
+        for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
+            jointAuthorTable.setUpdateTime(LocalDateTime.now());
+            updateById(jointAuthorTable);
+            if (lambdaQuery().eq(JointAuthorTable::getTableId, jointAuthorTable.getTableId()).count() == 1)
+                bookJointAuthorTableIdList.add(jointAuthorTable.getTableId());
+        }
+        if (removeByIds(jointAuthorTableList)) {
+            for (int bookJointAuthorTableId : bookJointAuthorTableIdList)
+                if (!bookService.deleteBookByOtherId("jointAuthorTableId", bookJointAuthorTableId)) {
+                    for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
+                        jointAuthorTableMapper.recoveryById(jointAuthorTable.getJointAuthorTableId());
+                    }
+                    return false;
+                }
+            return true;
+        } else
+            return false;
+    }
+
     private JointAuthorTableVoListVo setJointAuthorTableVoListVo(List<JointAuthorTable> jointAuthorTableList) {
         List<JointAuthorTableVo> jointAuthorTableVoList = new ArrayList<>();
         for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
@@ -157,6 +186,7 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
                 jointAuthorTableVoList.add(jointAuthorTableVo);
             }
         }
+        jointAuthorTableVoList.removeIf(jointAuthorTableVo -> jointAuthorTableVo.getAuthorNames().split(";").length == 1);
         return new JointAuthorTableVoListVo(jointAuthorTableVoList);
     }
 }

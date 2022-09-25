@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Api(tags = "作者主页")
 @Controller
@@ -73,5 +74,25 @@ public class AuthorController {
         if (author == null)
             return R.error("无对应作者信息");
         return R.success(author);
+    }
+
+    @ResponseBody
+    @PutMapping("/update")
+    @ApiOperation("作者信息更新")
+    public R<Author> updateAuthor(@RequestBody Author author) {
+        author.setUpdateTime(LocalDateTime.now());
+        if (authorService.updateById(author)) {
+            return R.success(authorService.selectAuthorById(author.getAuthorId()));
+        } else {
+            return R.error("作者信息更新失败");
+        }
+    }
+
+    @ResponseBody
+    @DeleteMapping
+    @ApiOperation("作者信息删除")
+    @ApiImplicitParam(name = "id", value = "待删除作者ID", required = true)
+    public R<Boolean> deleteAuthor(int id) {
+        return authorService.deleteAuthorById(id);
     }
 }

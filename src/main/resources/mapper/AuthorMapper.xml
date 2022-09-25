@@ -5,12 +5,18 @@
 <mapper namespace="com.example.library_mysql.mapper.AuthorMapper">
 
     <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.Author">
-            <id property="authorId" column="author_id" jdbcType="INTEGER"/>
-            <result property="authorName" column="author_name" jdbcType="VARCHAR"/>
-            <result property="authorSex" column="author_sex" jdbcType="INTEGER"/>
-            <result property="authorAge" column="author_age" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
+        <id property="authorId" column="author_id" jdbcType="INTEGER"/>
+        <result property="authorName" column="author_name" jdbcType="VARCHAR"/>
+        <result property="authorSex" column="author_sex" jdbcType="INTEGER"/>
+        <result property="authorAge" column="author_age" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
+
+    <update id="recoveryById">
+        update author
+        set is_deleted = 0
+        where author_id = #{id}
+    </update>
 </mapper>

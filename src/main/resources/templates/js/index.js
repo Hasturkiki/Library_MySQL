@@ -151,7 +151,7 @@ function search() {
                         td_bookName.appendChild(td_bookName_a)
 
                         let td_author = document.createElement("td")
-                        if (book["jointAuthorTableId"] !== 0) {
+                        if (book["jointAuthorTableId"] !== 0 && bookVo["jointIsAlive"]) {
                             let td_book_authorName_a = document.createElement("a")
                             td_book_authorName_a.innerText = bookVo["authorName"].split(' ')[0]
                             td_book_authorName_a.href = '/author/getOne?authorKey=' + book["authorId"]
@@ -219,8 +219,13 @@ function search() {
                                 td_book_jointAuthorTable_a.style.color = '#000'
                                 break
                             default:
-                                td_book_jointAuthorTable_a.innerText = '合著'
-                                td_book_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
+                                if (bookVo["jointIsAlive"]) {
+                                    td_book_jointAuthorTable_a.innerText = '合著'
+                                    td_book_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
+                                } else {
+                                    td_book_jointAuthorTable_a.innerText = '无'
+                                    td_book_jointAuthorTable_a.style.color = '#000'
+                                }
                         }
                         td_jointAuthorTable.appendChild(td_book_jointAuthorTable_a)
 

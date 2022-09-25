@@ -20,7 +20,11 @@ public class BookVo {
     @ApiModelProperty("该书籍关联标签名")
     private String tagName;
 
+    @ApiModelProperty("该书籍共同作者表作生效标志")
+    private boolean jointIsAlive;
+
     public BookVo(Book book) {
         this.book = book;
+        this.jointIsAlive = true;
     }
 }

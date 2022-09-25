@@ -5,19 +5,43 @@
 <mapper namespace="com.example.library_mysql.mapper.BookMapper">
 
     <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.Book">
-            <id property="bookId" column="book_id" jdbcType="INTEGER"/>
-            <result property="bookName" column="book_name" jdbcType="VARCHAR"/>
-            <result property="authorId" column="author_id" jdbcType="INTEGER"/>
-            <result property="ibsn" column="IBSN" jdbcType="VARCHAR"/>
-            <result property="publishingCompanyId" column="publishing_company_id" jdbcType="INTEGER"/>
-            <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
-            <result property="quantity" column="quantity" jdbcType="INTEGER"/>
-            <result property="price" column="price" jdbcType="INTEGER"/>
-            <result property="isBeingBorrowed" column="is_being_borrowed" jdbcType="INTEGER"/>
-            <result property="publicationDate" column="publication_date" jdbcType="DATE"/>
-            <result property="jointAuthorTableId" column="joint_author_table_id" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
+        <id property="bookId" column="book_id" jdbcType="INTEGER"/>
+        <result property="bookName" column="book_name" jdbcType="VARCHAR"/>
+        <result property="authorId" column="author_id" jdbcType="INTEGER"/>
+        <result property="ibsn" column="IBSN" jdbcType="VARCHAR"/>
+        <result property="publishingCompanyId" column="publishing_company_id" jdbcType="INTEGER"/>
+        <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
+        <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+        <result property="price" column="price" jdbcType="INTEGER"/>
+        <result property="isBeingBorrowed" column="is_being_borrowed" jdbcType="INTEGER"/>
+        <result property="publicationDate" column="publication_date" jdbcType="DATE"/>
+        <result property="jointAuthorTableId" column="joint_author_table_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
+
+    <update id="recoveryById">
+        update book
+        set is_deleted = 0
+        where book_id = #{id}
+    </update>
+
+    <update id="recoveryByAuthorId">
+        update book
+        set is_deleted = 0
+        where author_id = #{id}
+    </update>
+
+    <update id="recoveryByPublishingCompanyId">
+        update book
+        set is_deleted = 0
+        where publishing_company_id = #{id}
+    </update>
+
+    <update id="recoveryByTagId">
+        update book
+        set is_deleted = 0
+        where tag_id = #{id}
+    </update>
 </mapper>

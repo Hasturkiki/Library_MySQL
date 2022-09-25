@@ -5,14 +5,20 @@
 <mapper namespace="com.example.library_mysql.mapper.BookBorrowTableMapper">
 
     <resultMap id="BaseResultMap" type="com.example.library_mysql.domain.BookBorrowTable">
-            <id property="booksBorrowTableId" column="books_borrow_table_id" jdbcType="INTEGER"/>
-            <result property="readerId" column="reader_id" jdbcType="INTEGER"/>
-            <result property="bookId" column="book_id" jdbcType="INTEGER"/>
-            <result property="isBorrowing" column="is_borrowing" jdbcType="INTEGER"/>
-            <result property="borrowTime" column="borrow_time" jdbcType="TIMESTAMP"/>
-            <result property="backTime" column="back_time" jdbcType="TIMESTAMP"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
+        <id property="booksBorrowTableId" column="books_borrow_table_id" jdbcType="INTEGER"/>
+        <result property="readerId" column="reader_id" jdbcType="INTEGER"/>
+        <result property="bookId" column="book_id" jdbcType="INTEGER"/>
+        <result property="isBorrowing" column="is_borrowing" jdbcType="INTEGER"/>
+        <result property="borrowTime" column="borrow_time" jdbcType="TIMESTAMP"/>
+        <result property="backTime" column="back_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="BIT"/>
     </resultMap>
+
+    <update id="recoveryById">
+        update book_borrow_table
+        set is_deleted = 0
+        where books_borrow_table_id = #{id}
+    </update>
 </mapper>
