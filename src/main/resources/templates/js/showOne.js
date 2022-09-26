@@ -8,7 +8,7 @@ window.onload = function () {
 
 function showOne(showOneUrl) {
     let showBox = $('#showOne')[0]
-    myAxios.post(showOneUrl).then(res => {
+    myAxios.get(showOneUrl).then(res => {
         if (res.code === 200) {
             let showData = res.data
             if (showData.length == null) {
@@ -40,6 +40,13 @@ function showOne(showOneUrl) {
                             item_tr.innerText += '作'
                         if (itemIndex.indexOf('saving') !== -1)
                             item_tr.innerText = '$' + item_tr.innerText
+                        if (itemIndex.indexOf('authorName') !== -1 && showData['jointIsAlive'] === true)
+                            item_tr.innerText += ' 等'
+                        if (itemIndex.indexOf('jointIsAlive') !== -1)
+                            if (showData[itemIndex] === true)
+                                item_tr.innerText = '合著'
+                            else
+                                item_tr.innerText = ''
                         if (itemIndex.indexOf('createTime') === 0 || itemIndex.indexOf('updateTime') === 0 || itemIndex.indexOf('isDelete') === 0)
                             continue
 
@@ -84,6 +91,8 @@ function showOne(showOneUrl) {
                             }
                             if (innerIndex.indexOf('bookNumber') !== -1)
                                 item_tr.innerText += '作'
+                            if (innerIndex.indexOf('quantity') !== -1)
+                                item_tr.innerText = '库存' + item_tr.innerText + '本'
                             if (innerIndex.indexOf('price') !== -1)
                                 switch (showData[itemIndex][innerIndex]) {
                                     case 0:
@@ -139,6 +148,13 @@ function showOne(showOneUrl) {
                                     item_tr.innerText += '作'
                                 if (itemIndex.indexOf('saving') !== -1)
                                     item_tr.innerText = '$' + item_tr.innerText
+                                if (itemIndex.indexOf('authorName') !== -1 && showData[itemsIndex]['jointIsAlive'] === true)
+                                    item_tr.innerText += ' 等'
+                                if (itemIndex.indexOf('jointIsAlive') !== -1)
+                                    if (showData[itemsIndex][itemIndex] === true)
+                                        item_tr.innerText = '合著'
+                                    else
+                                        item_tr.innerText = ''
                                 if (itemIndex.indexOf('createTime') === 0 || itemIndex.indexOf('updateTime') === 0 || itemIndex.indexOf('isDelete') === 0)
                                     continue
 
@@ -183,6 +199,8 @@ function showOne(showOneUrl) {
                                     }
                                     if (innerIndex.indexOf('bookNumber') !== -1)
                                         item_tr.innerText += '作'
+                                    if (innerIndex.indexOf('quantity') !== -1)
+                                        item_tr.innerText = '库存' + item_tr.innerText + '本'
                                     if (innerIndex.indexOf('price') !== -1)
                                         switch (showData[itemsIndex][itemIndex][innerIndex]) {
                                             case 0:

@@ -29,7 +29,7 @@ public class AuthorController {
     private AuthorService authorService;
 
     @ResponseBody
-    @PostMapping("/getAuthorListVoByPage")
+    @GetMapping("/getAuthorListVoByPage")
     @ApiOperation("分页获取作者列表扩展：page=0时代表获取所有作者")
     @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int")
     public R<AuthorListVo> getAuthorListVoByPage(int page) {
@@ -40,7 +40,7 @@ public class AuthorController {
     }
 
     @ResponseBody
-    @PostMapping("/getAuthorListVo")
+    @GetMapping("/getAuthorListVo")
     @ApiOperation("依据排序分页获取作者列表扩展：page=0时代表获取所有作者")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int"),
@@ -61,7 +61,7 @@ public class AuthorController {
     }
 
     @ResponseBody
-    @PostMapping("/showOne")
+    @GetMapping("/showOne")
     @ApiOperation("作者信息展示")
     @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
     public R<Author> showOne(String key) {
@@ -89,7 +89,7 @@ public class AuthorController {
     }
 
     @ResponseBody
-    @DeleteMapping
+    @DeleteMapping("/delete")
     @ApiOperation("作者信息删除")
     @ApiImplicitParam(name = "id", value = "待删除作者ID", required = true)
     public R<Boolean> deleteAuthor(int id) {

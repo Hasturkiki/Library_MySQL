@@ -1,13 +1,13 @@
 const sortItems = ['authorId', 'authorName', 'authorSex', 'authorAge', 'bookNumber']
 const sortTypes = ['none', 'asc', 'desc']
 
-window.onload = function () {
+$(document).ready(function () {
     getAuthorListVo(1, sortItems[0], sortTypes[0])
-}
+})
 
 function getAuthorListVo(page, sortItem, sortType) {
     let authorTable = document.getElementsByClassName("author_table")[0]
-    myAxios.post('/author/getAuthorListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
+    myAxios.get('/author/getAuthorListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let authorListVo = res.data
             let authorList = authorListVo["authorList"]
@@ -176,6 +176,13 @@ function getAuthorListVo(page, sortItem, sortType) {
                         pageLink_ul.appendChild(pageLink_left)
                     }
                 }
+
+                $(".table_button_update").click(function () {
+                    updateAuthor(this)
+                })
+                $('.table_button_delete').click(function () {
+                    deleteAuthor(this)
+                })
             } else {
                 let p = document.createElement("p")
                 p.className = "search_result_emptyHind"
@@ -216,29 +223,37 @@ function tableSort(sortItem) {
     getAuthorListVo(1, sortKey, sortType)
 }
 
-$(".table_button_update").click(function (event) {
-    //    todo update author
-    prompt(event.innerText)
-    prompt("update author")
+// todo 获取对应作者数据并展开更新界面（删除成功时也用这个方法显示成功提示）、发送put请求更新
+function updateAuthor(button) {
+    let authorItem = button.parentNode.parentNode
+    let authorData = $(authorItem).find('td', 'a')
+    confirm(authorData)
+    // $.ajax({
+    //     url: '/author/update',
+    //     type: 'put',
+    //     async: true,
+    //     data: {
+    //         'authorId': this.authorId,
+    //         'authorName': this.authorName,
+    //         'authorSex': this.authorSex,
+    //         'authorAge': this.authorSex,
+    //     },
+    //     dataType: 'json',
+    //     success: (res) => {
+    //         let author = res.data
+    //         prompt(author)
+    //     }
+    // })
+}
 
-    $.ajax({
-        url: '/author',
-        type: 'put',
-        async: true,
-        data: {
-            'authorId': this.authorId,
-            'authorName': this.authorName,
-            'authorSex': this.authorSex,
-            'authorAge': this.authorSex,
-        },
-        dataType: 'json',
-        success: (res) => {
-            let author = res.data
-            prompt(author)
+function deleteAuthor(button) {
+    myAxios.delete('/author/delete?id=' + button.parentNode.parentNode.firstElementChild.innerText).then(res => {
+        if (res.code === 200) {
+            confirm('删除成功')
+            //    刷新界面
+        } else {
+            confirm('删除失败' + res["msg"].split(';')[0])
+            console.log(res["msg"].split(';')[1])
         }
     })
-})
-
-$('.table_button_delete').click({
-//    todo delete author
-})
+}

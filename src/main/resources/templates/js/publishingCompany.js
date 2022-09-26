@@ -7,7 +7,7 @@ window.onload = function () {
 
 function getPublishingCompanyListVo(page, sortItem, sortType) {
     let publishingCompanyTable = document.getElementsByClassName("publishingCompany_table")[0]
-    myAxios.post('/publishingCompany/getPublishingCompanyListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
+    myAxios.get('/publishingCompany/getPublishingCompanyListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let publishingCompanyListVo = res.data
             let publishingCompanyList = publishingCompanyListVo["publishingCompanyList"]

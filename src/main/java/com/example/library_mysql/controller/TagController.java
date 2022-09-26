@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
@@ -30,7 +30,7 @@ public class TagController {
     private TagService tagService;
 
     @ResponseBody
-    @PostMapping("/getTagListVoByPage")
+    @GetMapping("/getTagListVoByPage")
     @ApiOperation("分页获取标签列表扩展：page=0时代表获取所有标签")
     @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int")
     public R<TagListVo> getTagListVoByPage(int page) {
@@ -41,7 +41,7 @@ public class TagController {
     }
 
     @ResponseBody
-    @PostMapping("/getTagListVo")
+    @GetMapping("/getTagListVo")
     @ApiOperation("依据排序分页获取标签列表扩展：page=0时代表获取所有标签")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int"),
@@ -62,7 +62,7 @@ public class TagController {
     }
 
     @ResponseBody
-    @PostMapping("/showOne")
+    @GetMapping("/showOne")
     @ApiOperation("标签信息展示")
     @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
     public R<Tag> showOne(String key) {

@@ -1,7 +1,6 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
-import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
@@ -9,7 +8,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
@@ -30,7 +29,7 @@ public class JointAuthorTableController {
     private JointAuthorTableService jointAuthorTableService;
 
     @ResponseBody
-    @PostMapping("/getJointAuthorTableVoListVoByPage")
+    @GetMapping("/getJointAuthorTableVoListVoByPage")
     @ApiOperation("分页获取共同作者表扩展列表扩展：page=0时代表获取所有共同作者表扩展")
     @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int")
     public R<JointAuthorTableVoListVo> getJointAuthorTableVoListVoByPage(int page) {
@@ -41,7 +40,7 @@ public class JointAuthorTableController {
     }
 
     @ResponseBody
-    @PostMapping("/getJointAuthorTableVoListVo")
+    @GetMapping("/getJointAuthorTableVoListVo")
     @ApiOperation("依据排序分页获取共同作者表扩展列表扩展：page=0时代表获取所有共同作者表扩展")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int"),
@@ -62,7 +61,7 @@ public class JointAuthorTableController {
     }
 
     @ResponseBody
-    @PostMapping("/showOne")
+    @GetMapping("/showOne")
     @ApiOperation("共同作者表扩展信息展示")
     @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
     public R<JointAuthorTableVo> showOne(String key) {

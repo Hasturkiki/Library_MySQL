@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
@@ -30,7 +29,7 @@ public class BookBorrowTableController {
     private BookBorrowTableService bookBorrowTableService;
 
     @ResponseBody
-    @PostMapping("/getBookBorrowTableVoListVoByPage")
+    @GetMapping("/getBookBorrowTableVoListVoByPage")
     @ApiOperation("分页获取借书表扩展列表扩展：page=0时代表获取所有借书表扩展")
     @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int")
     public R<BookBorrowTableVoListVo> getBookBorrowTableVoListVoByPage(int page) {
@@ -41,7 +40,7 @@ public class BookBorrowTableController {
     }
 
     @ResponseBody
-    @PostMapping("/getBookBorrowTableVoListVo")
+    @GetMapping("/getBookBorrowTableVoListVo")
     @ApiOperation("依据排序分页获取借书表扩展列表扩展：page=0时代表获取所有借书表扩展")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int"),
@@ -62,7 +61,7 @@ public class BookBorrowTableController {
     }
 
     @ResponseBody
-    @PostMapping("/showOne")
+    @GetMapping("/showOne")
     @ApiOperation("借书表扩展信息展示")
     @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
     public R<BookBorrowTableVo> showOne(String key) {

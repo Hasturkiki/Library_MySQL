@@ -1,7 +1,6 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
-import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.domain.PublishingCompany;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
@@ -10,7 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
@@ -31,7 +30,7 @@ public class PublishingCompanyController {
     private PublishingCompanyService publishingCompanyService;
 
     @ResponseBody
-    @PostMapping("/getPublishingCompanyListVoByPage")
+    @GetMapping("/getPublishingCompanyListVoByPage")
     @ApiOperation("分页获取出版社列表扩展：page=0时代表获取所有出版社")
     @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int")
     public R<PublishingCompanyListVo> getPublishingCompanyListVoByPage(int page) {
@@ -42,7 +41,7 @@ public class PublishingCompanyController {
     }
 
     @ResponseBody
-    @PostMapping("/getPublishingCompanyListVo")
+    @GetMapping("/getPublishingCompanyListVo")
     @ApiOperation("依据排序分页获取出版社列表扩展：page=0时代表获取所有出版社")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int"),
@@ -63,7 +62,7 @@ public class PublishingCompanyController {
     }
 
     @ResponseBody
-    @PostMapping("/showOne")
+    @GetMapping("/showOne")
     @ApiOperation("出版社信息展示")
     @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
     public R<PublishingCompany> showOne(String key) {

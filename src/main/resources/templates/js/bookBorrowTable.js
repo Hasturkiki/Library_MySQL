@@ -7,7 +7,7 @@ window.onload = function () {
 
 function getBookBorrowTableVoListVo(page, sortItem, sortType) {
     let bookBorrowTableTable = document.getElementsByClassName("bookBorrowTable_table")[0]
-    myAxios.post('/bookBorrowTable/getBookBorrowTableVoListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
+    myAxios.get('/bookBorrowTable/getBookBorrowTableVoListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let bookBorrowTableVoListVo = res.data
             let bookBorrowTableVoList = bookBorrowTableVoListVo["bookBorrowTableVoList"]

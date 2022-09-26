@@ -7,7 +7,7 @@ window.onload = function () {
 
 function getReaderListVo(page, sortItem, sortType) {
     let readerTable = document.getElementsByClassName("reader_table")[0]
-    myAxios.post('/reader/getReaderListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
+    myAxios.get('/reader/getReaderListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let readerListVo = res.data
             let readerList = readerListVo["readerList"]

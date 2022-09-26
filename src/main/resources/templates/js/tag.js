@@ -7,7 +7,7 @@ window.onload = function () {
 
 function getTagListVo(page, sortItem, sortType) {
     let tagTable = document.getElementsByClassName("tag_table")[0]
-    myAxios.post('/tag/getTagListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
+    myAxios.get('/tag/getTagListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let tagListVo = res.data
             let tagList = tagListVo["tagList"]

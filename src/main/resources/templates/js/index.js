@@ -1,7 +1,7 @@
 window.onload = function () {
     window.scrollTo(0, 0)
     // 预先进行一次空查询，减少后续响应时间
-    myAxios.post('/search?searchKey=null').then(res => {
+    myAxios.get('/search?searchKey=null').then(res => {
         console.log(res["msg"])
     })
 }
@@ -40,7 +40,7 @@ function search() {
         document.getElementsByClassName("search_result_emptyHind")[0].remove()
     $.ajax({
         url: '/search',
-        type: 'post',
+        type: 'get',
         async: true,
         data: 'searchKey=' + searchKey,
         dataType: 'json',

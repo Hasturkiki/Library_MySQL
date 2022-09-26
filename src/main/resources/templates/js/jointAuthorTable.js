@@ -7,7 +7,7 @@ window.onload = function () {
 
 function getJointAuthorTableVoListVo(page, sortItem, sortType) {
     let jointAuthorTableTable = document.getElementsByClassName("jointAuthorTable_table")[0]
-    myAxios.post('/jointAuthorTable/getJointAuthorTableVoListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
+    myAxios.get('/jointAuthorTable/getJointAuthorTableVoListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let jointAuthorTableVoListVo = res.data
             let jointAuthorTableVoList = jointAuthorTableVoListVo["jointAuthorTableVoList"]

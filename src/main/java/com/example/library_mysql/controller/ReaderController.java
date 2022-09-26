@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
@@ -31,7 +31,7 @@ public class ReaderController {
     private ReaderService readerService;
 
     @ResponseBody
-    @PostMapping("/getReaderListVoByPage")
+    @GetMapping("/getReaderListVoByPage")
     @ApiOperation("分页获取读者列表扩展：page=0时代表获取所有读者")
     @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int")
     public R<ReaderListVo> getReaderListVoByPage(int page) {
@@ -42,7 +42,7 @@ public class ReaderController {
     }
 
     @ResponseBody
-    @PostMapping("/getReaderListVo")
+    @GetMapping("/getReaderListVo")
     @ApiOperation("依据排序分页获取读者列表扩展：page=0时代表获取所有读者")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页数", required = true, paramType = "query", dataType = "int"),
@@ -63,7 +63,7 @@ public class ReaderController {
     }
 
     @ResponseBody
-    @PostMapping("/showOne")
+    @GetMapping("/showOne")
     @ApiOperation("读者信息展示")
     @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
     public R<Reader> showOne(String key) {

@@ -44,7 +44,7 @@ public class HomeController {
 
     @SuppressWarnings("rawtypes")
     @ResponseBody
-    @PostMapping("/search")
+    @GetMapping("/search")
     @ApiOperation("首页搜索")
     @ApiImplicitParam(name = "searchKey", value = "搜索关键词", required = true, paramType = "query", dataType = "String")
     public R<Object> show(String searchKey) throws UnsupportedEncodingException {
@@ -100,7 +100,7 @@ public class HomeController {
     }
 
     @ResponseBody
-    @PostMapping("/showOne")
+    @GetMapping("/showOne")
     @ApiOperation("单个展示测试")
     @ApiImplicitParam(name = "key", value = "索引key", required = true, paramType = "query", dataType = "String")
     public R<Object> showOne(String key) {
