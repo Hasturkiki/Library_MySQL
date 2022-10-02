@@ -1,17 +1,27 @@
 const sortItems = ['authorId', 'authorName', 'authorSex', 'authorAge', 'bookNumber']
 const sortTypes = ['none', 'asc', 'desc']
 
+let nowPage = 1
+let nowSortItem = sortItems[0]
+let nowSortType = sortTypes[0]
+let pagesNumber
+
 $(document).ready(function () {
-    getAuthorListVo(1, sortItems[0], sortTypes[0])
+    getAuthorListVo(nowPage, nowSortItem, nowSortType)
 })
 
 function getAuthorListVo(page, sortItem, sortType) {
     let authorTable = document.getElementsByClassName("author_table")[0]
+    $('.itemEdit').remove()
     myAxios.get('/author/getAuthorListVo?page=' + page + '&sortItem=' + sortItem + '&sortType=' + sortType).then(res => {
         if (res.code === 200) {
             let authorListVo = res.data
             let authorList = authorListVo["authorList"]
-            let pagesNumber = authorListVo["pagesNumber"]
+            pagesNumber = authorListVo["pagesNumber"]
+            nowPage = page
+            nowSortItem = sortItem
+            nowSortType = sortType
+
             if (authorList.length !== 0) {
 
                 authorTable.innerHTML = '<colgroup>\n' +
@@ -44,6 +54,7 @@ function getAuthorListVo(page, sortItem, sortType) {
                 for (const author of authorList) {
                     let tr = document.createElement("tr")
                     tr.className = "search_result_content"
+                    $(tr).data('author', author)
 
                     let td_authorId = document.createElement("td")
                     td_authorId.innerText = author["authorId"]
@@ -101,6 +112,10 @@ function getAuthorListVo(page, sortItem, sortType) {
                 let pageLink_ul = document.getElementsByClassName("pageLink_ul")[0]
                 pageLink_ul.innerHTML = ''
                 if (pagesNumber > 1) {
+                    let pageJump = document.createElement('input')
+                    pageJump.className = 'pageJump'
+                    pageLink_ul.appendChild(pageJump)
+
                     if (page !== pagesNumber) {
                         let pageLink_right = document.createElement("li")
                         pageLink_right.innerText = '>'
@@ -177,24 +192,42 @@ function getAuthorListVo(page, sortItem, sortType) {
                     }
                 }
 
+                if ($(authorTable.parentNode).find('.pagesNumberShow').length === 0) {
+                    let pagesNumberShow = document.createElement('p')
+                    pagesNumberShow.className = 'pagesNumberShow'
+                    pagesNumberShow.innerText = '共' + pagesNumber + '页'
+                    authorTable.parentNode.appendChild(pagesNumberShow)
+                } else {
+                    let pagesNumberShow = document.getElementsByClassName('pagesNumberShow')[0]
+                    pagesNumberShow.innerText = '共' + pagesNumber + '页'
+                }
+
+                $(".pageJump").keyup(function (e) {
+                    if (e.keyCode === 13) {
+                        if (!isNaN(parseInt(this.value))) {
+                            nowPage = parseInt(this.value)
+                            getAuthorListVo(nowPage, nowSortItem, nowSortType)
+                        }
+                    }
+                })
                 $(".table_button_update").click(function () {
-                    updateAuthor(this)
+                    authorEdit(this)
                 })
                 $('.table_button_delete').click(function () {
-                    deleteAuthor(this)
+                    authorDelete(this)
                 })
             } else {
                 let p = document.createElement("p")
                 p.className = "search_result_emptyHind"
                 p.innerText = "无对应内容，请确认后重试。"
-                authorTable.appendChild(p)
+                $(authorTable).html(p)
             }
         } else {
             let p = document.createElement("p")
             p.className = "search_result_emptyHind"
             p.innerText = res["msg"].split(';')[0]
             console.log(res["msg"].split(';')[1])
-            authorTable.appendChild(p)
+            $(authorTable).html(p)
         }
     })
 }
@@ -223,34 +256,86 @@ function tableSort(sortItem) {
     getAuthorListVo(1, sortKey, sortType)
 }
 
-// todo 获取对应作者数据并展开更新界面（删除成功时也用这个方法显示成功提示）、发送put请求更新
-function updateAuthor(button) {
+function authorEdit(button) {
     let authorItem = button.parentNode.parentNode
-    let authorData = $(authorItem).find('td', 'a')
-    confirm(authorData)
-    // $.ajax({
-    //     url: '/author/update',
-    //     type: 'put',
-    //     async: true,
-    //     data: {
-    //         'authorId': this.authorId,
-    //         'authorName': this.authorName,
-    //         'authorSex': this.authorSex,
-    //         'authorAge': this.authorSex,
-    //     },
-    //     dataType: 'json',
-    //     success: (res) => {
-    //         let author = res.data
-    //         prompt(author)
-    //     }
-    // })
+    let authorData = $(authorItem).data('author')
+    let authorEdit = document.createElement('div')
+    authorEdit.className = 'itemEdit'
+    let authorId = document.createElement('p')
+    authorId.innerText = 'ID: ' + authorData["authorId"]
+    authorEdit.appendChild(authorId)
+    let authorName = document.createElement('div')
+    let authorName_p = document.createElement('p')
+    authorName_p.innerText = '姓名: '
+    authorName.appendChild(authorName_p)
+    let authorName_input = document.createElement('input')
+    authorName_input.value = authorData["authorName"]
+    authorName.appendChild(authorName_input)
+    authorEdit.appendChild(authorName)
+    // todo 性别应改为选择框
+    let authorSex = document.createElement('div')
+    let authorSex_p = document.createElement('p')
+    authorSex_p.innerText = '性别: '
+    authorSex.appendChild(authorSex_p)
+    let authorSex_input = document.createElement('input')
+    authorSex_input.value = authorData["authorSex"]
+    authorSex.appendChild(authorSex_input)
+    authorEdit.appendChild(authorSex)
+    let authorAge = document.createElement('div')
+    let authorAge_p = document.createElement('p')
+    authorAge_p.innerText = '年龄: '
+    authorAge.appendChild(authorAge_p)
+    let authorAge_input = document.createElement('input')
+    authorAge_input.value = authorData["authorAge"]
+    authorAge.appendChild(authorAge_input)
+    authorEdit.appendChild(authorAge)
+    let update = document.createElement('button')
+    update.innerText = '更新'
+    update.onclick = function () {
+        authorData["authorName"] = authorName_input.value
+        authorData["authorSex"] = authorSex_input.value
+        authorData["authorAge"] = authorAge_input.value
+        authorUpdate(authorData)
+    }
+    authorEdit.appendChild(update)
+    let cancel = document.createElement('button')
+    cancel.innerText = '取消'
+    cancel.onclick = function () {
+        authorEdit.remove()
+    }
+    authorEdit.appendChild(cancel)
+    $('body')[0].appendChild(authorEdit)
 }
 
-function deleteAuthor(button) {
-    myAxios.delete('/author/delete?id=' + button.parentNode.parentNode.firstElementChild.innerText).then(res => {
+function authorUpdate(authorData) {
+    myAxios.put('/author/update', authorData).then(res => {
+        if (res.code === 200) {
+            confirm('更新成功')
+            getAuthorListVo(nowPage, nowSortItem, nowSortType)
+        } else {
+            confirm('更新失败' + res["msg"].split(';')[0])
+            console.log(res["msg"].split(';')[1])
+        }
+    })
+}
+
+// todo 多条删除时有可能出现bug，待调试解决
+function authorDelete(button) {
+    let authorItem = button.parentNode.parentNode
+    let authorTable = authorItem.parentNode
+    myAxios.delete('/author/delete?id=' + authorItem.firstElementChild.innerText).then(res => {
         if (res.code === 200) {
             confirm('删除成功')
-            //    刷新界面
+            $(authorItem).remove()
+            if ($(authorTable).find('.search_result_content').length === 0) {
+                if (pagesNumber === 1) {
+                    confirm('作者信息已全部删除')
+                    location.href = '/home'
+                }
+                if (pagesNumber === nowPage)
+                    nowPage--
+                getAuthorListVo(nowPage, nowSortItem, nowSortType)
+            }
         } else {
             confirm('删除失败' + res["msg"].split(';')[0])
             console.log(res["msg"].split(';')[1])

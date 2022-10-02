@@ -111,6 +111,7 @@ Axios.prototype.put = function (url, data) {
         xhr.open('put', url, true);
         //设置请求头的配置
         setHeader(xhr, this.headers);
+        xhr.setRequestHeader('Content-Type', 'application/json')
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if ((xhr.status === 200 || xhr.status === 304)) {
