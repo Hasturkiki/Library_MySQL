@@ -280,3 +280,7 @@ table button:active {
 .itemEdit button {
     margin: 1%;
 }
+
+.itemEdit input {
+    width: 16%;
+}

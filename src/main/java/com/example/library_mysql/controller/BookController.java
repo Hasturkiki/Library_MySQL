@@ -82,7 +82,6 @@ public class BookController {
         return "book_showList";
     }
 
-    // todo 共同作者作品也应加入
     @ResponseBody
     @GetMapping("/selectByAuthorKey")
     @ApiOperation("依据排序分页获取对应id作者名下书籍扩展列表扩展：page=0时代表获取所有书籍扩展")

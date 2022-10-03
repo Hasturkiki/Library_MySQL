@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Hastur kiki
@@ -150,12 +148,22 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
 
     @Override
     public R<BookVoListVo> selectBooksByAuthor(int id) {
-        return selectBooks(lambdaQuery().eq(Book::getAuthorId, id));
+        List<Integer> jointBookList = jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getAuthorId, id).list().stream().map(JointAuthorTable::getTableId).toList();
+        return selectBooks(
+                lambdaQuery()
+                        .eq(Book::getAuthorId, id).eq(Book::getJointAuthorTableId, 0)
+                        .or()
+                        .in(Book::getJointAuthorTableId, jointBookList)
+        );
     }
 
     @Override
     public R<BookVoListVo> selectBooksByAuthorWithCondition(int id, int page, String sortItem, String sortType) {
-        return selectBooksWithCondition(page, sortItem, sortType, lambdaQuery().eq(Book::getAuthorId, id));
+        List<Integer> jointBookList = jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getAuthorId, id).list().stream().map(JointAuthorTable::getTableId).toList();
+        return selectBooksWithCondition(page, sortItem, sortType, lambdaQuery()
+                .eq(Book::getAuthorId, id).eq(Book::getJointAuthorTableId, 0)
+                .or()
+                .in(Book::getJointAuthorTableId, jointBookList));
     }
 
     @Override

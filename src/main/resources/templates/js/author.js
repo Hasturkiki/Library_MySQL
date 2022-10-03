@@ -4,7 +4,7 @@ const sortTypes = ['none', 'asc', 'desc']
 let nowPage = 1
 let nowSortItem = sortItems[0]
 let nowSortType = sortTypes[0]
-let pagesNumber
+let pagesNumber = 0
 
 $(document).ready(function () {
     getAuthorListVo(nowPage, nowSortItem, nowSortType)
@@ -167,18 +167,19 @@ function getAuthorListVo(page, sortItem, sortType) {
                             pageLink_ul.appendChild(pageLink_left_2)
                         }
                     } else {
-                        while (pagesNumber > 0) {
+                        let innerPagesNumber = pagesNumber
+                        while (innerPagesNumber > 0) {
                             let pageLink_li = document.createElement("li")
-                            pageLink_li.innerText = pagesNumber
+                            pageLink_li.innerText = innerPagesNumber
                             pageLink_li.addEventListener('click', function () {
                                 getAuthorListVo(Number(this.innerText), sortItem, sortType)
                             })
-                            if (pagesNumber === page) {
+                            if (innerPagesNumber === page) {
                                 pageLink_li.style.color = '#1aa'
                                 pageLink_li.style.borderBottom = '1px solid #aa1'
                             }
                             pageLink_ul.appendChild(pageLink_li)
-                            pagesNumber--
+                            innerPagesNumber--
                         }
                     }
 
@@ -272,14 +273,18 @@ function authorEdit(button) {
     authorName_input.value = authorData["authorName"]
     authorName.appendChild(authorName_input)
     authorEdit.appendChild(authorName)
-    // todo 性别应改为选择框
     let authorSex = document.createElement('div')
     let authorSex_p = document.createElement('p')
     authorSex_p.innerText = '性别: '
     authorSex.appendChild(authorSex_p)
-    let authorSex_input = document.createElement('input')
-    authorSex_input.value = authorData["authorSex"]
-    authorSex.appendChild(authorSex_input)
+    let authorSex_select = document.createElement('select')
+    authorSex_select.add(new Option('女',0))
+    authorSex_select.add(new Option('男',1))
+    authorSex_select.add(new Option('保密',2))
+    authorSex_select.value = authorData["authorSex"]
+    authorSex_select.style.width = '17%'
+    authorSex_select.style.height = '22px'
+    authorSex.appendChild(authorSex_select)
     authorEdit.appendChild(authorSex)
     let authorAge = document.createElement('div')
     let authorAge_p = document.createElement('p')
@@ -293,7 +298,7 @@ function authorEdit(button) {
     update.innerText = '更新'
     update.onclick = function () {
         authorData["authorName"] = authorName_input.value
-        authorData["authorSex"] = authorSex_input.value
+        authorData["authorSex"] = authorSex_select.value
         authorData["authorAge"] = authorAge_input.value
         authorUpdate(authorData)
     }
@@ -319,7 +324,6 @@ function authorUpdate(authorData) {
     })
 }
 
-// todo 多条删除时有可能出现bug，待调试解决
 function authorDelete(button) {
     let authorItem = button.parentNode.parentNode
     let authorTable = authorItem.parentNode
