@@ -25,5 +25,9 @@ public interface JointAuthorTableService extends IService<JointAuthorTable> {
 
     R<JointAuthorTableVoListVo> getJointAuthorTableVoListVo(int page, String sortItem, String sortType);
 
-    boolean deleteJointAuthorTableByOtherId(String sign, int id);
+    R<Boolean> deleteJointAuthorTableById(int id);
+
+    boolean deleteJointAuthorTableByAuthorId(int id);
+
+    boolean deleteJointAuthorTableByBookId(int id);
 }

@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface PublishingCompanyMapper extends BaseMapper<PublishingCompany> {
-    public Integer recoveryById(Integer id);
+    public boolean recoveryById(Integer id);
 }
 
 

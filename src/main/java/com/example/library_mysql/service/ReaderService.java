@@ -25,4 +25,6 @@ public interface ReaderService extends IService<Reader> {
     R<ReaderListVo> getReaderListVoByPage(int page);
 
     R<ReaderListVo> getReaderListVo(int page, String sortItem, String sortType);
+
+    R<Boolean> deleteReaderById(int id);
 }

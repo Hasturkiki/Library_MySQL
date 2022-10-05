@@ -1,6 +1,7 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
+import com.example.library_mysql.domain.Book;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
 import io.swagger.annotations.Api;
@@ -8,12 +9,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Api(tags = "书籍主页")
 @Controller
@@ -128,5 +128,25 @@ public class BookController {
             return bookService.selectBooksByTag(key);
         else
             return bookService.selectBooksByTagWithCondition(key, page, sortItem, sortType);
+    }
+
+    @ResponseBody
+    @PutMapping("/update")
+    @ApiOperation("书籍信息更新")
+    public R<Book> updateBook(@RequestBody Book book) {
+        book.setUpdateTime(LocalDateTime.now());
+        if (bookService.updateById(book)) {
+            return R.success(bookService.selectBookById(book.getBookId()));
+        } else {
+            return R.error("书籍信息更新失败");
+        }
+    }
+
+    @ResponseBody
+    @DeleteMapping("/delete")
+    @ApiOperation("书籍信息删除")
+    @ApiImplicitParam(name = "id", value = "待删除书籍ID", required = true)
+    public R<Boolean> deleteBook(int id) {
+        return bookService.deleteBookById(id);
     }
 }

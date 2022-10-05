@@ -12,7 +12,11 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface BookBorrowTableMapper extends BaseMapper<BookBorrowTable> {
-    public Integer recoveryById(Integer id);
+    public boolean recoveryById(Integer id);
+
+    public boolean recoveryByBookId(int id);
+
+    public boolean recoveryByReaderId(int id);
 }
 
 

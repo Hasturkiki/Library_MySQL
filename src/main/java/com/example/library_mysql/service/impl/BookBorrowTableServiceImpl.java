@@ -15,6 +15,7 @@ import com.example.library_mysql.vo.BookBorrowTableVoListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +30,11 @@ public class BookBorrowTableServiceImpl extends ServiceImpl<BookBorrowTableMappe
 
     @Resource
     private ReaderService readerService;
-
     @Resource
     private BookService bookService;
+
+    @Resource
+    private BookBorrowTableMapper bookBorrowTableMapper;
 
     @Override
     public BookBorrowTableVo selectBookBorrowTableVoById(int id) {
@@ -155,6 +158,65 @@ public class BookBorrowTableServiceImpl extends ServiceImpl<BookBorrowTableMappe
 
         bookBorrowTableVoListVo.setPagesNumber(pagesNumber);
         return R.success(bookBorrowTableVoListVo);
+    }
+
+    @Override
+    public R<Boolean> deleteBookBorrowTableById(int id) {
+        BookBorrowTable bookBorrowTable = lambdaQuery().eq(BookBorrowTable::getBooksBorrowTableId, id).one();
+        if (bookBorrowTable == null) {
+            return R.error("借书表信息删除失败（不存在该借书表）");
+        } else {
+            bookBorrowTable.setUpdateTime(LocalDateTime.now());
+            updateById(bookBorrowTable);
+            if (removeById(id)) {
+                Book book = bookService.selectBookById(bookBorrowTable.getBookId());
+                if (book == null) {
+                    bookBorrowTableMapper.recoveryById(id);
+                    return R.error("借书表信息删除失败（借书表对应书籍不存在）");
+                } else {
+                    book.setIsBeingBorrowed(book.getIsBeingBorrowed() - 1);
+                    book.setUpdateTime(LocalDateTime.now());
+                    bookService.updateById(book);
+                    return R.success(true);
+                }
+            } else {
+                return R.error("借书表信息删除失败");
+            }
+        }
+    }
+
+    @Override
+    public boolean deleteBookBorrowTableByOtherId(String sign, int id) {
+        List<BookBorrowTable> bookBorrowTableList = switch (sign) {
+            case "bookId" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).list();
+            default -> lambdaQuery().eq(BookBorrowTable::getReaderId, id).list();
+        };
+        if (bookBorrowTableList.size() == 0)
+            return true;
+        for (BookBorrowTable bookBorrowTable : bookBorrowTableList) {
+            bookBorrowTable.setUpdateTime(LocalDateTime.now());
+            updateById(bookBorrowTable);
+            if (!sign.equals("bookId")) {
+                Book book = bookService.selectBookById(bookBorrowTable.getBookId());
+                if (book == null) {
+                    return false;
+                } else {
+                    book.setIsBeingBorrowed(book.getIsBeingBorrowed() - 1);
+                    book.setUpdateTime(LocalDateTime.now());
+                    bookService.updateById(book);
+                }
+            }
+        }
+        return removeByIds(bookBorrowTableList);
+    }
+
+    @Override
+    public boolean recoveryByOtherId(String sign, int id) {
+        return switch (sign) {
+            case "bookId" -> bookBorrowTableMapper.recoveryByBookId(id);
+            case "readerId" -> bookBorrowTableMapper.recoveryByReaderId(id);
+            default -> bookBorrowTableMapper.recoveryById(id);
+        };
     }
 
     private BookBorrowTableVoListVo setBookBorrowTableVoListVo(List<BookBorrowTable> bookBorrowTableList) {

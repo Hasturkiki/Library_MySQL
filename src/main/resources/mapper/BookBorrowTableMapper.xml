@@ -21,4 +21,16 @@
         set is_deleted = 0
         where books_borrow_table_id = #{id}
     </update>
+
+    <update id="recoveryByBookId">
+        update book_borrow_table
+        set is_deleted = 0
+        where book_id = #{id}
+    </update>
+
+    <update id="recoveryByReaderId">
+        update book_borrow_table
+        set is_deleted = 0
+        where reader_id = #{id}
+    </update>
 </mapper>

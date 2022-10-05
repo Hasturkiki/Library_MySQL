@@ -9,12 +9,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Api(tags = "标签主页")
 @Controller
@@ -75,5 +74,25 @@ public class TagController {
         if (tag == null)
             return R.error("无对应标签信息");
         return R.success(tag);
+    }
+
+    @ResponseBody
+    @PutMapping("/update")
+    @ApiOperation("标签信息更新")
+    public R<Tag> updateTag(@RequestBody Tag tag) {
+        tag.setUpdateTime(LocalDateTime.now());
+        if (tagService.updateById(tag)) {
+            return R.success(tagService.selectTagById(tag.getTagId()));
+        } else {
+            return R.error("标签信息更新失败");
+        }
+    }
+
+    @ResponseBody
+    @DeleteMapping("/delete")
+    @ApiOperation("标签信息删除")
+    @ApiImplicitParam(name = "id", value = "标签ID", required = true)
+    public R<Boolean> deleteTag(int id) {
+        return tagService.deleteTagById(id);
     }
 }

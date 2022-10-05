@@ -28,6 +28,8 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     @Resource
     private AuthorService authorService;
     @Resource
+    private BookBorrowTableService bookBorrowTableService;
+    @Resource
     private JointAuthorTableService jointAuthorTableService;
     @Resource
     private PublishingCompanyService publishingCompanyService;
@@ -187,20 +189,45 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     }
 
     @Override
-    public boolean deleteBookByOtherId(String sign, int id) {
-        List<Book> bookList;
-        switch (sign) {
-            case "authorId" -> bookList = lambdaQuery().eq(Book::getAuthorId, id).list();
-            case "publishingCompanyId" -> bookList = lambdaQuery().eq(Book::getPublishingCompanyId, id).list();
-            case "tagId" -> bookList = lambdaQuery().eq(Book::getTagId, id).list();
-            default -> bookList = lambdaQuery().eq(Book::getJointAuthorTableId, id).list();
-        }
-        if (bookList.size() == 0)
-            return true;
-        for (Book book : bookList) {
+    public R<Boolean> deleteBookById(int id) {
+        Book book = selectBookById(id);
+        if (book == null) {
+            return R.error("书籍信息删除失败（不存在该书籍）");
+        } else {
             book.setUpdateTime(LocalDateTime.now());
             updateById(book);
+            if (removeById(id)) {
+                if (bookBorrowTableService.deleteBookBorrowTableByOtherId("bookId", id)) {
+                    if (jointAuthorTableService.deleteJointAuthorTableByBookId(id))
+                        return R.success(true);
+                    else {
+                        bookMapper.recoveryById(id);
+                        if (bookBorrowTableService.recoveryByOtherId("bookId", id))
+                            return R.error("关联信息删除失败（共同作者表）");
+                        else
+                            return R.error("关联信息删除失败（共同作者表）、且已删除借书表信息未恢复");
+                    }
+                } else {
+                    bookMapper.recoveryById(id);
+                    return R.error("关联信息删除失败（借书表）");
+                }
+            } else {
+                return R.error("书籍信息删除失败");
+            }
         }
+    }
+
+    // 级联删除时很可能出现bug 重点关注
+    @Override
+    public boolean deleteBookByOtherId(String sign, int id) {
+        List<Book> bookList = switch (sign) {
+            case "authorId" -> lambdaQuery().eq(Book::getAuthorId, id).list();
+            case "publishingCompanyId" -> lambdaQuery().eq(Book::getPublishingCompanyId, id).list();
+            case "tagId" -> lambdaQuery().eq(Book::getTagId, id).list();
+            default -> lambdaQuery().eq(Book::getJointAuthorTableId, id).list();
+        };
+        if (bookList.size() == 0)
+            return true;
         if (sign.equals("authorId")) {
             for (Book book : bookList) {
                 if (book.getJointAuthorTableId() != 0)
@@ -214,6 +241,20 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
                             return true;
                     }
             }
+        }
+        for (Book book : bookList) {
+            book.setUpdateTime(LocalDateTime.now());
+            updateById(book);
+            if (bookBorrowTableService.deleteBookBorrowTableByOtherId("bookId", id)) {
+                if (!sign.equals("jointAuthorTableId")) {
+                    if (!jointAuthorTableService.deleteJointAuthorTableByBookId(id)) {
+                        bookMapper.recoveryById(id);
+                        bookBorrowTableService.recoveryByOtherId("bookId", id);
+                        return false;
+                    }
+                }
+            } else
+                return false;
         }
         return removeByIds(bookList);
     }

@@ -137,18 +137,18 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
             updateById(author);
             if (removeById(id)) {
                 if (bookService.deleteBookByOtherId("authorId", id))
-                    if (jointAuthorTableService.deleteJointAuthorTableByOtherId("authorId", id))
+                    if (jointAuthorTableService.deleteJointAuthorTableByAuthorId(id))
                         return R.success(true);
                     else {
                         authorMapper.recoveryById(id);
                         if (bookService.recoveryByOtherId("authorId", id))
-                            return R.error("关联信息删除失败");
+                            return R.error("关联信息删除失败（共同作者表）");
                         else
-                            return R.error("关联信息删除失败、且已删除书籍信息未恢复");
+                            return R.error("关联信息删除失败（共同作者表）、且已删除书籍信息未恢复");
                     }
                 else {
                     authorMapper.recoveryById(id);
-                    return R.error("关联信息删除失败");
+                    return R.error("关联信息删除失败（书籍）");
                 }
             } else {
                 return R.error("作者信息删除失败");

@@ -9,12 +9,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Api(tags = "出版社主页")
 @Controller
@@ -75,5 +74,25 @@ public class PublishingCompanyController {
         if (publishingCompany == null)
             return R.error("无对应出版社信息");
         return R.success(publishingCompany);
+    }
+
+    @ResponseBody
+    @PutMapping("/update")
+    @ApiOperation("出版社信息更新")
+    public R<PublishingCompany> updatePublishingCompany(@RequestBody PublishingCompany publishingCompany) {
+        publishingCompany.setUpdateTime(LocalDateTime.now());
+        if (publishingCompanyService.updateById(publishingCompany)) {
+            return R.success(publishingCompanyService.selectPublishingCompanyById(publishingCompany.getPublishingCompanyId()));
+        } else {
+            return R.error("出版社信息更新失败");
+        }
+    }
+
+    @ResponseBody
+    @DeleteMapping("/delete")
+    @ApiOperation("出版社信息删除")
+    @ApiImplicitParam(name = "id", value = "待删除出版社ID", required = true)
+    public R<Boolean> deletePublishingCompany(int id) {
+        return publishingCompanyService.deletePublishingCompanyById(id);
     }
 }

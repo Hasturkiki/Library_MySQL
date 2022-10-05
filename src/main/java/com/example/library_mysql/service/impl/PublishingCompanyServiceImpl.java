@@ -117,6 +117,11 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
         return R.success(publishingCompanyListVo);
     }
 
+    @Override
+    public R<Boolean> deletePublishingCompanyById(int id) {
+        return null;
+    }
+
     private void setBookNumber(List<PublishingCompany> publishingCompanyList) {
         for (PublishingCompany publishingCompany : publishingCompanyList) {
             long bookNumber = bookService.lambdaQuery().eq(Book::getPublishingCompanyId, publishingCompany.getPublishingCompanyId()).count();

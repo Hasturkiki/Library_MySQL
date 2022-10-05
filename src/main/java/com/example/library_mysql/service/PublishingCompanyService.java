@@ -25,4 +25,6 @@ public interface PublishingCompanyService extends IService<PublishingCompany> {
     R<PublishingCompanyListVo> getPublishingCompanyListVoByPage(int page);
 
     R<PublishingCompanyListVo> getPublishingCompanyListVo(int page, String sortItem, String sortType);
+
+    R<Boolean> deletePublishingCompanyById(int id);
 }

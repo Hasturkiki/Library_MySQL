@@ -92,6 +92,11 @@ public class ReaderServiceImpl extends ServiceImpl<ReaderMapper, Reader>
         readerListVo.setPagesNumber(pagesNumber);
         return R.success(readerListVo);
     }
+
+    @Override
+    public R<Boolean> deleteReaderById(int id) {
+        return null;
+    }
 }
 
 

@@ -113,6 +113,11 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
         return R.success(tagListVo);
     }
 
+    @Override
+    public R<Boolean> deleteTagById(int id) {
+        return null;
+    }
+
     private void setBookNumber(List<Tag> tagList) {
         for (Tag tag : tagList) {
             long bookNumber = bookService.lambdaQuery().eq(Book::getTagId, tag.getTagId()).count();

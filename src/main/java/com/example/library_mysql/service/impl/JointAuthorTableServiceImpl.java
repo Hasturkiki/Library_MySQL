@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -147,7 +146,22 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
     }
 
     @Override
-    public boolean deleteJointAuthorTableByOtherId(String sign, int id) {
+    public R<Boolean> deleteJointAuthorTableById(int id) {
+        List<JointAuthorTable> jointAuthorTableList = lambdaQuery().eq(JointAuthorTable::getTableId, id).list();
+        if (jointAuthorTableList.size() == 0)
+            return R.error("共同作者表信息删除失败（不存在该id共同作者表序列）");
+        for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
+            jointAuthorTable.setUpdateTime(LocalDateTime.now());
+            updateById(jointAuthorTable);
+        }
+        Book book = bookService.lambdaQuery().eq(Book::getJointAuthorTableId, id).one();
+        book.setJointAuthorTableId(0);
+        bookService.updateById(book);
+        return R.success(removeByIds(jointAuthorTableList));
+    }
+
+    @Override
+    public boolean deleteJointAuthorTableByAuthorId(int id) {
         List<JointAuthorTable> jointAuthorTableList = lambdaQuery().eq(JointAuthorTable::getAuthorId, id).list();
         if (jointAuthorTableList.size() == 0)
             return true;
@@ -169,6 +183,18 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
             return true;
         } else
             return false;
+    }
+
+    @Override
+    public boolean deleteJointAuthorTableByBookId(int id) {
+        List<JointAuthorTable> jointAuthorTableList = lambdaQuery().eq(JointAuthorTable::getTableId, id).list();
+        if (jointAuthorTableList.size() == 0)
+            return true;
+        for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
+            jointAuthorTable.setUpdateTime(LocalDateTime.now());
+            updateById(jointAuthorTable);
+        }
+        return removeByIds(jointAuthorTableList);
     }
 
     private JointAuthorTableVoListVo setJointAuthorTableVoListVo(List<JointAuthorTable> jointAuthorTableList) {

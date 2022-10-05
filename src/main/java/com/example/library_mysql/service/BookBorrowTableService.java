@@ -29,4 +29,10 @@ public interface BookBorrowTableService extends IService<BookBorrowTable> {
     R<BookBorrowTableVoListVo> BookBorrowTablesByBook(int id);
 
     R<BookBorrowTableVoListVo> BookBorrowTablesByBookWithCondition(int id, int page, String sortItem, String sortType);
+
+    R<Boolean> deleteBookBorrowTableById(int id);
+
+    boolean deleteBookBorrowTableByOtherId(String sign, int id);
+
+    boolean recoveryByOtherId(String sign, int id);
 }

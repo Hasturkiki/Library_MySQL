@@ -1,7 +1,6 @@
 package com.example.library_mysql.controller;
 
 import com.example.library_mysql.common.R;
-import com.example.library_mysql.domain.Author;
 import com.example.library_mysql.domain.Reader;
 import com.example.library_mysql.service.*;
 import com.example.library_mysql.vo.*;
@@ -10,12 +9,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Api(tags = "读者主页")
 @Controller
@@ -76,5 +74,25 @@ public class ReaderController {
         if (reader == null)
             return R.error("无对应读者信息");
         return R.success(reader);
+    }
+
+    @ResponseBody
+    @PutMapping("/update")
+    @ApiOperation("读者信息更新")
+    public R<Reader> updateReader(@RequestBody Reader reader) {
+        reader.setUpdateTime(LocalDateTime.now());
+        if (readerService.updateById(reader)) {
+            return R.success(readerService.selectReaderById(reader.getReaderId()));
+        } else {
+            return R.error("读者信息更新失败");
+        }
+    }
+
+    @ResponseBody
+    @DeleteMapping("/delete")
+    @ApiOperation("读者信息删除")
+    @ApiImplicitParam(name = "id", value = "待删除读者ID", required = true)
+    public R<Boolean> deleteReader(int id) {
+        return readerService.deleteReaderById(id);
     }
 }

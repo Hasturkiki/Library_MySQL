@@ -41,6 +41,8 @@ public interface BookService extends IService<Book> {
 
     R<BookVoListVo> selectBooksByTagWithCondition(int id, int page, String sortItem, String sortType);
 
+    R<Boolean> deleteBookById(int id);
+
     boolean deleteBookByOtherId(String sign, int id);
 
     boolean recoveryByOtherId(String sign, int id);
