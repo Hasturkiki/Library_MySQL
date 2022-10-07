@@ -12,6 +12,7 @@ import com.example.library_mysql.vo.PublishingCompanyListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -118,8 +119,22 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
     }
 
     @Override
-    public R<Boolean> deletePublishingCompanyById(int id) {
-        return null;
+    public R<Boolean> deletePublishingCompanyById(int id, LocalDateTime updateTime) {
+        PublishingCompany publishingCompany = lambdaQuery().eq(PublishingCompany::getPublishingCompanyId, id).one();
+        if (publishingCompany == null) {
+            return R.error("出版社信息删除失败（不存在该出版社）");
+        } else {
+            if (bookService.deleteBookByOtherId("publishingCompanyId", id, updateTime)) {
+                publishingCompany.setUpdateTime(updateTime);
+                updateById(publishingCompany);
+                if (removeById(id))
+                    return R.success(true);
+                else
+                    return R.error("出版社信息删除失败");
+            } else {
+                return R.error("关联信息删除失败（书籍）");
+            }
+        }
     }
 
     private void setBookNumber(List<PublishingCompany> publishingCompanyList) {
@@ -129,7 +144,3 @@ public class PublishingCompanyServiceImpl extends ServiceImpl<PublishingCompanyM
         }
     }
 }
-
-
-
-

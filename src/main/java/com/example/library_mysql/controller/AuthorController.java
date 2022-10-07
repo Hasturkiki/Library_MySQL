@@ -93,6 +93,6 @@ public class AuthorController {
     @ApiOperation("作者信息删除")
     @ApiImplicitParam(name = "id", value = "待删除作者ID", required = true)
     public R<Boolean> deleteAuthor(int id) {
-        return authorService.deleteAuthorById(id);
+        return authorService.deleteAuthorById(id, LocalDateTime.now());
     }
 }

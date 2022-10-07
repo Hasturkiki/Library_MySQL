@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 @Api(tags = "共同作者表主页")
 @Controller
-@RequestMapping({"/jointAuthorTable", "/jointAuthorTableVo"})
+@RequestMapping("/jointAuthorTable")
 public class JointAuthorTableController {
     @ApiIgnore
     @RequestMapping("/jointAuthorTableHome")
@@ -82,7 +82,7 @@ public class JointAuthorTableController {
     public R<JointAuthorTableVo> updateJointAuthorTable(@RequestBody JointAuthorTable jointAuthorTable) {
         jointAuthorTable.setUpdateTime(LocalDateTime.now());
         if (jointAuthorTableService.updateById(jointAuthorTable)) {
-            return R.success(jointAuthorTableService. selectJointAuthorTableVoById(jointAuthorTable.getJointAuthorTableId()));
+            return R.success(jointAuthorTableService.selectJointAuthorTableVoById(jointAuthorTable.getJointAuthorTableId()));
         } else {
             return R.error("共同作者表信息更新失败");
         }
@@ -93,6 +93,6 @@ public class JointAuthorTableController {
     @ApiOperation("共同作者表信息删除")
     @ApiImplicitParam(name = "id", value = "待删除共同作者表ID", required = true)
     public R<Boolean> deleteJointAuthorTable(int id) {
-        return jointAuthorTableService.deleteJointAuthorTableById(id);
+        return jointAuthorTableService.deleteJointAuthorTableById(id, LocalDateTime.now());
     }
 }

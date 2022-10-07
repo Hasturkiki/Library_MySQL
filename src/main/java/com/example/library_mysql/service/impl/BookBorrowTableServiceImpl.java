@@ -161,40 +161,41 @@ public class BookBorrowTableServiceImpl extends ServiceImpl<BookBorrowTableMappe
     }
 
     @Override
-    public R<Boolean> deleteBookBorrowTableById(int id) {
+    public R<Boolean> deleteBookBorrowTableById(int id, LocalDateTime updateTime) {
         BookBorrowTable bookBorrowTable = lambdaQuery().eq(BookBorrowTable::getBooksBorrowTableId, id).one();
         if (bookBorrowTable == null) {
             return R.error("借书表信息删除失败（不存在该借书表）");
         } else {
-            bookBorrowTable.setUpdateTime(LocalDateTime.now());
-            updateById(bookBorrowTable);
-            if (removeById(id)) {
-                Book book = bookService.selectBookById(bookBorrowTable.getBookId());
-                if (book == null) {
-                    bookBorrowTableMapper.recoveryById(id);
-                    return R.error("借书表信息删除失败（借书表对应书籍不存在）");
-                } else {
-                    book.setIsBeingBorrowed(book.getIsBeingBorrowed() - 1);
-                    book.setUpdateTime(LocalDateTime.now());
-                    bookService.updateById(book);
-                    return R.success(true);
-                }
+            Book book = bookService.selectBookById(bookBorrowTable.getBookId());
+            if (book == null) {
+                return R.error("借书表信息删除失败（借书表对应书籍不存在）");
             } else {
-                return R.error("借书表信息删除失败");
+                if(bookBorrowTable.getIsBorrowing() == 0) {
+                    book.setIsBeingBorrowed(book.getIsBeingBorrowed() - 1);
+                    book.setUpdateTime(updateTime);
+                    bookService.updateById(book);
+                }
+                bookBorrowTable.setUpdateTime(updateTime);
+                updateById(bookBorrowTable);
+                if (removeById(id))
+                    return R.success(true);
+                else
+                    return R.error("借书表信息删除失败");
             }
         }
     }
 
     @Override
-    public boolean deleteBookBorrowTableByOtherId(String sign, int id) {
+    public boolean deleteBookBorrowTableByOtherId(String sign, int id, LocalDateTime updateTime) {
         List<BookBorrowTable> bookBorrowTableList = switch (sign) {
             case "bookId" -> lambdaQuery().eq(BookBorrowTable::getBookId, id).list();
-            default -> lambdaQuery().eq(BookBorrowTable::getReaderId, id).list();
+            case "readerId" -> lambdaQuery().eq(BookBorrowTable::getReaderId, id).list();
+            default -> lambdaQuery().eq(BookBorrowTable::getBooksBorrowTableId, id).list();
         };
         if (bookBorrowTableList.size() == 0)
             return true;
         for (BookBorrowTable bookBorrowTable : bookBorrowTableList) {
-            bookBorrowTable.setUpdateTime(LocalDateTime.now());
+            bookBorrowTable.setUpdateTime(updateTime);
             updateById(bookBorrowTable);
             if (!sign.equals("bookId")) {
                 Book book = bookService.selectBookById(bookBorrowTable.getBookId());
@@ -202,7 +203,7 @@ public class BookBorrowTableServiceImpl extends ServiceImpl<BookBorrowTableMappe
                     return false;
                 } else {
                     book.setIsBeingBorrowed(book.getIsBeingBorrowed() - 1);
-                    book.setUpdateTime(LocalDateTime.now());
+                    book.setUpdateTime(updateTime);
                     bookService.updateById(book);
                 }
             }
@@ -211,10 +212,10 @@ public class BookBorrowTableServiceImpl extends ServiceImpl<BookBorrowTableMappe
     }
 
     @Override
-    public boolean recoveryByOtherId(String sign, int id) {
+    public boolean recoveryByOtherId(String sign, int id, LocalDateTime updateTime) {
         return switch (sign) {
-            case "bookId" -> bookBorrowTableMapper.recoveryByBookId(id);
-            case "readerId" -> bookBorrowTableMapper.recoveryByReaderId(id);
+            case "bookId" -> bookBorrowTableMapper.recoveryByBookId(id, updateTime);
+            case "readerId" -> bookBorrowTableMapper.recoveryByReaderId(id, updateTime);
             default -> bookBorrowTableMapper.recoveryById(id);
         };
     }
@@ -232,7 +233,3 @@ public class BookBorrowTableServiceImpl extends ServiceImpl<BookBorrowTableMappe
         return new BookBorrowTableVoListVo(bookBorrowTableVoList);
     }
 }
-
-
-
-

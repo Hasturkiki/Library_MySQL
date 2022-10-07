@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.library_mysql.common.R;
 import com.example.library_mysql.domain.Reader;
 import com.example.library_mysql.mapper.ReaderMapper;
+import com.example.library_mysql.service.BookBorrowTableService;
 import com.example.library_mysql.service.ReaderService;
 import com.example.library_mysql.vo.ReaderListVo;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -19,6 +22,9 @@ import java.util.List;
 @Service
 public class ReaderServiceImpl extends ServiceImpl<ReaderMapper, Reader>
         implements ReaderService {
+
+    @Resource
+    private BookBorrowTableService bookBorrowTableService;
 
     @Override
     public Reader selectReaderById(int id) {
@@ -94,11 +100,21 @@ public class ReaderServiceImpl extends ServiceImpl<ReaderMapper, Reader>
     }
 
     @Override
-    public R<Boolean> deleteReaderById(int id) {
-        return null;
+    public R<Boolean> deleteReaderById(int id, LocalDateTime updateTime) {
+        Reader reader = lambdaQuery().eq(Reader::getReaderId, id).one();
+        if (reader == null) {
+            return R.error("读者信息删除失败（不存在该读者）");
+        } else {
+            if (bookBorrowTableService.deleteBookBorrowTableByOtherId("readerId", id, updateTime)) {
+                reader.setUpdateTime(updateTime);
+                updateById(reader);
+                if (removeById(id))
+                    return R.success(true);
+                else
+                    return R.error("读者信息删除失败");
+            } else {
+                return R.error("关联信息删除失败（借书表）");
+            }
+        }
     }
 }
-
-
-
-

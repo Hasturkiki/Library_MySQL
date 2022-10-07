@@ -12,6 +12,7 @@ import com.example.library_mysql.vo.TagListVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -114,8 +115,22 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
     }
 
     @Override
-    public R<Boolean> deleteTagById(int id) {
-        return null;
+    public R<Boolean> deleteTagById(int id, LocalDateTime updateTime) {
+        Tag tag = lambdaQuery().eq(Tag::getTagId, id).one();
+        if (tag == null) {
+            return R.error("标签信息删除失败（不存在该标签）");
+        } else {
+            if (bookService.deleteBookByOtherId("tagId", id, updateTime)) {
+                tag.setUpdateTime(updateTime);
+                updateById(tag);
+                if (removeById(id))
+                    return R.success(true);
+                else
+                    return R.error("标签信息删除失败");
+            } else {
+                return R.error("关联信息删除失败（书籍）");
+            }
+        }
     }
 
     private void setBookNumber(List<Tag> tagList) {
@@ -125,7 +140,3 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
         }
     }
 }
-
-
-
-

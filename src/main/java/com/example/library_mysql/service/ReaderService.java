@@ -5,6 +5,7 @@ import com.example.library_mysql.domain.Reader;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.library_mysql.vo.ReaderListVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,5 +27,5 @@ public interface ReaderService extends IService<Reader> {
 
     R<ReaderListVo> getReaderListVo(int page, String sortItem, String sortType);
 
-    R<Boolean> deleteReaderById(int id);
+    R<Boolean> deleteReaderById(int id, LocalDateTime updateTime);
 }

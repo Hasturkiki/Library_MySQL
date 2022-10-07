@@ -7,6 +7,7 @@ import com.example.library_mysql.vo.BookBorrowTableVo;
 import com.example.library_mysql.vo.BookBorrowTableVoListVo;
 import com.example.library_mysql.vo.BookVoListVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,9 +31,9 @@ public interface BookBorrowTableService extends IService<BookBorrowTable> {
 
     R<BookBorrowTableVoListVo> BookBorrowTablesByBookWithCondition(int id, int page, String sortItem, String sortType);
 
-    R<Boolean> deleteBookBorrowTableById(int id);
+    R<Boolean> deleteBookBorrowTableById(int id, LocalDateTime updateTime);
 
-    boolean deleteBookBorrowTableByOtherId(String sign, int id);
+    boolean deleteBookBorrowTableByOtherId(String sign, int id, LocalDateTime updateTime);
 
-    boolean recoveryByOtherId(String sign, int id);
+    boolean recoveryByOtherId(String sign, int id, LocalDateTime updateTime);
 }

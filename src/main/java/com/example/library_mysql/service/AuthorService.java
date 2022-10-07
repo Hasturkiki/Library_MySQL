@@ -5,6 +5,7 @@ import com.example.library_mysql.domain.Author;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.library_mysql.vo.AuthorListVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,5 +27,5 @@ public interface AuthorService extends IService<Author> {
 
     R<AuthorListVo> getAuthorListVo(int page, String sortItem, String sortType);
 
-    R<Boolean> deleteAuthorById(int id);
+    R<Boolean> deleteAuthorById(int id, LocalDateTime updateTime);
 }

@@ -30,18 +30,24 @@
     <update id="recoveryByAuthorId">
         update book
         set is_deleted = 0
-        where author_id = #{id}
+        where author_id = #{id} and update_time = #{updateTime}
     </update>
 
     <update id="recoveryByPublishingCompanyId">
         update book
         set is_deleted = 0
-        where publishing_company_id = #{id}
+        where publishing_company_id = #{id} and update_time = #{updateTime}
     </update>
 
     <update id="recoveryByTagId">
         update book
         set is_deleted = 0
-        where tag_id = #{id}
+        where tag_id = #{id} and update_time = #{updateTime}
+    </update>
+
+    <update id="recoveryByUpdateTime">
+        update book
+        set is_deleted = 0
+        where update_time = #{updateTime}
     </update>
 </mapper>

@@ -93,6 +93,6 @@ public class TagController {
     @ApiOperation("标签信息删除")
     @ApiImplicitParam(name = "id", value = "标签ID", required = true)
     public R<Boolean> deleteTag(int id) {
-        return tagService.deleteTagById(id);
+        return tagService.deleteTagById(id, LocalDateTime.now());
     }
 }

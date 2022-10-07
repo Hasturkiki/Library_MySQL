@@ -32,9 +32,6 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
     @Resource
     private AuthorService authorService;
 
-    @Resource
-    private JointAuthorTableMapper jointAuthorTableMapper;
-
     @Override
     public JointAuthorTableVo selectJointAuthorTableVoById(int id) {
         List<JointAuthorTable> jointAuthorTableList = lambdaQuery().orderByAsc(JointAuthorTable::getJointAuthorTableId).list();
@@ -146,12 +143,12 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
     }
 
     @Override
-    public R<Boolean> deleteJointAuthorTableById(int id) {
+    public R<Boolean> deleteJointAuthorTableById(int id, LocalDateTime updateTime) {
         List<JointAuthorTable> jointAuthorTableList = lambdaQuery().eq(JointAuthorTable::getTableId, id).list();
         if (jointAuthorTableList.size() == 0)
             return R.error("共同作者表信息删除失败（不存在该id共同作者表序列）");
         for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
-            jointAuthorTable.setUpdateTime(LocalDateTime.now());
+            jointAuthorTable.setUpdateTime(updateTime);
             updateById(jointAuthorTable);
         }
         Book book = bookService.lambdaQuery().eq(Book::getJointAuthorTableId, id).one();
@@ -161,37 +158,33 @@ public class JointAuthorTableServiceImpl extends ServiceImpl<JointAuthorTableMap
     }
 
     @Override
-    public boolean deleteJointAuthorTableByAuthorId(int id) {
+    public boolean deleteJointAuthorTableByAuthorId(int id, LocalDateTime updateTime) {
         List<JointAuthorTable> jointAuthorTableList = lambdaQuery().eq(JointAuthorTable::getAuthorId, id).list();
         if (jointAuthorTableList.size() == 0)
             return true;
         ArrayList<Integer> bookJointAuthorTableIdList = new ArrayList<>();
         for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
-            jointAuthorTable.setUpdateTime(LocalDateTime.now());
+            jointAuthorTable.setUpdateTime(updateTime);
             updateById(jointAuthorTable);
             if (lambdaQuery().eq(JointAuthorTable::getTableId, jointAuthorTable.getTableId()).count() == 1)
                 bookJointAuthorTableIdList.add(jointAuthorTable.getTableId());
         }
-        if (removeByIds(jointAuthorTableList)) {
-            for (int bookJointAuthorTableId : bookJointAuthorTableIdList)
-                if (!bookService.deleteBookByOtherId("jointAuthorTableId", bookJointAuthorTableId)) {
-                    for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
-                        jointAuthorTableMapper.recoveryById(jointAuthorTable.getJointAuthorTableId());
-                    }
-                    return false;
-                }
-            return true;
-        } else
-            return false;
+        for (int bookJointAuthorTableId : bookJointAuthorTableIdList)
+            if (!bookService.deleteBookByOtherId("jointAuthorTableId", bookJointAuthorTableId, updateTime)) {
+                // 纯粹根据更新时间恢复书籍书籍，可能有问题
+                bookService.recoveryByUpdateTime(updateTime);
+                return false;
+            }
+        return removeByIds(jointAuthorTableList);
     }
 
     @Override
-    public boolean deleteJointAuthorTableByBookId(int id) {
-        List<JointAuthorTable> jointAuthorTableList = lambdaQuery().eq(JointAuthorTable::getTableId, id).list();
+    public boolean deleteJointAuthorTableByBookId(int id, LocalDateTime updateTime) {
+        List<JointAuthorTable> jointAuthorTableList = lambdaQuery().eq(JointAuthorTable::getTableId, bookService.lambdaQuery().eq(Book::getBookId, id).one().getJointAuthorTableId()).list();
         if (jointAuthorTableList.size() == 0)
             return true;
         for (JointAuthorTable jointAuthorTable : jointAuthorTableList) {
-            jointAuthorTable.setUpdateTime(LocalDateTime.now());
+            jointAuthorTable.setUpdateTime(updateTime);
             updateById(jointAuthorTable);
         }
         return removeByIds(jointAuthorTableList);

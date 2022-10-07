@@ -115,6 +115,6 @@ public class BookBorrowTableController {
     @ApiOperation("借书表信息删除")
     @ApiImplicitParam(name = "id", value = "待删除借书表ID", required = true)
     public R<Boolean> deleteBookBorrowTable(int id) {
-        return bookBorrowTableService.deleteBookBorrowTableById(id);
+        return bookBorrowTableService.deleteBookBorrowTableById(id, LocalDateTime.now());
     }
 }

@@ -23,14 +23,14 @@
     </update>
 
     <update id="recoveryByBookId">
-        update book_borrow_table
-        set is_deleted = 0
-        where book_id = #{id}
+        update book_borrow_table b, reader r
+        set b.is_deleted = 0
+        where b.book_id = #{id} and b.reader_id = r.reader_id and r.is_deleted = 0 and update_time = #{updateTime}
     </update>
 
     <update id="recoveryByReaderId">
-        update book_borrow_table
-        set is_deleted = 0
-        where reader_id = #{id}
+        update book_borrow_table b, book
+        set b.is_deleted = 0
+        where b.reader_id = #{id} and b.book_id = book.book_id and book.is_deleted = 0 and update_time = #{updateTime}
     </update>
 </mapper>

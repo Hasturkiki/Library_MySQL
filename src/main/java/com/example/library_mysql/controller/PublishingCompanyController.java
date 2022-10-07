@@ -93,6 +93,6 @@ public class PublishingCompanyController {
     @ApiOperation("出版社信息删除")
     @ApiImplicitParam(name = "id", value = "待删除出版社ID", required = true)
     public R<Boolean> deletePublishingCompany(int id) {
-        return publishingCompanyService.deletePublishingCompanyById(id);
+        return publishingCompanyService.deletePublishingCompanyById(id, LocalDateTime.now());
     }
 }

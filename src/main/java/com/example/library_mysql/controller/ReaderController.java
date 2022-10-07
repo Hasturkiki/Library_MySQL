@@ -93,6 +93,6 @@ public class ReaderController {
     @ApiOperation("读者信息删除")
     @ApiImplicitParam(name = "id", value = "待删除读者ID", required = true)
     public R<Boolean> deleteReader(int id) {
-        return readerService.deleteReaderById(id);
+        return readerService.deleteReaderById(id, LocalDateTime.now());
     }
 }

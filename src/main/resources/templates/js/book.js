@@ -70,7 +70,7 @@ function getBookVoListVo(page, sortItem, sortType) {
                         td_author.appendChild(td_authorName_a)
                         let td_jointAuthorTable_a = document.createElement("a")
                         td_jointAuthorTable_a.innerText = ' 等'
-                        td_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
+                        td_jointAuthorTable_a.href = '/jointAuthorTable/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
                         td_author.appendChild(td_jointAuthorTable_a)
                     } else {
                         let td_authorName_a = document.createElement("a")
@@ -136,7 +136,7 @@ function getBookVoListVo(page, sortItem, sortType) {
                         default:
                             if (bookVo["jointIsAlive"]) {
                                 td_jointAuthorTable_a.innerText = '合著'
-                                td_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
+                                td_jointAuthorTable_a.href = '/jointAuthorTable/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
                             } else {
                                 td_jointAuthorTable_a.innerText = '无'
                                 td_jointAuthorTable_a.style.color = '#000'

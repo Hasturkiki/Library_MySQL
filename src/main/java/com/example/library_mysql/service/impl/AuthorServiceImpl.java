@@ -127,31 +127,28 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
         return R.success(authorListVo);
     }
 
+    // 删除失败恢复时可能会将非本次删除条目恢复，待修改
     @Override
-    public R<Boolean> deleteAuthorById(int id) {
-        Author author = selectAuthorById(id);
+    public R<Boolean> deleteAuthorById(int id, LocalDateTime updateTime) {
+        Author author = lambdaQuery().eq(Author::getAuthorId, id).one();
         if (author == null) {
             return R.error("作者信息删除失败（不存在该作者）");
         } else {
-            author.setUpdateTime(LocalDateTime.now());
-            updateById(author);
-            if (removeById(id)) {
-                if (bookService.deleteBookByOtherId("authorId", id))
-                    if (jointAuthorTableService.deleteJointAuthorTableByAuthorId(id))
+            if (bookService.deleteBookByOtherId("authorId", id, updateTime)) {
+                if (jointAuthorTableService.deleteJointAuthorTableByAuthorId(id, updateTime)) {
+                    author.setUpdateTime(updateTime);
+                    updateById(author);
+                    if (removeById(id))
                         return R.success(true);
-                    else {
-                        authorMapper.recoveryById(id);
-                        if (bookService.recoveryByOtherId("authorId", id))
-                            return R.error("关联信息删除失败（共同作者表）");
-                        else
-                            return R.error("关联信息删除失败（共同作者表）、且已删除书籍信息未恢复");
-                    }
-                else {
+                    else
+                        return R.error("作者信息删除失败");
+                } else {
                     authorMapper.recoveryById(id);
-                    return R.error("关联信息删除失败（书籍）");
+                    bookService.recoveryByOtherId("authorId", id, updateTime);
+                    return R.error("关联信息删除失败（共同作者表）");
                 }
             } else {
-                return R.error("作者信息删除失败");
+                return R.error("关联信息删除失败（书籍）");
             }
         }
     }
@@ -164,7 +161,3 @@ public class AuthorServiceImpl extends ServiceImpl<AuthorMapper, Author>
         }
     }
 }
-
-
-
-

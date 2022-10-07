@@ -4,6 +4,8 @@ import com.example.library_mysql.domain.Book;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.time.LocalDateTime;
+
 /**
 * @author Hastur kiki
 * @description 针对表【book(书籍信息)】的数据库操作Mapper
@@ -14,10 +16,12 @@ import org.apache.ibatis.annotations.Mapper;
 public interface BookMapper extends BaseMapper<Book> {
     public boolean recoveryById(Integer id);
 
-    public boolean recoveryByAuthorId(Integer id);
+    public boolean recoveryByAuthorId(Integer id, LocalDateTime updateTime);
 
-    public boolean recoveryByPublishingCompanyId(Integer id);
+    public boolean recoveryByPublishingCompanyId(Integer id, LocalDateTime updateTime);
 
-    public boolean recoveryByTagId(Integer id);
+    public boolean recoveryByTagId(Integer id, LocalDateTime updateTime);
+
+    public boolean recoveryByUpdateTime(LocalDateTime updateTime);
 }
 

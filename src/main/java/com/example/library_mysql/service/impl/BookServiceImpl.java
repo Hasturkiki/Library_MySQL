@@ -189,53 +189,56 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     }
 
     @Override
-    public R<Boolean> deleteBookById(int id) {
-        Book book = selectBookById(id);
+    public R<Boolean> deleteBookById(int id, LocalDateTime updateTime) {
+        Book book = lambdaQuery().eq(Book::getBookId, id).one();
         if (book == null) {
             return R.error("书籍信息删除失败（不存在该书籍）");
         } else {
-            book.setUpdateTime(LocalDateTime.now());
-            updateById(book);
-            if (removeById(id)) {
-                if (bookBorrowTableService.deleteBookBorrowTableByOtherId("bookId", id)) {
-                    if (jointAuthorTableService.deleteJointAuthorTableByBookId(id))
+            if (bookBorrowTableService.deleteBookBorrowTableByOtherId("bookId", id, updateTime)) {
+                if (jointAuthorTableService.deleteJointAuthorTableByBookId(id, updateTime)) {
+                    book.setUpdateTime(updateTime);
+                    updateById(book);
+                    if (removeById(id))
                         return R.success(true);
-                    else {
-                        bookMapper.recoveryById(id);
-                        if (bookBorrowTableService.recoveryByOtherId("bookId", id))
-                            return R.error("关联信息删除失败（共同作者表）");
-                        else
-                            return R.error("关联信息删除失败（共同作者表）、且已删除借书表信息未恢复");
-                    }
-                } else {
+                    else
+                        return R.error("书籍信息删除失败");
+                }
+                else {
                     bookMapper.recoveryById(id);
-                    return R.error("关联信息删除失败（借书表）");
+                    bookBorrowTableService.recoveryByOtherId("bookId", id, updateTime);
+                    return R.error("关联信息删除失败（共同作者表）");
                 }
             } else {
-                return R.error("书籍信息删除失败");
+                bookMapper.recoveryById(id);
+                return R.error("关联信息删除失败（借书表）");
             }
         }
     }
 
     // 级联删除时很可能出现bug 重点关注
     @Override
-    public boolean deleteBookByOtherId(String sign, int id) {
+    public boolean deleteBookByOtherId(String sign, int id, LocalDateTime updateTime) {
         List<Book> bookList = switch (sign) {
             case "authorId" -> lambdaQuery().eq(Book::getAuthorId, id).list();
+            case "jointAuthorTableId" -> lambdaQuery().eq(Book::getJointAuthorTableId, id).list();
             case "publishingCompanyId" -> lambdaQuery().eq(Book::getPublishingCompanyId, id).list();
             case "tagId" -> lambdaQuery().eq(Book::getTagId, id).list();
-            default -> lambdaQuery().eq(Book::getJointAuthorTableId, id).list();
+            default -> lambdaQuery().eq(Book::getBookId, id).list();
         };
         if (bookList.size() == 0)
             return true;
         if (sign.equals("authorId")) {
             for (Book book : bookList) {
+                book.setUpdateTime(updateTime);
+                updateById(book);
                 if (book.getJointAuthorTableId() != 0)
                     if (jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getTableId, book.getJointAuthorTableId())
                             .ne(JointAuthorTable::getAuthorId, id).count() > 0) {
                         bookList.remove(book);
-                        book.setAuthorId(jointAuthorTableService.lambdaQuery().eq(JointAuthorTable::getTableId, book.getJointAuthorTableId())
-                                .ne(JointAuthorTable::getAuthorId, id).list().get(0).getAuthorId());
+                        book.setAuthorId(
+                                jointAuthorTableService
+                                        .lambdaQuery().eq(JointAuthorTable::getTableId, book.getJointAuthorTableId())
+                                        .ne(JointAuthorTable::getAuthorId, id).list().get(0).getAuthorId());
                         updateById(book);
                         if (bookList.size() == 0)
                             return true;
@@ -243,13 +246,11 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
             }
         }
         for (Book book : bookList) {
-            book.setUpdateTime(LocalDateTime.now());
-            updateById(book);
-            if (bookBorrowTableService.deleteBookBorrowTableByOtherId("bookId", id)) {
+            if (bookBorrowTableService.deleteBookBorrowTableByOtherId("bookId", book.getBookId(), updateTime)) {
                 if (!sign.equals("jointAuthorTableId")) {
-                    if (!jointAuthorTableService.deleteJointAuthorTableByBookId(id)) {
-                        bookMapper.recoveryById(id);
-                        bookBorrowTableService.recoveryByOtherId("bookId", id);
+                    if (!jointAuthorTableService.deleteJointAuthorTableByBookId(book.getBookId(), updateTime)) {
+                        bookMapper.recoveryById(book.getBookId());
+                        bookBorrowTableService.recoveryByOtherId("bookId", book.getBookId(), updateTime);
                         return false;
                     }
                 }
@@ -260,13 +261,18 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     }
 
     @Override
-    public boolean recoveryByOtherId(String sign, int id) {
+    public boolean recoveryByOtherId(String sign, int id, LocalDateTime updateTime) {
         return switch (sign) {
-            case "authorId" -> bookMapper.recoveryByAuthorId(id);
-            case "publishingCompanyId" -> bookMapper.recoveryByPublishingCompanyId(id);
-            case "tagId" -> bookMapper.recoveryByTagId(id);
+            case "authorId" -> bookMapper.recoveryByAuthorId(id, updateTime);
+            case "publishingCompanyId" -> bookMapper.recoveryByPublishingCompanyId(id, updateTime);
+            case "tagId" -> bookMapper.recoveryByTagId(id, updateTime);
             default -> bookMapper.recoveryById(id);
         };
+    }
+
+    @Override
+    public boolean recoveryByUpdateTime(LocalDateTime updateTime) {
+        return bookMapper.recoveryByUpdateTime(updateTime);
     }
 
     private R<BookVoListVo> getR_BookVoListVoByPage(int page, List<Book> bookList) {

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.library_mysql.vo.BookVoListVo;
 import com.example.library_mysql.vo.BookVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,9 +42,11 @@ public interface BookService extends IService<Book> {
 
     R<BookVoListVo> selectBooksByTagWithCondition(int id, int page, String sortItem, String sortType);
 
-    R<Boolean> deleteBookById(int id);
+    R<Boolean> deleteBookById(int id, LocalDateTime updateTime);
 
-    boolean deleteBookByOtherId(String sign, int id);
+    boolean deleteBookByOtherId(String sign, int id, LocalDateTime updateTime);
 
-    boolean recoveryByOtherId(String sign, int id);
+    boolean recoveryByOtherId(String sign, int id, LocalDateTime updateTime);
+
+    boolean recoveryByUpdateTime(LocalDateTime updateTime);
 }

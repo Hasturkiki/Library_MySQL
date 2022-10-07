@@ -5,6 +5,7 @@ import com.example.library_mysql.domain.PublishingCompany;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.library_mysql.vo.PublishingCompanyListVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,5 +27,5 @@ public interface PublishingCompanyService extends IService<PublishingCompany> {
 
     R<PublishingCompanyListVo> getPublishingCompanyListVo(int page, String sortItem, String sortType);
 
-    R<Boolean> deletePublishingCompanyById(int id);
+    R<Boolean> deletePublishingCompanyById(int id, LocalDateTime updateTime);
 }

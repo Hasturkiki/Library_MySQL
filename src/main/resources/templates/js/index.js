@@ -158,7 +158,7 @@ function search() {
                             td_author.appendChild(td_book_authorName_a)
                             let td_book_jointAuthorTable_a = document.createElement("a")
                             td_book_jointAuthorTable_a.innerText = ' 等'
-                            td_book_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
+                            td_book_jointAuthorTable_a.href = '/jointAuthorTable/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
                             td_author.appendChild(td_book_jointAuthorTable_a)
                         } else {
                             let td_book_authorName_a = document.createElement("a")
@@ -221,7 +221,7 @@ function search() {
                             default:
                                 if (bookVo["jointIsAlive"]) {
                                     td_book_jointAuthorTable_a.innerText = '合著'
-                                    td_book_jointAuthorTable_a.href = '/jointAuthorTableVo/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
+                                    td_book_jointAuthorTable_a.href = '/jointAuthorTable/getOne?jointAuthorTableKey=' + book["jointAuthorTableId"]
                                 } else {
                                     td_book_jointAuthorTable_a.innerText = '无'
                                     td_book_jointAuthorTable_a.style.color = '#000'

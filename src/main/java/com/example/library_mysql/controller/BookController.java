@@ -147,6 +147,6 @@ public class BookController {
     @ApiOperation("书籍信息删除")
     @ApiImplicitParam(name = "id", value = "待删除书籍ID", required = true)
     public R<Boolean> deleteBook(int id) {
-        return bookService.deleteBookById(id);
+        return bookService.deleteBookById(id, LocalDateTime.now());
     }
 }

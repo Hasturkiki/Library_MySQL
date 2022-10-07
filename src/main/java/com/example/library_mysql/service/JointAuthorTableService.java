@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.library_mysql.vo.JointAuthorTableVo;
 import com.example.library_mysql.vo.JointAuthorTableVoListVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,9 +26,9 @@ public interface JointAuthorTableService extends IService<JointAuthorTable> {
 
     R<JointAuthorTableVoListVo> getJointAuthorTableVoListVo(int page, String sortItem, String sortType);
 
-    R<Boolean> deleteJointAuthorTableById(int id);
+    R<Boolean> deleteJointAuthorTableById(int id, LocalDateTime updateTime);
 
-    boolean deleteJointAuthorTableByAuthorId(int id);
+    boolean deleteJointAuthorTableByAuthorId(int id, LocalDateTime updateTime);
 
-    boolean deleteJointAuthorTableByBookId(int id);
+    boolean deleteJointAuthorTableByBookId(int id, LocalDateTime updateTime);
 }
